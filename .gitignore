@@ -1,0 +1,23 @@
+# Build directories
+[Bb]in/
+[Oo]bj/
+[Dd]ebug*/
+[Rr]elease*/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+
+# NuGet packages
+packages/
+*.nupkg
+
+# Debug/Cache
+*.pdb
+*.log
+*.cache
+
+# Windows junk
+Thumbs.db
+Desktop.ini
