@@ -19,7 +19,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border CornerRadius="25"
+                    <Border CornerRadius="12"
                             Background="{TemplateBinding Background}"
                             SnapsToDevicePixels="True">
                         <ContentPresenter HorizontalAlignment="Center"
