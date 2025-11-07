@@ -66,6 +66,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Views\OQPCanceled.xaml.cs">
+      <DependentUpon>OQPCanceled.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OQPPendingApproval.xaml.cs">
+      <DependentUpon>OQPPendingApproval.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OQPShipping.xaml.cs">
+      <DependentUpon>OQPShipping.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OQPSuccess.xaml.cs">
+      <DependentUpon>OQPSuccess.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\OrderQueuePage.xaml.cs">
       <DependentUpon>OrderQueuePage.xaml</DependentUpon>
     </Compile>
@@ -90,6 +102,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\MainStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OQPCanceled.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OQPPendingApproval.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OQPShipping.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OQPSuccess.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

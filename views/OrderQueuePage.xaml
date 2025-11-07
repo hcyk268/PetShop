@@ -50,7 +50,7 @@
                 Style="{StaticResource ButtonQueuePageNavigation}" />
                 <Button Grid.Column="2"
                 Margin="10,5,10,0"
-                Content="Duyệt Nhận"
+                Content="Đã Nhận"
                 Style="{StaticResource ButtonQueuePageNavigation}" />
                 <Button Grid.Column="3"
                 Margin="10,5,10,0"
