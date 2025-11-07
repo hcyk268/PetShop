@@ -6,8 +6,27 @@
         xmlns:local="clr-namespace:Pet_Shop_Project"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" 
+        Height="650" Width="1000" 
+        WindowStartupLocation="CenterScreen" 
+        ResizeMode="NoResize">
 
+    <Grid Margin="0,0,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="920"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" Background="AliceBlue">
+            
+        </Grid>
+
+        <Frame Grid.Column="1" 
+                x:Name="MainScreen"              
+                NavigationUIVisibility="Hidden"
+                Source="Views/OrderQueuePage.xaml">
+                <!--Test Page-->
+
+        </Frame>
     </Grid>
 </Window>
