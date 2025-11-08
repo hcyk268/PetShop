@@ -10,11 +10,11 @@ namespace Pet_Shop_Project.Models
 
     public class CartItem : INotifyPropertyChanged
     {
-        private int _cartItemId;
-        private int _productId;
+        private string _cartItemId;
+        private string _productId;
         private int _quantity;
 
-        public int CartItemId
+        public string CartItemId
         {
             get => _cartItemId;
             set
@@ -24,7 +24,7 @@ namespace Pet_Shop_Project.Models
             }
         }
 
-        public int ProductId
+        public string ProductId
         {
             get => _productId;
             set

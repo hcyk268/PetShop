@@ -10,11 +10,11 @@ namespace Pet_Shop_Project.Models
 {
     public class Cart : INotifyPropertyChanged
     {
-        private int _cartId;
-        private int _userId;
+        private string _cartId;
+        private string _userId;
         private ObservableCollection<CartItem> _items = new ObservableCollection<CartItem>();
 
-        public int CartId
+        public string CartId
         {
             get => _cartId;
             set
@@ -24,7 +24,7 @@ namespace Pet_Shop_Project.Models
             }
         }
 
-        public int UserId
+        public string UserId
         {
             get => _userId;
             set

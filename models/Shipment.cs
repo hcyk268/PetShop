@@ -9,12 +9,12 @@ namespace Pet_Shop_Project.Models
 {
     public class Shipment : INotifyPropertyChanged
     {
-        private int _shipmentId;
-        private int _orderId;
+        private string _shipmentId;
+        private string _orderId;
         private DateTime _shipDate;
         private string _status; // Shipping / Delivered
 
-        public int ShipmentId
+        public string ShipmentId
         {
             get => _shipmentId;
             set
@@ -24,7 +24,7 @@ namespace Pet_Shop_Project.Models
             }
         }
 
-        public int OrderId
+        public string OrderId
         {
             get => _orderId;
             set

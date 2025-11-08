@@ -9,14 +9,14 @@ namespace Pet_Shop_Project.Models
 {
     public class Review : INotifyPropertyChanged
     {
-        private int _reviewid;
-        private int _productid;
-        private int _userid;
+        private string _reviewid;
+        private string _productid;
+        private string _userid;
         private int _rating;
         private string _comment;
         private DateTime _reviewdate;
 
-        public int ReviewId 
+        public string ReviewId 
         { 
             get => _reviewid;
             set
@@ -26,7 +26,7 @@ namespace Pet_Shop_Project.Models
             }
 
         }
-        public int ProductId 
+        public string ProductId 
         { 
             get => _productid;
             set
@@ -35,7 +35,7 @@ namespace Pet_Shop_Project.Models
                 OnPropertyChanged(nameof(ProductId));
             } 
         }
-        public int UserId
+        public string UserId
         { 
             get => _userid;
             set

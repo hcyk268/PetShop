@@ -9,13 +9,12 @@ namespace Pet_Shop_Project.Models
 {
     public class OrderDetail : INotifyPropertyChanged
     {
-        private int _orderDetailId;
-        private int _productId;
+        private string _orderDetailId;
+        private string _productId;
         private int _quantity;
-        private decimal _unitPrice;
-        private double _discount;
+        private Product _product;
 
-        public int OrderDetailId
+        public string OrderDetailId
         {
             get => _orderDetailId;
             set
@@ -25,13 +24,13 @@ namespace Pet_Shop_Project.Models
             }
         }
 
-        public int Product
+        public string ProductId
         {
             get => _productId;
             set
             {
                 _productId = value;
-                OnPropertyChanged(nameof(Product));
+                OnPropertyChanged(nameof(ProductId));
                 OnPropertyChanged(nameof(SubTotal)); // SubTotal phụ thuộc Product
             }
         }
@@ -47,29 +46,19 @@ namespace Pet_Shop_Project.Models
             }
         }
 
-        public decimal UnitPrice
+        
+
+        public Product Product
         {
-            get => _unitPrice;
+            get => _product;
             set
             {
-                _unitPrice = value;
-                OnPropertyChanged(nameof(UnitPrice));
-                OnPropertyChanged(nameof(SubTotal)); // SubTotal phụ thuộc UnitPrice
+                _product = value;
+                OnPropertyChanged(nameof(Product));
             }
         }
 
-        public double Discount
-        {
-            get => _discount;
-            set
-            {
-                _discount = value;
-                OnPropertyChanged(nameof(Discount));
-                OnPropertyChanged(nameof(SubTotal)); // SubTotal phụ thuộc Discount
-            }
-        }
-
-        public decimal SubTotal => Quantity * UnitPrice * (decimal)(1 - Discount);
+        public decimal SubTotal => Quantity * Product.UnitPrice * (decimal)(1 - Product.Discount);
 
         public event PropertyChangedEventHandler PropertyChanged;
 
