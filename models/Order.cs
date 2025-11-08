@@ -19,7 +19,7 @@ namespace Pet_Shop_Project.Models
         private string _shippingStatus; // Pending / Shipped / Delivered
         private string _address;
         private string _note;
-        private ObservableCollection<OrderDetail> _details = new ObservableCollection<OrderDetail>();
+        private ObservableCollection<OrderDetail> _details;
 
         public string OrderId
         {

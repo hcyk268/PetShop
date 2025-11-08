@@ -30,6 +30,7 @@ namespace Pet_Shop_Project.Views
         public OrderQueuePage()
         {
             InitializeComponent();
+            AllOrders = new ObservableCollection<Order>();
             GetDataFromDB();
         }
 
@@ -75,9 +76,55 @@ namespace Pet_Shop_Project.Views
                             $"- {reader["ApprovalStatus"]} - {reader["PaymentStatus"]} - {reader["ShippingStatus"]} " +
                             $"- {reader["Address"]} - {reader["Quantity"]} - {reader["Name"]} - {reader["Picture"]}");
 
-                        //var order = new Order(
-                        //    OderId = 
-                        //);
+                        string orderid = reader["OrderId"].ToString();
+                        Order order = null;
+                        foreach (var check in AllOrders)
+                        {
+                            if (check.OrderId == orderid)
+                            {
+                                order = check; 
+                                break;
+                            }
+                        }    
+
+                        if (order == null)
+                        {
+                            order = new Order
+                            {
+                                OrderId = orderid,
+                                UserId = reader["UserId"].ToString(),
+                                OrderDate = (DateTime)reader["OrderDate"],
+                                TotalAmount = (decimal)reader["TotalAmount"],
+                                ApprovalStatus = reader["ApprovalStatus"].ToString(),
+                                PaymentStatus = reader["PaymentStatus"].ToString(),
+                                ShippingStatus = reader["ShippingStatus"].ToString(),
+                                Address = reader["Address"].ToString(),
+                                Note = reader["Note"].ToString(),
+                                Details = new ObservableCollection<OrderDetail>()
+                            };
+                            AllOrders.Add(order);
+                        }
+
+
+                        order.Details.Add(
+                            new OrderDetail
+                            {
+                                OrderDetailId = reader["OrderDetailId"].ToString(),
+                                OrderId = orderid,
+                                ProductId = reader["ProductId"].ToString(),
+                                Quantity = (int)reader["Quantity"],
+                                Product = new Product
+                                {
+                                    ProductId = reader["ProductId"].ToString(),
+                                    Name = reader["Name"].ToString(),
+                                    Description = reader["Description"].ToString(),
+                                    UnitPrice = (decimal)reader["UnitPrice"],
+                                    UnitInStock = (int)reader["UnitInStock"],
+                                    Discount = (double)reader["Discount"],
+                                    Picture = reader["Picture"].ToString()
+                                }
+                            }
+                        );
                     }
                     reader.Close();
                 }

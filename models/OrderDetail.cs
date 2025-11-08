@@ -10,6 +10,7 @@ namespace Pet_Shop_Project.Models
     public class OrderDetail : INotifyPropertyChanged
     {
         private string _orderDetailId;
+        private string _orderId;
         private string _productId;
         private int _quantity;
         private Product _product;
@@ -21,6 +22,16 @@ namespace Pet_Shop_Project.Models
             {
                 _orderDetailId = value;
                 OnPropertyChanged(nameof(OrderDetailId));
+            }
+        }
+
+        public string OrderId
+        {
+            get => _orderId;
+            set
+            {
+                _orderId = value;
+                OnPropertyChanged(nameof(OrderId));
             }
         }
 
