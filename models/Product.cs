@@ -9,7 +9,7 @@ namespace Pet_Shop_Project.Models
 {
     public class Product : INotifyPropertyChanged
     {
-        private int _productId;
+        private string _productId;
         private string _name;
         private string _description;
         private decimal _unitPrice;
@@ -17,7 +17,7 @@ namespace Pet_Shop_Project.Models
         private double _discount;
         private string _picture;
 
-        public int ProductId
+        public string ProductId
         {
             get => _productId;
             set

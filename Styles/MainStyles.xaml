@@ -3,12 +3,12 @@
 
     <!--QueuePage-->
     <Style x:Key="HeaderOderQueuePage" TargetType="Grid">
-        <Setter Property="Background" Value="#F5F5F5"/>
+        <Setter Property="Background" Value="White"/>
     </Style>
 
     <Style x:Key="TextHeaderOderQueuePage" TargetType="TextBlock">
-        <Setter Property="Margin" Value="30,20,0,0"/>
-        <Setter Property="FontSize" Value="25"/>
+        <Setter Property="Margin" Value="30,30,0,0"/>
+        <Setter Property="FontSize" Value="30"/>
         <Setter Property="FontWeight" Value="Bold"/>
     </Style>
     
@@ -34,23 +34,23 @@
                     <Grid ClipToBounds="True">
                         <!-- Nền hover/pressed -->
                         <Border x:Name="Bg"
-                    Background="{TemplateBinding Background}"
-                    CornerRadius="6"/>
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="6"/>
 
                         <!-- Nội dung -->
                         <ContentPresenter
-                    Margin="8,6,8,10"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    RecognizesAccessKey="True"/>
+                            Margin="8,6,8,10"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            RecognizesAccessKey="True"/>
 
                         <!-- Gạch chân -->
                         <Border x:Name="Underline"
-                    Height="2"
-                    VerticalAlignment="Bottom"
-                    CornerRadius="2"
-                    Background="{StaticResource QP.UnderlineIdle}"
-                    Margin="10,0,10,0"/>
+                            Height="2"
+                            VerticalAlignment="Bottom"
+                            CornerRadius="2"
+                            Background="{StaticResource QP.UnderlineIdle}"
+                            Margin="10,0,10,0"/>
                     </Grid>
 
                     <!-- Trạng thái -->

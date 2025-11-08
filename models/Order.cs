@@ -10,8 +10,8 @@ namespace Pet_Shop_Project.Models
 {
     public class Order : INotifyPropertyChanged
     {
-        private int _orderId;
-        private int _userId;
+        private string _orderId;
+        private string _userId;
         private DateTime _orderDate;
         private decimal _totalAmount;
         private string _approvalStatus; // Waiting / Approved / Rejected
@@ -21,7 +21,7 @@ namespace Pet_Shop_Project.Models
         private string _note;
         private ObservableCollection<OrderDetail> _details = new ObservableCollection<OrderDetail>();
 
-        public int OrderId
+        public string OrderId
         {
             get => _orderId;
             set
@@ -31,7 +31,7 @@ namespace Pet_Shop_Project.Models
             }
         }
 
-        public int UserId
+        public string UserId
         {
             get => _userId;
             set

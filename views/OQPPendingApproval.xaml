@@ -6,13 +6,14 @@
       xmlns:local="clr-namespace:Pet_Shop_Project.Views"
       mc:Ignorable="d" 
       d:DesignHeight="487" d:DesignWidth="920"
-      Title="OQPPendingApproval">
+      Title="OQPPendingApproval"
+      Background="White">
 
-    <ScrollViewer>
-        <ItemsControl>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ItemsControl ItemsSource="{Binding OrderPendings}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-
+                    
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

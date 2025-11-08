@@ -9,7 +9,7 @@ namespace Pet_Shop_Project.Models
 {
     public class User : INotifyPropertyChanged
     {
-        private int _userId;
+        private string _userId;
         private string _fullName;
         private string _email;
         private string _password;
@@ -17,7 +17,7 @@ namespace Pet_Shop_Project.Models
         private string _address;
         private string _role;
 
-        public int UserId
+        public string UserId
         {
             get => _userId;
             set
