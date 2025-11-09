@@ -26,7 +26,6 @@
                 NavigationUIVisibility="Hidden"
                 Source="Views/OrderQueuePage.xaml">
                 <!--Test Page-->
-
         </Frame>
     </Grid>
 </Window>

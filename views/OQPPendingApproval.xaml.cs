@@ -50,8 +50,9 @@ namespace Pet_Shop_Project.Views
             foreach (var order in _allOrders)
                 if (order.ApprovalStatus == "Waiting")
                     OrderPendings.Add(order);
-            
         }
+
+        public int TotalOrderPending => _orderPendings.Count;
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string nameProperty)

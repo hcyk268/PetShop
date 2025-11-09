@@ -1,10 +1,12 @@
-﻿using Pet_Shop_Project.Models;
+﻿using MaterialDesignColors.Recommended;
+using Pet_Shop_Project.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,12 +28,17 @@ namespace Pet_Shop_Project.Views
     {
         private ObservableCollection<Order> _allOrders;
 
+        private bool _active = false;
+
         private string _connectionDB = "Data Source=HAI\\SQLEXPRESS;Initial Catalog=PETSHOP;Integrated Security=True;";
+
+        
         public OrderQueuePage()
         {
             InitializeComponent();
             AllOrders = new ObservableCollection<Order>();
             GetDataFromDB();
+            MainScreenOQP.Navigate(new OQPPendingApproval(AllOrders));
         }
 
         public ObservableCollection<Order> AllOrders
@@ -41,6 +48,16 @@ namespace Pet_Shop_Project.Views
             {
                 _allOrders = value;
                 OnPropertyChanged(nameof(AllOrders));
+            }
+        }
+
+        public bool Active
+        {
+            get => _active;
+            set
+            {
+                _active = value;
+                OnPropertyChanged(nameof(Active));
             }
         }
 
@@ -135,9 +152,42 @@ namespace Pet_Shop_Project.Views
                 }
             }
         }
+
+        SolidColorBrush defaulttext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#222")); 
+        SolidColorBrush clickedtext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#ffa2a2"));
+        protected void setForeColorDefault()
+        {
+            odppendingbutton.Foreground = defaulttext;
+            odpshippingbutton.Foreground = defaulttext;
+            odpsuccessbutton.Foreground = defaulttext;
+            odpcanceledbutton.Foreground = defaulttext;
+        }
         private void odppendingbutton_Click(object sender, RoutedEventArgs e)
         {
+            setForeColorDefault();
+            odppendingbutton.Foreground = clickedtext;
             MainScreenOQP.Navigate(new OQPPendingApproval(AllOrders));
+        }
+
+        private void odpshippingbutton_Click(object sender, RoutedEventArgs e)
+        {
+            setForeColorDefault();
+            odpshippingbutton.Foreground = clickedtext;
+            MainScreenOQP.Navigate(new OQPShipping(AllOrders));
+        }
+
+        private void odpsuccessbutton_Click(object sender, RoutedEventArgs e)
+        {
+            setForeColorDefault();
+            odpsuccessbutton.Foreground = clickedtext;
+            MainScreenOQP.Navigate(new OQPSuccess(AllOrders));
+        }
+
+        private void odpcanceledbutton_Click(object sender, RoutedEventArgs e)
+        {
+            setForeColorDefault();
+            odpcanceledbutton.Foreground = clickedtext;
+            MainScreenOQP.Navigate(new OQPCanceled(AllOrders));
         }
     }
 }

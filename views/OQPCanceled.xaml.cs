@@ -65,6 +65,8 @@ namespace Pet_Shop_Project.Views
                     OrderCanceled.Add(order);
         }
 
+        public int TotalOrderCancel => _orderCanceled.Count;
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string nameProperty)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameProperty));

@@ -41,23 +41,22 @@
                 </Grid.ColumnDefinitions>
 
                 <Button x:Name="odppendingbutton" Grid.Column="0"
-                Margin="10,5,10,0"
-                Content="Đang Duyệt"
-                Style="{StaticResource ButtonQueuePageNavigation}" Click="odppendingbutton_Click" />
+                    Margin="10,5,10,0"
+                    Content="Đang Duyệt"
+                    Style="{StaticResource ButtonQueuePageNavigation}" Click="odppendingbutton_Click" />
                 <Button x:Name="odpshippingbutton" Grid.Column="1"
-                Margin="10,5,10,0"
-                Content="Đang Giao"
-                Style="{StaticResource ButtonQueuePageNavigation}" />
+                    Margin="10,5,10,0"
+                    Content="Đang Giao"
+                    Style="{StaticResource ButtonQueuePageNavigation}" Click="odpshippingbutton_Click" />
                 <Button x:Name="odpsuccessbutton" Grid.Column="2"
-                Margin="10,5,10,0"
-                Content="Đã Nhận"
-                Style="{StaticResource ButtonQueuePageNavigation}" />
+                    Margin="10,5,10,0"
+                    Content="Đã Nhận"
+                    Style="{StaticResource ButtonQueuePageNavigation}" Click="odpsuccessbutton_Click" />
                 <Button x:Name="odpcanceledbutton" Grid.Column="3"
-                Margin="10,5,10,0"
-                Content="Đã Hủy"
-                Style="{StaticResource ButtonQueuePageNavigation}" />
+                    Margin="10,5,10,0"
+                    Content="Đã Hủy"
+                    Style="{StaticResource ButtonQueuePageNavigation}" Click="odpcanceledbutton_Click" />
             </Grid>
-
         </Grid>
 
         <Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="#FFAFABAB">

@@ -65,6 +65,8 @@ namespace Pet_Shop_Project.Views
                     OrderSuccesses.Add(order);
         }
 
+        public int TotalSuccess => _orderSuccesses.Count;
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string nameProperty)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameProperty));

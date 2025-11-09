@@ -59,7 +59,7 @@
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Bg" Property="Background" Value="{StaticResource QP.BgHoverBrush}"/>
                             <Setter Property="Foreground" Value="{StaticResource QP.TextHoverBrush}"/>
-                            <Setter TargetName="Underline" Property="Background" Value="{StaticResource QP.AccentBrush}"/>
+                            
                         </Trigger>
 
                         <!-- Pressed -->
@@ -85,7 +85,6 @@
                             <Setter TargetName="Underline" Property="Background" Value="{StaticResource QP.AccentBrush}"/>
                             <Setter Property="Foreground" Value="{StaticResource QP.AccentBrush}"/>
                         </Trigger>
-
 
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

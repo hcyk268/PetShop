@@ -39,7 +39,7 @@ namespace Pet_Shop_Project.Views
         {
             OrderShippings.Clear();
             foreach (var order in _allOrders)
-                if (order.ShippingStatus == "Pending")
+                if (order.ShippingStatus == "Shipped")
                     OrderShippings.Add(order);
         }
         public ObservableCollection<Order> OrderShippings
@@ -51,6 +51,8 @@ namespace Pet_Shop_Project.Views
                 OnPropertyChanged(nameof(OrderShippings));
             }
         }
+
+        public int TotalOrderShipping => _ordersShippings.Count;
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string nameProperty)

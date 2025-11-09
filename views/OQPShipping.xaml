@@ -6,15 +6,83 @@
       xmlns:local="clr-namespace:Pet_Shop_Project.Views"
       mc:Ignorable="d" 
       d:DesignHeight="487" d:DesignWidth="920"
-      Title="OQPShipping">
+      Title="OQPShipping"
+      Background="White">
 
-    <ScrollViewer>
-        <ItemsControl>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </ScrollViewer>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="30,10,0,0">
+            <TextBlock Text="Tổng Số Đơn Hàng Đang Giao: " FontWeight="Bold"/>
+            <TextBlock Text="{Binding TotalOrderShipping}"/>
+        </StackPanel>
+        
+        <ScrollViewer Grid.Row="1"
+              VerticalScrollBarVisibility="Auto" 
+              Margin="20"
+              Background="Transparent">
+            <ScrollViewer.Resources>
+                <Style TargetType="ScrollBar">
+                    <Setter Property="Width" Value="6"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
+            </ScrollViewer.Resources>
+            <ItemsControl ItemsSource="{Binding OrderShippings}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="#FFA2A2" BorderThickness="1" CornerRadius="8" Margin="0 0 30 15" Padding="15">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0 0 0 8">
+                                    <TextBlock Text="Mã đơn hàng: " FontWeight="Bold" />
+                                    <TextBlock Text="{Binding OrderId}" Margin="4,0"/>
+                                    <TextBlock Text="    Ngày đặt: " FontWeight="Bold" Margin="10,0,0,0"/>
+                                    <TextBlock Text="{Binding OrderDate, StringFormat='{}{0:dd/MM/yyyy HH:mm}'}" Margin="4,0"/>
+                                    <TextBlock Text="    Tổng tiền: " FontWeight="Bold" />
+                                    <TextBlock Text="{Binding TotalAmount, StringFormat='{}{0:N0} ₫'}" Margin="4,0" Foreground="DarkRed"/>
+                                    <TextBlock Text="    Thanh toán: " FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding PaymentStatus}" Margin="4,0"/>
+                                    <TextBlock Text="    Vận chuyển: " FontWeight="Bold" Margin="10,0,0,0"/>
+                                    <TextBlock Text="{Binding ShippingStatus}" Margin="4,0"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0 0 0 8">
+                                    <TextBlock Text="Địa chỉ giao hàng: " FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Address}" TextWrapping="Wrap" Margin="0 0 0 5"/>
+                                </StackPanel>
+
+                                <!-- Danh sách sản phẩm -->
+                                <ItemsControl ItemsSource="{Binding Details}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="#FFC476" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0 0 0 5">
+                                                <DockPanel>
+                                                    <Image Source="{Binding Product.Picture}" Width="60" Height="60" Stretch="UniformToFill" Margin="0 0 10 0"/>
+                                                    <StackPanel>
+                                                        <TextBlock Text="{Binding Product.Name}" FontWeight="Bold"/>
+                                                        <TextBlock Text="{Binding Product.Description}" FontStyle="Italic" Foreground="Gray" TextWrapping="Wrap" MaxWidth="600"/>
+                                                        <TextBlock>
+                                                            <Run Text="Số lượng: "/>
+                                                            <Run Text="{Binding Quantity}"/>
+                                                            <Run Text=" | Giá: "/>
+                                                            <Run Text="{Binding Product.UnitPrice, StringFormat='{}{0:N0} ₫'}"/>
+                                                            <Run Text=" | Giảm: "/>
+                                                            <Run Text="{Binding Product.Discount, StringFormat='{}{0:P0}'}"/>
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                </DockPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
 </Page>
