@@ -40,19 +40,19 @@
                     <ColumnDefinition Width="0.25*"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0"
+                <Button x:Name="odppendingbutton" Grid.Column="0"
                 Margin="10,5,10,0"
                 Content="Đang Duyệt"
-                Style="{StaticResource ButtonQueuePageNavigation}" />
-                <Button Grid.Column="1"
+                Style="{StaticResource ButtonQueuePageNavigation}" Click="odppendingbutton_Click" />
+                <Button x:Name="odpshippingbutton" Grid.Column="1"
                 Margin="10,5,10,0"
                 Content="Đang Giao"
                 Style="{StaticResource ButtonQueuePageNavigation}" />
-                <Button Grid.Column="2"
+                <Button x:Name="odpsuccessbutton" Grid.Column="2"
                 Margin="10,5,10,0"
                 Content="Đã Nhận"
                 Style="{StaticResource ButtonQueuePageNavigation}" />
-                <Button Grid.Column="3"
+                <Button x:Name="odpcanceledbutton" Grid.Column="3"
                 Margin="10,5,10,0"
                 Content="Đã Hủy"
                 Style="{StaticResource ButtonQueuePageNavigation}" />
@@ -61,8 +61,8 @@
         </Grid>
 
         <Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="#FFAFABAB">
-            <Frame >
-
+            <Frame x:Name="MainScreenOQP">
+                
             </Frame>
         </Border>
 

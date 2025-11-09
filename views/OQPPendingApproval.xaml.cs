@@ -23,20 +23,38 @@ namespace Pet_Shop_Project.Views
     /// </summary>
     public partial class OQPPendingApproval : Page, INotifyPropertyChanged
     {
-        public OQPPendingApproval()
+        private ObservableCollection<Order> _orderPendings;
+        private ObservableCollection<Order> _allOrders;
+        public OQPPendingApproval(ObservableCollection<Order> allOrders)
         {
             InitializeComponent();
-            LoadPendingFromDB();
+            _allOrders = allOrders;
+            OrderPendings = new ObservableCollection<Order>();
+            FilterOrders();
+            _allOrders.CollectionChanged += (s, e) => FilterOrders();
+            DataContext = this;
         }
-        public ObservableCollection<Order> OrderPendings { set; get; }
+        public ObservableCollection<Order> OrderPendings 
+        {
+            get => _orderPendings;
+            set
+            {
+                _orderPendings = value;
+                OnPropertyChanged(nameof(OrderPendings));
+            }
+        }
+
+        protected void FilterOrders()
+        {
+            OrderPendings.Clear();
+            foreach (var order in _allOrders)
+                if (order.ApprovalStatus == "Waiting")
+                    OrderPendings.Add(order);
+            
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string nameProperty)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameProperty));
-
-        protected void LoadPendingFromDB()
-        {
-
-        }
     }
 }

@@ -23,13 +23,27 @@ namespace Pet_Shop_Project.Views
     /// </summary>
     public partial class OQPSuccess : Page, INotifyPropertyChanged
     {
-        public OQPSuccess()
+        private ObservableCollection<Order> _orderSuccesses;
+        private ObservableCollection<Order> _allOrders;
+        public OQPSuccess(ObservableCollection<Order> allOrders)
         {
             InitializeComponent();
-            LoadSuccessFromDB();
+            _allOrders = allOrders;
+            OrderSuccesses = new ObservableCollection<Order>();
+            FilterOrders();
+            _allOrders.CollectionChanged += (s, e) => FilterOrders();
+            DataContext = this;
         }
 
-        public ObservableCollection<Order> OrderSuccesss { set; get; }
+        public ObservableCollection<Order> OrderSuccesses
+        {
+            get => _orderSuccesses;
+            set
+            {
+                _orderSuccesses = value;
+                OnPropertyChanged(nameof(OrderSuccesses));
+            }
+        }
 
         private int _ToTalSuccess;
 
@@ -43,13 +57,17 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        protected void FilterOrders()
+        {
+            OrderSuccesses.Clear();
+            foreach (var order in _allOrders)
+                if (order.ShippingStatus == "Delivered")
+                    OrderSuccesses.Add(order);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string nameProperty)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameProperty));
 
-        protected void LoadSuccessFromDB()
-        {
-
-        }
     }
 }

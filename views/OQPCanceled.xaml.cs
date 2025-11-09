@@ -23,13 +23,27 @@ namespace Pet_Shop_Project.Views
     /// </summary>
     public partial class OQPCanceled : Page, INotifyPropertyChanged
     {
-        public OQPCanceled()
+        private ObservableCollection<Order> _orderCanceled;
+        private ObservableCollection<Order> _allOrders;
+        public OQPCanceled(ObservableCollection<Order> allOrders)
         {
             InitializeComponent();
-            LoadCanceledFromDB();
+            _allOrders = allOrders;
+            OrderCanceled = new ObservableCollection<Order>();
+            FilterOrders();
+            _allOrders.CollectionChanged += (s, e) => FilterOrders();
+            DataContext = this;
         }
 
-        public ObservableCollection<Order> OrderCanceled { set; get; }
+        public ObservableCollection<Order> OrderCanceled
+        {
+            get => _orderCanceled;
+            set
+            {
+                _orderCanceled = value;
+                OnPropertyChanged(nameof(OrderCanceled));
+            }
+        }
 
         private int _ToTalCanceled;
 
@@ -43,13 +57,17 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        protected void FilterOrders()
+        {
+            OrderCanceled.Clear();
+            foreach (var order in _allOrders)
+                if (order.ApprovalStatus == "Rejected")
+                    OrderCanceled.Add(order);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string nameProperty)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameProperty));
 
-        protected void LoadCanceledFromDB()
-        {
-
-        }
     }
 }

@@ -23,22 +23,38 @@ namespace Pet_Shop_Project.Views
     /// </summary>
     public partial class OQPShipping : Page, INotifyPropertyChanged
     {
-        public OQPShipping()
+        private ObservableCollection<Order> _ordersShippings;
+        private ObservableCollection<Order> _allOrders;
+        public OQPShipping(ObservableCollection<Order> allOrders)
         {
             InitializeComponent();
-            LoadShippingFromDB();
+            _allOrders = allOrders;
+            OrderShippings = new ObservableCollection<Order>();
+            FilterOrders();
+            _allOrders.CollectionChanged += (s, e) => FilterOrders();
+            DataContext = this;
         }
 
-        public ObservableCollection<Order> OrderShippings { set; get; }
+        protected void FilterOrders()
+        {
+            OrderShippings.Clear();
+            foreach (var order in _allOrders)
+                if (order.ShippingStatus == "Pending")
+                    OrderShippings.Add(order);
+        }
+        public ObservableCollection<Order> OrderShippings
+        {
+            get => _ordersShippings;
+            set
+            {
+                _ordersShippings = value;
+                OnPropertyChanged(nameof(OrderShippings));
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string nameProperty)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameProperty));
-
-        protected void LoadShippingFromDB()
-        {
-
-        }
 
     }
 }

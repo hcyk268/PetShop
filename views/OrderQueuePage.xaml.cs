@@ -135,26 +135,9 @@ namespace Pet_Shop_Project.Views
                 }
             }
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void odppendingbutton_Click(object sender, RoutedEventArgs e)
         {
-
+            MainScreenOQP.Navigate(new OQPPendingApproval(AllOrders));
         }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Button_Click_3(object sender, RoutedEventArgs e)
-        {
-
-        }
-
     }
-
 }
