@@ -30,6 +30,39 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="NavButtonStyle" TargetType="Button">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#ffc476" Offset="0"/>
+                    <GradientStop Color="#ffa2a2" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="10,5"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Width" Value="56"/>
+        <Setter Property="Height" Value="56"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border CornerRadius="30"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="RoundButtonStyle" TargetType="Button">
         <!-- Kích thước, màu sắc mặc định -->
         <Setter Property="Width" Value="100"/>
