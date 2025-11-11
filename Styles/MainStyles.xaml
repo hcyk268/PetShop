@@ -3,13 +3,21 @@
 
     <!--QueuePage-->
     <Style x:Key="HeaderOderQueuePage" TargetType="Grid">
-        <Setter Property="Background" Value="White"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="White" Offset="0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="TextHeaderOderQueuePage" TargetType="TextBlock">
         <Setter Property="Margin" Value="30,30,0,0"/>
         <Setter Property="FontSize" Value="30"/>
         <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="#222"/>
     </Style>
     
     <SolidColorBrush x:Key="QP.TextBrush" Color="#222" />
@@ -65,14 +73,7 @@
                         <!-- Pressed -->
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="Bg" Property="Background" Value="{StaticResource QP.BgPressedBrush}"/>
-                            <Setter TargetName="Underline" Property="Background" Value="{StaticResource QP.AccentBrush}"/>
-                            <Setter TargetName="Underline" Property="Height" Value="4"/>
                             <Setter Property="Foreground" Value="{StaticResource QP.AccentBrush}"/>
-                        </Trigger>
-
-                        <!-- Focus (bằng bàn phím) -->
-                        <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter TargetName="Underline" Property="Background" Value="{StaticResource QP.AccentBrush}"/>
                         </Trigger>
 
                         <!-- Disabled -->

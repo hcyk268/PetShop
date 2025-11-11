@@ -154,7 +154,7 @@ namespace Pet_Shop_Project.Views
         }
 
         SolidColorBrush defaulttext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#222")); 
-        SolidColorBrush clickedtext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#ffa2a2"));
+        SolidColorBrush clickedtext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF0000"));
         protected void setForeColorDefault()
         {
             odppendingbutton.Foreground = defaulttext;
