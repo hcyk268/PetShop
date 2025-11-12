@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using Pet_Shop_Project.Views;
 
 namespace Pet_Shop_Project.Services
 {
@@ -33,10 +34,7 @@ namespace Pet_Shop_Project.Services
 
         public void NavigateToHome()
         {
-            if (mainFrame != null)
-            {
-                mainFrame.Navigate(new HomePage());
-            }
+            mainFrame.Navigate(new HomePage());
         }
     }
 }
