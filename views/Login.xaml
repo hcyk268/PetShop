@@ -1,0 +1,95 @@
+﻿<Window x:Class="Pet_Shop_Project.Views.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="LoginWindow" Height="650" Width="1000"
+        Background="{DynamicResource MaterialDesignPaper}">
+    <Grid>
+        <!-- Layer 1: Hình nền mờ -->
+        <Image Source="/Images/download.jpg" 
+               Stretch="UniformToFill"
+               Opacity="0.4"/>
+        <Grid Margin="40">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <materialDesign:Card Grid.Row="1" 
+                             Padding="30" 
+                             Width="400" 
+                             MaxHeight="500"
+                             UniformCornerRadius="8" 
+                             materialDesign:ElevationAssist.Elevation="Dp8" 
+                             HorizontalAlignment="Center" 
+                             VerticalAlignment="Center"
+                             Background="{DynamicResource MaterialDesignBackground}">
+
+
+                <StackPanel>
+
+                    <materialDesign:PackIcon Kind="Paw" 
+                                             Width="60" 
+                                             Height="60" 
+                                             HorizontalAlignment="Center" 
+                                             Foreground="{DynamicResource PrimaryHueMidBrush}" 
+                                             Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Sign into your account" 
+                               FontSize="24" 
+                               FontWeight="Bold" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,15,0,25"
+                               Foreground="{DynamicResource MaterialDesignBody}"/>
+
+                    <TextBox x:Name="txtUsername"
+                             materialDesign:HintAssist.Hint="👤 Username" 
+                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Margin="0,0,0,15"/>
+
+                    <PasswordBox x:Name="txtPassword"
+                                 materialDesign:HintAssist.Hint="🔒 Password"
+                                 Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
+                                 Margin="0,0,0,10"/>
+
+                    <Grid Margin="0,0,0,30">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <CheckBox Content="Remember me" 
+                                  FontSize="14"
+                                  Grid.Column="0" 
+                                  VerticalAlignment="Center"/>
+
+                        <Button Content="Forgot Password?" 
+                                FontStyle="Italic"
+                                FontSize="14"
+                                Grid.Column="1" 
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                HorizontalAlignment="Right"/>
+                    </Grid>
+
+                    <Button Style="{StaticResource GradientButtonStyle}" 
+                            Content="LOGIN"
+                            Click="Login_Click"
+                            Height="45"
+                            FontSize="14"
+                            materialDesign:ButtonAssist.CornerRadius="5"/>
+
+                </StackPanel>
+
+            </materialDesign:Card>
+
+            <TextBlock Grid.Row="2" Text="© Pet Shop Management 2025"
+                   Foreground="Gray"
+                   HorizontalAlignment="Center"
+                   Margin="0 20 0 10"/>
+        </Grid>
+    </Grid>
+</Window>
