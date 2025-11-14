@@ -27,6 +27,8 @@ namespace Pet_Shop_Project.Views
             InitializeComponent();
             AllOrders = new ObservableCollection<Order>();
             GetDataFromDB();
+            setForeColorDefault();
+            odppendingbutton.Foreground = clickedtext;
             MainScreenOQP.Navigate(new OQPPendingApproval(AllOrders));
         }
 
@@ -143,7 +145,7 @@ namespace Pet_Shop_Project.Views
         }
 
         SolidColorBrush defaulttext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#222")); 
-        SolidColorBrush clickedtext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF0000"));
+        SolidColorBrush clickedtext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF6B6B"));
         protected void setForeColorDefault()
         {
             odppendingbutton.Foreground = defaulttext;
