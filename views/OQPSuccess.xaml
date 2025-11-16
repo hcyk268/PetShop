@@ -22,7 +22,7 @@
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="30,10,0,0">
             <TextBlock Text="Tổng Số Đơn Hàng Đã Giao Thành Công: " FontWeight="Bold" FontSize="15"/>
-            <TextBlock Text="{Binding TotalSuccess}" FontSize="15"/>
+            <TextBlock Text="{Binding TotalOrderSuccess}" FontSize="15"/>
         </StackPanel>
 
         <ScrollViewer Grid.Row="1"

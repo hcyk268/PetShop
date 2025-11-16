@@ -148,10 +148,7 @@ namespace Pet_Shop_Project.Views
         SolidColorBrush clickedtext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF6B6B"));
         protected void setForeColorDefault()
         {
-            odppendingbutton.Foreground = defaulttext;
-            odpshippingbutton.Foreground = defaulttext;
-            odpsuccessbutton.Foreground = defaulttext;
-            odpcanceledbutton.Foreground = defaulttext;
+            odppendingbutton.Foreground = odpshippingbutton.Foreground = odpsuccessbutton.Foreground = odpcanceledbutton.Foreground = defaulttext;
         }
         private void odppendingbutton_Click(object sender, RoutedEventArgs e)
         {
