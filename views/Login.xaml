@@ -29,61 +29,9 @@
                              VerticalAlignment="Center"
                              Background="{DynamicResource MaterialDesignBackground}">
 
-
-                <StackPanel>
-
-                    <materialDesign:PackIcon Kind="Paw" 
-                                             Width="60" 
-                                             Height="60" 
-                                             HorizontalAlignment="Center" 
-                                             Foreground="{DynamicResource PrimaryHueMidBrush}" 
-                                             Margin="0,0,0,10"/>
-
-                    <TextBlock Text="Sign into your account" 
-                               FontSize="24" 
-                               FontWeight="Bold" 
-                               HorizontalAlignment="Center" 
-                               Margin="0,15,0,25"
-                               Foreground="{DynamicResource MaterialDesignBody}"/>
-
-                    <TextBox x:Name="txtUsername"
-                             materialDesign:HintAssist.Hint="👤 Username" 
-                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                             Margin="0,0,0,15"/>
-
-                    <PasswordBox x:Name="txtPassword"
-                                 materialDesign:HintAssist.Hint="🔒 Password"
-                                 Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
-                                 Margin="0,0,0,10"/>
-
-                    <Grid Margin="0,0,0,30">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <CheckBox Content="Remember me" 
-                                  FontSize="14"
-                                  Grid.Column="0" 
-                                  VerticalAlignment="Center"/>
-
-                        <Button Content="Forgot Password?" 
-                                FontStyle="Italic"
-                                FontSize="14"
-                                Grid.Column="1" 
-                                Style="{StaticResource MaterialDesignFlatButton}"
-                                HorizontalAlignment="Right"/>
-                    </Grid>
-
-                    <Button Style="{StaticResource GradientButtonStyle}" 
-                            Content="LOGIN"
-                            Click="Login_Click"
-                            Height="45"
-                            FontSize="14"
-                            materialDesign:ButtonAssist.CornerRadius="5"/>
-
-                </StackPanel>
-
+                <Frame x:Name="MainFrame"
+                    NavigationUIVisibility="Hidden"/>
+                
             </materialDesign:Card>
 
             <TextBlock Grid.Row="2" Text="© Pet Shop Management 2025"
