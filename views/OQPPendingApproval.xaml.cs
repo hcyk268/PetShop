@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -26,7 +27,7 @@ namespace Pet_Shop_Project.Views
     {
         private ObservableCollection<Order> _orderPendings;
         private ObservableCollection<Order> _allOrders;
-        private string _connectionDB = "Data Source=HAI\\SQLEXPRESS;Initial Catalog=PETSHOP;Integrated Security=True;";
+        private readonly string _connectionDB = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
         public OQPPendingApproval(ObservableCollection<Order> allOrders)
         {
             InitializeComponent();

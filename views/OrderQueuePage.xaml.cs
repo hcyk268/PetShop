@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-
+using System.Configuration;
 
 namespace Pet_Shop_Project.Views
 {
@@ -19,9 +19,9 @@ namespace Pet_Shop_Project.Views
 
         private bool _active = false;
 
-        private string _connectionDB = "Data Source=HAI\\SQLEXPRESS;Initial Catalog=PETSHOP;Integrated Security=True;";
+        private readonly string _connectionDB = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
 
-        
+
         public OrderQueuePage()
         {
             InitializeComponent();
