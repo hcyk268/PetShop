@@ -82,7 +82,11 @@
       <HintPath>packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+<<<<<<< HEAD
     <Reference Include="System.Configuration" />
+=======
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+>>>>>>> main
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -105,8 +109,15 @@
     <Compile Include="Controls\NavigationBar.xaml.cs">
       <DependentUpon>NavigationBar.xaml</DependentUpon>
     </Compile>
+<<<<<<< HEAD
     <Compile Include="Services\ConvertLanguage.cs" />
+=======
+    <Compile Include="Models\CartService.cs" />
+>>>>>>> main
     <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Views\Cart.xaml.cs">
+      <DependentUpon>Cart.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
     </Compile>
@@ -124,6 +135,9 @@
     </Compile>
     <Compile Include="Views\OrderQueuePage.xaml.cs">
       <DependentUpon>OrderQueuePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Payment.xaml.cs">
+      <DependentUpon>Payment.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\NavigationBar.xaml">
       <SubType>Designer</SubType>
@@ -153,6 +167,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Cart.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\HomePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -174,6 +192,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\OrderQueuePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Payment.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
