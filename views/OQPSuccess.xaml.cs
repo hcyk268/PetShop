@@ -45,27 +45,17 @@ namespace Pet_Shop_Project.Views
             }
         }
 
-        private int _ToTalSuccess;
-
-        public int ToTalSuccess
-        {
-            get => _ToTalSuccess;
-            set
-            {
-                _ToTalSuccess = value;
-                OnPropertyChanged(nameof(ToTalSuccess));
-            }
-        }
-
         protected void FilterOrders()
         {
             OrderSuccesses.Clear();
             foreach (var order in _allOrders)
                 if (order.ShippingStatus == "Delivered")
                     OrderSuccesses.Add(order);
+            
+            OnPropertyChanged(nameof(TotalOrderSuccess));
         }
 
-        public int TotalSuccess => _orderSuccesses.Count;
+        public int TotalOrderSuccess => _orderSuccesses.Count;
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string nameProperty)

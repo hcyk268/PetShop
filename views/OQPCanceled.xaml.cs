@@ -45,24 +45,14 @@ namespace Pet_Shop_Project.Views
             }
         }
 
-        private int _ToTalCanceled;
-
-        public int ToTalCanceled
-        {
-            get => _ToTalCanceled;
-            set
-            {
-                _ToTalCanceled = value;
-                OnPropertyChanged(nameof(ToTalCanceled));
-            }
-        }
-
         protected void FilterOrders()
         {
             OrderCanceled.Clear();
             foreach (var order in _allOrders)
                 if (order.ApprovalStatus == "Rejected")
                     OrderCanceled.Add(order);
+
+            OnPropertyChanged(nameof(TotalOrderCancel));
         }
 
         public int TotalOrderCancel => _orderCanceled.Count;

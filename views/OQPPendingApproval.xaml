@@ -4,11 +4,17 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Pet_Shop_Project.Views"
+      xmlns:services="clr-namespace:Pet_Shop_Project.Services"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       d:DesignHeight="487" d:DesignWidth="920"
       Title="OQPPendingApproval"
       Background="White">
-    
+
+    <Page.Resources>
+        <services:ConvertLanguage x:Key="LangConverter"/>
+    </Page.Resources>
+
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -16,8 +22,8 @@
         </Grid.RowDefinitions>
         
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="30,10,0,0">
-            <TextBlock Text="Tổng Số Đơn Hàng Đang Đợi Duyệt: " FontWeight="Bold"/>
-            <TextBlock Text="{Binding TotalOrderPending}"/>
+            <TextBlock Text="Tổng Số Đơn Hàng Đang Đợi Duyệt: " FontWeight="Bold" FontSize="15"/>
+            <TextBlock Text="{Binding TotalOrderPending}" FontSize="15"/>
         </StackPanel>
         
         <ScrollViewer Grid.Row="1"
@@ -34,25 +40,42 @@
             <ItemsControl ItemsSource="{Binding OrderPendings}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border BorderBrush="#FFA2A2" BorderThickness="1" CornerRadius="8" Margin="0 0 30 15" Padding="15">
+                        <Border Style="{StaticResource TemplateODQ}">
                             <StackPanel>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0 0 0 8">
-                                    <TextBlock Text="Mã đơn hàng: " FontWeight="Bold" />
-                                    <TextBlock Text="{Binding OrderId}" Margin="4,0"/>
-                                    <TextBlock Text="    Ngày đặt: " FontWeight="Bold" Margin="10,0,0,0"/>
-                                    <TextBlock Text="{Binding OrderDate, StringFormat='{}{0:dd/MM/yyyy HH:mm}'}" Margin="4,0"/>
-                                    <TextBlock Text="    Tổng tiền: " FontWeight="Bold" />
-                                    <TextBlock Text="{Binding TotalAmount, StringFormat='{}{0:N0} ₫'}" Margin="4,0" Foreground="DarkRed"/>
-                                    <TextBlock Text="    Thanh toán: " FontWeight="Bold"/>
-                                    <TextBlock Text="{Binding PaymentStatus}" Margin="4,0"/>
-                                    <TextBlock Text="    Vận chuyển: " FontWeight="Bold" Margin="10,0,0,0"/>
-                                    <TextBlock Text="{Binding ShippingStatus}" Margin="4,0"/>
-                                </StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <StackPanel Grid.Column="0">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0 0 0 8">
+                                            <TextBlock Text="Mã đơn hàng: " FontWeight="Bold" Foreground="Blue"/>
+                                            <TextBlock Text="{Binding OrderId}" Margin="4,0"/>
+                                            <TextBlock Text="    Ngày đặt: " FontWeight="Bold" Margin="10,0,0,0"/>
+                                            <TextBlock Text="{Binding OrderDate, StringFormat='{}{0:dd/MM/yyyy HH:mm}'}" Margin="4,0"/>
+                                            <TextBlock Text="    Tổng tiền: " FontWeight="Bold" />
+                                            <TextBlock Text="{Binding TotalAmount, StringFormat='{}{0:N0} ₫'}" Margin="4,0" Foreground="Red"/>
+                                            <TextBlock Text="    Thanh toán: " FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding PaymentStatus, Converter={StaticResource LangConverter}}" Margin="4,0"/>
+                                        </StackPanel>
 
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0 0 0 8">
-                                    <TextBlock Text="Ghi chú: " FontWeight="Bold"/>
-                                    <TextBlock Text="{Binding Note}" TextWrapping="Wrap" Margin="0 0 0 10"/>
-                                </StackPanel>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0 0 0 8">
+                                            <TextBlock Text="Ghi chú: " FontWeight="Bold" Foreground="Red"/>
+                                            <TextBlock Text="{Binding Note}" TextWrapping="Wrap" Margin="0 0 0 10"/>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <Button x:Name="buttondeleteorder" Grid.Column="1"
+                                                Style="{StaticResource MaterialDesignToolButton}"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Top"
+                                                ToolTip="Xóa Đơn Đặt Hàng" 
+                                                Click="buttondeleteorder_Click"
+                                                Tag="{Binding OrderId}">
+                                        <materialDesign:PackIcon Kind="Delete" Width="25" Height="25" Foreground="#E53935"/>
+                                    </Button>
+                                </Grid>
 
                                 <!-- Danh sách sản phẩm -->
                                 <ItemsControl ItemsSource="{Binding Details}">

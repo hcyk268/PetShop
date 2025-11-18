@@ -82,6 +82,7 @@
       <HintPath>packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -105,6 +106,7 @@
     <Compile Include="Controls\NavigationBar.xaml.cs">
       <DependentUpon>NavigationBar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\ConvertLanguage.cs" />
     <Compile Include="Models\CartService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Views\Cart.xaml.cs">
