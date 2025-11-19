@@ -18,21 +18,23 @@
                 </Grid.RowDefinitions>
 
                 <!-- Header with Back Button -->
-                <Grid Grid.Row="0" Margin="0,0,0,25">
-                    <Button Style="{StaticResource RoundButtonStyle}" 
-                            ToolTip="Chọn tất cả"
+                <Grid Grid.Row="0" Margin="-10,0,0,25">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Height="69">
+                        <Button Style="{StaticResource RoundButtonStyle}" 
+                            ToolTip="Trở về"
                             Click="BackButton_Click" 
                             Height="50" 
                             Width="50"
-                            Margin="0,4,850,-4">
-                        <materialDesign:PackIcon x:Name="BackButton" 
+                            Margin="10,0,0,0">
+                            <materialDesign:PackIcon x:Name="BackButton" 
                              Kind="ArrowLeft" 
                              Width="30" 
                              Height="30"/>
-                    </Button>
+                        </Button>
+                    </StackPanel>
 
                     <TextBlock Text="Thanh toán" 
-                               FontSize="32" 
+                               FontSize="40" 
                                FontWeight="SemiBold"
                                Foreground="#333333"
                                HorizontalAlignment="Center"
@@ -189,13 +191,14 @@
                                                            Text="{Binding Price, StringFormat=₫ {0:N0}}" 
                                                            FontSize="16" 
                                                            FontWeight="SemiBold"
-                                                           Foreground="{StaticResource QP.AccentBrush}"
+                                                           Foreground="#ff6b6b"
                                                            VerticalAlignment="Center"/>
                                             </Grid>
                                         </Border>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
+
                             <!-- Total Products and Amount -->
                             <Border Background="#F8F8F8"
                                     CornerRadius="8"
@@ -245,7 +248,6 @@
                             </Grid>
 
                             <!-- Viettel Post (Selected) -->
-
                             <RadioButton x:Name="ViettelPostOption"
                                          Style="{StaticResource ShippingOptionStyle}"
                                          IsChecked="True"
@@ -461,7 +463,7 @@
                                 <TextBlock x:Name="TotalAmountText"
                                            FontSize="20"
                                            FontWeight="Bold"
-                                           Foreground="{StaticResource QP.AccentBrush}"
+                                           Foreground="#FF6B6B"
                                            HorizontalAlignment="Right" Grid.Column="1"/>
                             </Grid>
                         </StackPanel>

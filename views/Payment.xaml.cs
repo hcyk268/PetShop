@@ -72,8 +72,7 @@ namespace Pet_Shop_Project.Views
                         Name = "Thức ăn cho chó Royal Canin",
                         Description = "Size 5kg",
                         UnitPrice = 500000,
-                        Discount = 0,
-                        Picture = "/Assets/sample-product.jpg",
+                        Picture = "https://www.petmart.vn/wp-content/uploads/2021/06/thuc-an-cho-cho-poodle-con-royal-canin-poodle-puppy1.jpg",
                         UnitInStock = 50
                     }
                 },
@@ -86,10 +85,9 @@ namespace Pet_Shop_Project.Views
                     {
                         ProductId = "P002",
                         Name = "Đồ chơi cho mèo",
-                        Description = "Chuột nhồi bông",
+                        Description = "Tháp bóng",
                         UnitPrice = 150000,
-                        Discount = 0.1, // Giảm 10%
-                        Picture = "/Assets/sample-product2.jpg",
+                        Picture = "https://dathangsi.vn/upload/products/2023/07/0459-do-choi-cho-meo.jpg",
                         UnitInStock = 100
                     }
                 }
@@ -218,7 +216,6 @@ namespace Pet_Shop_Project.Views
             UpdateSummary();
         }
 
-        // Đặt hàng
         // Đặt hàng
         private void PlaceOrder_Click(object sender, RoutedEventArgs e)
         {
