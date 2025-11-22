@@ -1,0 +1,75 @@
+﻿<UserControl x:Class="Pet_Shop_Project.Controls.ProductCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             Width="150" Height="auto"
+             Margin="10">
+
+    <Border Background="White"
+            CornerRadius="12"
+            Cursor="Hand">
+        <Border.Effect>
+            <DropShadowEffect ShadowDepth="0" 
+                            BlurRadius="10" 
+                            Opacity="0.15" 
+                            Color="Black"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="140"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Product Image -->
+            <Border Grid.Row="0"
+                    Background="#F5F5F5"
+                    CornerRadius="12,12,0,0"
+                    ClipToBounds="True">
+                <Image x:Name="ProductImage"
+                       Stretch="UniformToFill"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+            </Border>
+
+            <!-- Product Info -->
+            <StackPanel Grid.Row="1" 
+                       Margin="12,8,12,12">
+
+                <!-- Product Name -->
+                <TextBlock x:Name="ProductName"
+                          Text="Tên sản phẩm"
+                          FontSize="14"
+                          FontWeight="SemiBold"
+                          Foreground="#333333"
+                          TextTrimming="CharacterEllipsis"
+                          MaxHeight="35"
+                          TextWrapping="Wrap"
+                          Margin="0,0,0,3"/>
+
+                <!-- Rating -->
+                <StackPanel Orientation="Horizontal"
+                           Margin="0,0,0,3">
+                    <StackPanel x:Name="StarPanel" 
+                               Orientation="Horizontal"
+                               Margin="0,0,0,0"/>
+                    <TextBlock x:Name="RatingText"
+                              Text="5/5"
+                              FontSize="9"
+                              Foreground="#FFA500"
+                              VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Price -->
+                <TextBlock x:Name="ProductPrice"
+                          Text="75.000 đ"
+                          FontSize="14"
+                          FontWeight="Bold"
+                          Foreground="#FF6B6B"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

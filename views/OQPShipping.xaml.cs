@@ -41,6 +41,8 @@ namespace Pet_Shop_Project.Views
             foreach (var order in _allOrders)
                 if (order.ShippingStatus == "Shipped")
                     OrderShippings.Add(order);
+
+            OnPropertyChanged(nameof(TotalOrderShipping));
         }
         public ObservableCollection<Order> OrderShippings
         {

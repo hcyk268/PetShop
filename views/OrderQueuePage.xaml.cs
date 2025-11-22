@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-
+using System.Configuration;
 
 namespace Pet_Shop_Project.Views
 {
@@ -19,14 +19,16 @@ namespace Pet_Shop_Project.Views
 
         private bool _active = false;
 
-        private string _connectionDB = "Data Source=HAI\\SQLEXPRESS;Initial Catalog=PETSHOP;Integrated Security=True;";
+        private readonly string _connectionDB = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
 
-        
+
         public OrderQueuePage()
         {
             InitializeComponent();
             AllOrders = new ObservableCollection<Order>();
             GetDataFromDB();
+            setForeColorDefault();
+            odppendingbutton.Foreground = clickedtext;
             MainScreenOQP.Navigate(new OQPPendingApproval(AllOrders));
         }
 
@@ -143,13 +145,10 @@ namespace Pet_Shop_Project.Views
         }
 
         SolidColorBrush defaulttext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#222")); 
-        SolidColorBrush clickedtext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF0000"));
+        SolidColorBrush clickedtext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF6B6B"));
         protected void setForeColorDefault()
         {
-            odppendingbutton.Foreground = defaulttext;
-            odpshippingbutton.Foreground = defaulttext;
-            odpsuccessbutton.Foreground = defaulttext;
-            odpcanceledbutton.Foreground = defaulttext;
+            odppendingbutton.Foreground = odpshippingbutton.Foreground = odpsuccessbutton.Foreground = odpcanceledbutton.Foreground = defaulttext;
         }
         private void odppendingbutton_Click(object sender, RoutedEventArgs e)
         {

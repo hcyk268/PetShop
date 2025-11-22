@@ -22,7 +22,9 @@
         </Grid>
 
         <Frame Grid.Column="1" 
-                x:Name="MainScreen">
+                x:Name="MainScreen"
+               NavigationUIVisibility="Hidden"
+               Source="Views/OrderQueuePage.xaml">
                 <!--Test Page-->
         </Frame>
     </Grid>
