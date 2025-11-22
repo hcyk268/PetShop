@@ -106,9 +106,6 @@
     <Compile Include="Controls\NavigationBar.xaml.cs">
       <DependentUpon>NavigationBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ProductCard.xaml.cs">
-      <DependentUpon>ProductCard.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Services\ConvertLanguage.cs" />
     <Compile Include="Models\CartService.cs" />
     <Compile Include="Services\NavigationService.cs" />
