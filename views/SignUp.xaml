@@ -1,0 +1,111 @@
+﻿<Page x:Class="Pet_Shop_Project.Views.SignUp"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="30" MaxWidth="400">
+            <!-- Logo -->
+            <Image Source="/Images/peach.png"
+                   Width="60"
+                   Height="60"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,10"/>
+
+            <!-- Title -->
+            <TextBlock Text="Create your account" 
+                       FontSize="24" 
+                       FontWeight="Bold" 
+                       HorizontalAlignment="Center" 
+                       Margin="0,15,0,25"
+                       Foreground="{DynamicResource MaterialDesignBody}"/>
+
+            <!-- Full Name -->
+            <TextBox x:Name="FullNameTextBox"
+                     materialDesign:HintAssist.Hint="👤 Full Name"
+                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                     Margin="0,0,0,15"
+                     FontSize="14"/>
+
+            <!-- Username -->
+            <TextBox x:Name="UsernameTextBox"
+                     materialDesign:HintAssist.Hint="✨ Username"
+                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                     Margin="0,0,0,15"
+                     FontSize="14"/>
+
+            <!-- Email -->
+            <TextBox x:Name="EmailTextBox"
+                     materialDesign:HintAssist.Hint="📧 Email"
+                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                     Margin="0,0,0,15"
+                     FontSize="14"/>
+
+            <!-- Phone Number -->
+            <TextBox x:Name="PhoneTextBox"
+                     materialDesign:HintAssist.Hint="📱 Phone Number"
+                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                     Margin="0,0,0,15"
+                     FontSize="14"/>
+
+            <!-- Password -->
+            <PasswordBox x:Name="PasswordBox"
+                         materialDesign:HintAssist.Hint="🔒 Password"
+                         Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
+                         Margin="0,0,0,15"
+                         FontSize="14"/>
+
+            <!-- Confirm Password -->
+            <PasswordBox x:Name="ConfirmPasswordBox"
+                         materialDesign:HintAssist.Hint="🔒 Confirm Password"
+                         Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
+                         Margin="0,0,0,10"
+                         FontSize="14"
+                         KeyDown="ConfirmPasswordBox_KeyDown"/>
+
+            <!-- Terms and Conditions -->
+            <CheckBox x:Name="AgreeTermsCheckBox"
+                      Margin="0,10,0,20"
+                      FontSize="13">
+                <TextBlock TextWrapping="Wrap">
+                    <Run Text="I agree to the "/>
+                    <Hyperlink Click="Terms_Click">Terms and Conditions</Hyperlink>
+                </TextBlock>
+            </CheckBox>
+
+            <!-- Error Message -->
+            <TextBlock x:Name="ErrorMessageTextBlock"
+                       Foreground="Red"
+                       FontSize="12"
+                       Margin="0,0,0,10"
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Center"
+                       Visibility="Collapsed"/>
+
+            <!-- Sign Up Button -->
+            <Button x:Name="SignUpButton"
+                    Content="SIGN UP"
+                    Height="45"
+                    FontSize="14"
+                    Style="{StaticResource GradientButtonStyle}"
+                    materialDesign:ButtonAssist.CornerRadius="5"
+                    Click="SignUp_Click"
+                    Margin="0,0,0,15"/>
+
+            <!-- Already have account -->
+            <StackPanel Orientation="Horizontal" 
+                        HorizontalAlignment="Center"
+                        Margin="0,10,0,0">
+                <TextBlock Text="Already have an account? " 
+                           FontSize="14"
+                           VerticalAlignment="Center"/>
+                <Button Content="Sign in"
+                        Style="{StaticResource MaterialDesignFlatButton}"
+                        Click="SignIn_Click"
+                        FontStyle="Italic"
+                        FontSize="14"
+                        Padding="5,0"/>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>
