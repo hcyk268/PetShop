@@ -31,5 +31,9 @@ namespace Pet_Shop_Project.Controls
             Services.NavigationService.Instance.NavigateToHome();
         }
 
+        private void OrderButton_Click(object sender, RoutedEventArgs e)
+        {
+            Services.NavigationService.Instance.NavigateToOrder();
+        }
     }
 }

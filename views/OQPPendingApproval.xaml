@@ -7,7 +7,7 @@
       xmlns:services="clr-namespace:Pet_Shop_Project.Services"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
-      d:DesignHeight="487" d:DesignWidth="920"
+      d:DesignHeight="487" d:DesignWidth="940"
       Title="OQPPendingApproval"
       Background="White">
 

@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:Pet_Shop_Project.Views"
       xmlns:services="clr-namespace:Pet_Shop_Project.Services"
       mc:Ignorable="d" 
-      d:DesignHeight="487" d:DesignWidth="920"
+      d:DesignHeight="487" d:DesignWidth="940"
       Title="OQPCanceled"
       Background="White">
 

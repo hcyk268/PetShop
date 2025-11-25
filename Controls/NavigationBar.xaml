@@ -54,10 +54,10 @@
                 </Button>
 
                 <!-- Accessories Button -->
-                <Button x:Name="AccessoriesButton"
+                <Button x:Name="OrderButton"
                         Style="{StaticResource NavButtonStyle}" 
-                        ToolTip="Phụ kiện"
-                        Tag="Accessories">
+                        ToolTip="Các Đơn Hàng"
+                        Tag="Accessories" Click="OrderButton_Click">
                     <StackPanel>
                         <materialDesign:PackIcon Kind="ReceiptTextClock" 
                                                 Width="30" 
