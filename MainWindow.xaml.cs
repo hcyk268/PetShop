@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Pet_Shop_Project.Services;
 
 namespace Pet_Shop_Project
 {
@@ -21,7 +22,7 @@ namespace Pet_Shop_Project
         public MainWindow()
         {
             InitializeComponent();
-            
+            Services.NavigationService.Instance.Initialize(MainScreen);
         }
     }
 }
