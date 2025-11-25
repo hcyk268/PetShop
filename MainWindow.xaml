@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pet_Shop_Project"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:controls="clr-namespace:Pet_Shop_Project.Controls"
         mc:Ignorable="d"
         Title="Pet Shop" 
         Height="650" Width="1000" 
@@ -13,77 +14,14 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="920"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Sidebar -->
-        <Grid Grid.Column="0" Background="#FF2196F3">
-            <StackPanel VerticalAlignment="Top" Margin="0,20,0,0">
-                <!-- Logo -->
-                <Image Source="/Images/peach.png" 
-                       Width="50" 
-                       Height="50" 
-                       Margin="0,0,0,30"/>
-
-                <!-- Menu Items -->
-                <Button x:Name="HomeButton"
-                        Width="60" 
-                        Height="60"
-                        Margin="0,10"
-                        Style="{StaticResource MaterialDesignFloatingActionButton}"
-                        ToolTip="Home"
-                        Click="HomeButton_Click">
-                    <materialDesign:PackIcon Kind="Home" 
-                                           Width="30" 
-                                           Height="30"/>
-                </Button>
-
-                <Button x:Name="ProductsButton"
-                        Width="60" 
-                        Height="60"
-                        Margin="0,10"
-                        Style="{StaticResource MaterialDesignFloatingActionButton}"
-                        ToolTip="Products"
-                        Click="ProductsButton_Click">
-                    <materialDesign:PackIcon Kind="Shopping" 
-                                           Width="30" 
-                                           Height="30"/>
-                </Button>
-
-                <Button x:Name="OrdersButton"
-                        Width="60" 
-                        Height="60"
-                        Margin="0,10"
-                        Style="{StaticResource MaterialDesignFloatingActionButton}"
-                        ToolTip="Orders"
-                        Click="OrdersButton_Click">
-                    <materialDesign:PackIcon Kind="Cart" 
-                                           Width="30" 
-                                           Height="30"/>
-                </Button>
-            </StackPanel>
-
-            <!-- Logout Button (Bottom) -->
-            <Button x:Name="LogoutButton"
-                    Width="60" 
-                    Height="60"
-                    Margin="0,0,0,20"
-                    VerticalAlignment="Bottom"
-                    Style="{StaticResource MaterialDesignFloatingActionButton}"
-                    ToolTip="Logout"
-                    Click="LogoutButton_Click">
-                <materialDesign:PackIcon Kind="Logout" 
-                                       Width="30" 
-                                       Height="30"/>
-            </Button>
-        </Grid>
-
+        <controls:NavigationBar Grid.Column="0" Margin="0,0,0,0"/>
         <!-- Main Content Frame -->
         <Frame Grid.Column="1" 
-
-                x:Name="MainScreen"
-               NavigationUIVisibility="Hidden"
-               Source="Views/OrderQueuePage.xaml">
+               x:Name="MainScreen"
+               NavigationUIVisibility="Hidden">
         </Frame>
 
     </Grid>

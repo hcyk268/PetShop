@@ -21,29 +21,7 @@ namespace Pet_Shop_Project
         public MainWindow()
         {
             InitializeComponent();
-
-            // Navigate đến trang đầu tiên
-            MainFrame.Navigate(new SignIn());
-        }
-
-        private void HomeButton_Click(object sender, RoutedEventArgs e)
-        {
-            // MainFrame.Navigate(new HomePage());
-        }
-
-        private void ProductsButton_Click(object sender, RoutedEventArgs e)
-        {
-            // MainFrame.Navigate(new ProductsPage());
-        }
-
-        private void OrdersButton_Click(object sender, RoutedEventArgs e)
-        {
-            // MainFrame.Navigate(new OrdersPage());
-        }
-
-        private void LogoutButton_Click(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(new SignIn());
+            
         }
     }
 }
