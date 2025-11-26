@@ -1,10 +1,10 @@
 ﻿<Page x:Class="Pet_Shop_Project.Views.SignUp"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" Height="368">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="30" MaxWidth="400">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Width="353" Margin="0,-28,0,0">
+        <StackPanel Margin="30" MaxWidth="400" Width="271" Height="701">
             <!-- Logo -->
             <Image Source="/Images/peach.png"
                    Width="60"
@@ -13,23 +13,23 @@
                    Margin="0,0,0,10"/>
 
             <!-- Title -->
-            <TextBlock Text="Create your account" 
-                       FontSize="24" 
+            <TextBlock Text="Tạo tài khoản mới" 
+                       FontSize="25" 
                        FontWeight="Bold" 
                        HorizontalAlignment="Center" 
-                       Margin="0,15,0,25"
+                       Margin="0,0,0,20"
                        Foreground="{DynamicResource MaterialDesignBody}"/>
 
             <!-- Full Name -->
             <TextBox x:Name="FullNameTextBox"
-                     materialDesign:HintAssist.Hint="👤 Full Name"
+                     materialDesign:HintAssist.Hint="👤 Họ và tên"
                      Style="{StaticResource MaterialDesignOutlinedTextBox}"
                      Margin="0,0,0,15"
                      FontSize="14"/>
 
             <!-- Username -->
             <TextBox x:Name="UsernameTextBox"
-                     materialDesign:HintAssist.Hint="✨ Username"
+                     materialDesign:HintAssist.Hint="✨ Tên đăng nhập"
                      Style="{StaticResource MaterialDesignOutlinedTextBox}"
                      Margin="0,0,0,15"
                      FontSize="14"/>
@@ -43,23 +43,23 @@
 
             <!-- Phone Number -->
             <TextBox x:Name="PhoneTextBox"
-                     materialDesign:HintAssist.Hint="📱 Phone Number"
+                     materialDesign:HintAssist.Hint="📱 Số điện thoại"
                      Style="{StaticResource MaterialDesignOutlinedTextBox}"
                      Margin="0,0,0,15"
                      FontSize="14"/>
 
             <!-- Password -->
             <PasswordBox x:Name="PasswordBox"
-                         materialDesign:HintAssist.Hint="🔒 Password"
+                         materialDesign:HintAssist.Hint="🔒 Mật khẩu"
                          Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
                          Margin="0,0,0,15"
                          FontSize="14"/>
 
             <!-- Confirm Password -->
             <PasswordBox x:Name="ConfirmPasswordBox"
-                         materialDesign:HintAssist.Hint="🔒 Confirm Password"
+                         materialDesign:HintAssist.Hint="🔒 Xác nhận mật khẩu"
                          Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
-                         Margin="0,0,0,10"
+                         Margin="0,0,0,15"
                          FontSize="14"
                          KeyDown="ConfirmPasswordBox_KeyDown"/>
 
@@ -68,8 +68,8 @@
                       Margin="0,10,0,20"
                       FontSize="13">
                 <TextBlock TextWrapping="Wrap">
-                    <Run Text="I agree to the "/>
-                    <Hyperlink Click="Terms_Click">Terms and Conditions</Hyperlink>
+                    <Run Text="Tôi đồng ý với mọi "/>
+                    <Hyperlink Click="Terms_Click">Điều kiện và điều khoản</Hyperlink>
                 </TextBlock>
             </CheckBox>
 
@@ -84,22 +84,22 @@
 
             <!-- Sign Up Button -->
             <Button x:Name="SignUpButton"
-                    Content="SIGN UP"
+                    Content="ĐĂNG KÝ"
                     Height="45"
                     FontSize="14"
                     Style="{StaticResource GradientButtonStyle}"
                     materialDesign:ButtonAssist.CornerRadius="5"
                     Click="SignUp_Click"
-                    Margin="0,0,0,15"/>
+                    Margin="0,0,0,6"/>
 
             <!-- Already have account -->
             <StackPanel Orientation="Horizontal" 
                         HorizontalAlignment="Center"
                         Margin="0,10,0,0">
-                <TextBlock Text="Already have an account? " 
+                <TextBlock Text="Đã có tài khoản? " 
                            FontSize="14"
                            VerticalAlignment="Center"/>
-                <Button Content="Sign in"
+                <Button Content="Đăng nhập?"
                         Style="{StaticResource MaterialDesignFlatButton}"
                         Click="SignIn_Click"
                         FontStyle="Italic"

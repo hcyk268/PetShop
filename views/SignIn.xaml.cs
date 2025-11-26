@@ -12,6 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Data.SqlClient;
+using System.Configuration;
+
+using System.Linq.Expressions; // Không cần thiết
 
 namespace Pet_Shop_Project.Views
 {
@@ -29,28 +33,59 @@ namespace Pet_Shop_Project.Views
         private void Login_Click(object sender, RoutedEventArgs e)
         {
             // Lấy thông tin từ các trường nhập liệu
-            string username = UsernameTextBox.Text;
+            string email = UsernameTextBox.Text; // Đổi thành Email để phù hợp với bảng USERS
             string password = PasswordBox.Password;
 
-            // TODO: Thay thế bằng logic kiểm tra đăng nhập thực tế của bạn
-            if (username == "admin" && password == "123")
+            // 1. Lấy chuỗi kết nối
+            string connectionString =ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
+
+            // 2. Câu truy vấn an toàn
+            // Đã đổi Username thành Email để khớp với cấu trúc bảng USERS bạn đã cung cấp (Email là UNIQUE)
+            string query = "SELECT COUNT(1) FROM USERS WHERE Username = @Username AND Password = @Password";
+
+            try
             {
-                // Đăng nhập thành công
-                MessageBox.Show("Succeed! LEGGOOOO!", "Notification", MessageBoxButton.OK, MessageBoxImage.Information);
+                // Khối using đảm bảo kết nối được đóng và Dispose
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        // Thêm tham số truy vấn để ngăn chặn SQL Injection
+                        command.Parameters.AddWithValue("@Email", email);
+                        command.Parameters.AddWithValue("@Password", password);
 
-                // Mở cửa sổ chính và đóng cửa sổ đăng nhập
-                MainWindow mainWindow = new MainWindow();
-                mainWindow.Show();
+                        connection.Open();
 
-                // Đóng LoginWindow (lấy Window chứa Page này)
-                Window.GetWindow(this)?.Close();
+                        // Thực thi truy vấn và lấy số lượng bản ghi khớp
+                        int count = (int)command.ExecuteScalar(); // Đã sửa lỗi dấu ngoặc thừa ở đây
+
+                        if (count == 1)
+                        {
+                            // Đăng nhập thành công
+                            MessageBox.Show("Succeed! LEGGOOOO!", "Notification", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                            // Mở cửa sổ chính
+                            MainWindow mainWindow = new MainWindow();
+                            mainWindow.Show();
+
+                            // Đóng LoginWindow
+                            Window.GetWindow(this)?.Close();
+                        }
+                        else
+                        {
+                            // Đăng nhập thất bại
+                            MessageBox.Show("Oops! Username and Password doesn't match!", "Notification", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                            // Xóa mật khẩu để người dùng nhập lại
+                            PasswordBox.Clear();
+                        }
+                    }
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Đăng nhập thất bại
-                MessageBox.Show("Oops! Username and Password doesn't match!", "Notification", MessageBoxButton.OK, MessageBoxImage.Error);
-
-                // Xóa mật khẩu để người dùng nhập lại
+                // Xử lý lỗi kết nối hoặc lỗi truy vấn SQL
+                MessageBox.Show($"Lỗi kết nối Database: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 PasswordBox.Clear();
             }
         }
@@ -58,6 +93,16 @@ namespace Pet_Shop_Project.Views
         private void SignUp_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(new SignUp());
+        }
+
+        private void UsernameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // Có thể thêm logic kiểm tra hoặc định dạng ở đây nếu cần
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

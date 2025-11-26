@@ -1,9 +1,9 @@
 ﻿<Page x:Class="Pet_Shop_Project.Views.SignIn"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" Height="436" Width="330">
 
-    <StackPanel Margin="30">
+    <StackPanel Margin="10,10,10,10">
 
         <Image Source="/Images/peach.png"
                Width="60"
@@ -11,18 +11,18 @@
                HorizontalAlignment="Center"
                Margin="0,0,0,10"/>
 
-        <TextBlock Text="Sign into your account" 
+        <TextBlock Text="Đăng nhập tài khoản" 
                    FontSize="24" 
                    FontWeight="Bold" 
                    HorizontalAlignment="Center" 
                    Margin="0,15,0,25"
                    Foreground="{DynamicResource MaterialDesignBody}"/>
 
-        <TextBox x:Name="UsernameTextBox" materialDesign:HintAssist.Hint="👤 Username"
+        <TextBox x:Name="UsernameTextBox" materialDesign:HintAssist.Hint="👤 Tên đăng nhập"
                  Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                 Margin="0,0,0,15"/>
+                 Margin="0,0,0,15" TextChanged="UsernameTextBox_TextChanged"/>
 
-        <PasswordBox x:Name="PasswordBox" materialDesign:HintAssist.Hint="🔒 Password"
+        <PasswordBox x:Name="PasswordBox" materialDesign:HintAssist.Hint="🔒 Mật khẩu"
                      Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
                      Margin="0,0,0,10"/>
 
@@ -32,21 +32,21 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <CheckBox Content="Remember me" FontSize="14"/>
+            <CheckBox Content="Ghi nhớ tôi" FontSize="14"/>
 
-            <Button Content="Sign up?"
+            <Button Content="Đăng ký?"
                     Grid.Column="1"
-                    Style="{StaticResource MaterialDesignFlatButton}"
+                    Style="{DynamicResource MaterialDesignFlatButton}"
                     Click="SignUp_Click"
                     FontStyle="Italic"
                     FontSize="14"/>
         </Grid>
 
-        <Button Content="LOGIN"
+        <Button Content="ĐĂNG NHẬP"
                 Height="45"
                 FontSize="14"
                 Style="{StaticResource GradientButtonStyle}"
-                materialDesign:ButtonAssist.CornerRadius="5" />
+                materialDesign:ButtonAssist.CornerRadius="5" Click="Button_Click" />
 
     </StackPanel>
 </Page>

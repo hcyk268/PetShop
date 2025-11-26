@@ -11,7 +11,7 @@
         <!-- Layer 1: Hình nền mờ -->
         <Image Source="/Images/download.jpg" 
                Stretch="UniformToFill"
-               Opacity="0.4"/>
+               Opacity="0.1"/>
         <Grid Margin="40">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -27,11 +27,11 @@
                              materialDesign:ElevationAssist.Elevation="Dp8" 
                              HorizontalAlignment="Center" 
                              VerticalAlignment="Center"
-                             Background="{DynamicResource MaterialDesignBackground}">
+                             Background="{DynamicResource MaterialDesignBackground}" Height="442">
 
                 <Frame x:Name="MainFrame"
-                    NavigationUIVisibility="Hidden"/>
-                
+                    NavigationUIVisibility="Hidden" Margin="-37,-46,-40,-39"/>
+
             </materialDesign:Card>
 
             <TextBlock Grid.Row="2" Text="© Pet Shop Management 2025"
