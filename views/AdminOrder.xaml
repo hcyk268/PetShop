@@ -42,19 +42,19 @@
                 <Button x:Name="pendingbtn" Grid.Column="0"
                 Margin="10,5,10,0"
                 Content="Đang Đợi Duyệt"
-                Style="{StaticResource ButtonQueuePageNavigation}"/>
+                Style="{StaticResource ButtonQueuePageNavigation}" Click="pendingbtn_Click"/>
                 <Button x:Name="shippingbtn" Grid.Column="1"
                 Margin="10,5,10,0"
                 Content="Đang Giao Hàng"
-                Style="{StaticResource ButtonQueuePageNavigation}"/>
+                Style="{StaticResource ButtonQueuePageNavigation}" Click="shippingbtn_Click"/>
                 <Button x:Name="shippedbtn" Grid.Column="2"
                 Margin="10,5,10,0"
                 Content="Đã Nhận Hàng"
-                Style="{StaticResource ButtonQueuePageNavigation}"/>
+                Style="{StaticResource ButtonQueuePageNavigation}" Click="shippedbtn_Click"/>
                 <Button x:Name="rejectedbtn" Grid.Column="3"
                 Margin="10,5,10,0"
                 Content="Đã Hủy Bỏ"
-                Style="{StaticResource ButtonQueuePageNavigation}"/>
+                Style="{StaticResource ButtonQueuePageNavigation}" Click="rejectedbtn_Click"/>
             </Grid>
         </Grid>
 

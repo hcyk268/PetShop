@@ -24,5 +24,25 @@ namespace Pet_Shop_Project.Views
         {
             InitializeComponent();
         }
+
+        private void pendingbtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void shippingbtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void shippedbtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void rejectedbtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
