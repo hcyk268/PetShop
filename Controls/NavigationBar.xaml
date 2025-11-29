@@ -6,8 +6,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              Width="60"
-             VerticalAlignment="Stretch"
-             >
+             VerticalAlignment="Stretch">
 
     <Border Background="#FFCC96"
             BorderBrush="{DynamicResource MaterialDesignDivider}"
