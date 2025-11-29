@@ -39,19 +39,19 @@
                     <ColumnDefinition Width="0.25*"/>
                 </Grid.ColumnDefinitions>
 
-                <Button x:Name="odppendingbutton" Grid.Column="0"
+                <Button x:Name="pendingbtn" Grid.Column="0"
                 Margin="10,5,10,0"
                 Content="Đang Đợi Duyệt"
                 Style="{StaticResource ButtonQueuePageNavigation}"/>
-                <Button x:Name="odpshippingbutton" Grid.Column="1"
+                <Button x:Name="shippingbtn" Grid.Column="1"
                 Margin="10,5,10,0"
                 Content="Đang Giao Hàng"
                 Style="{StaticResource ButtonQueuePageNavigation}"/>
-                <Button x:Name="odpsuccessbutton" Grid.Column="2"
+                <Button x:Name="shippedbtn" Grid.Column="2"
                 Margin="10,5,10,0"
                 Content="Đã Nhận Hàng"
                 Style="{StaticResource ButtonQueuePageNavigation}"/>
-                <Button x:Name="odpcanceledbutton" Grid.Column="3"
+                <Button x:Name="rejectedbtn" Grid.Column="3"
                 Margin="10,5,10,0"
                 Content="Đã Hủy Bỏ"
                 Style="{StaticResource ButtonQueuePageNavigation}"/>
