@@ -53,7 +53,7 @@
                 <ImageBrush x:Name="BackgroundImage" 
                            
                            Stretch="UniformToFill"/>
-                
+
             </Grid.Background>
             <Grid.OpacityMask>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -86,7 +86,7 @@
 
                 <StackPanel>
                     <!-- Avatar with Edit Button -->
-                    <Grid HorizontalAlignment="Center" Margin="0,0,0,20">
+                    <Grid HorizontalAlignment="Center" Margin="0,0,0,10">
                         <Ellipse Width="150" Height="150">
                             <Ellipse.Fill>
                                 <ImageBrush x:Name="AvatarImage" 
@@ -105,18 +105,18 @@
                              FontSize="20"
                              FontWeight="Bold"
                              TextAlignment="Center"
-                             Foreground="RosyBrown"
-                             Margin="0,0,0,5"/>
+                             Foreground="LightCoral"
+                             Margin="0,0,0,10"/>
 
                     <Border x:Name="borderRole"
-                          Background="DimGray" 
+                          Background="Pink" 
                           CornerRadius="12" 
                           Padding="12,6"
                           HorizontalAlignment="Center"
                           Margin="0,0,0,25">
                         <TextBlock x:Name="txtRole" 
                                  Text="Khách hàng" 
-                                 Foreground="White"
+                                 Foreground="DimGray"
                                  FontWeight="SemiBold"
                                  FontSize="13"/>
                     </Border>
@@ -168,14 +168,13 @@
                     </Border>
 
                     <!-- Action Buttons -->
-                    <Button Content="Chuyển tài khoản" 
+                    <Button x:Name="btn_PurHistory" Content="Lịch sử mua hàng" 
                           Height="40"
-                          Background="LightGray"
-                          Foreground="White"
+                          Style="{StaticResource GradientButtonStyle}"
                           BorderThickness="0"
                           FontWeight="SemiBold"
                           Margin="0,0,0,10"
-                          Click="btnChangePassword_Click"
+                          Click="btn_PurHistory_Click"
                           Cursor="Hand">
                         <Button.Resources>
                             <Style TargetType="Border">
@@ -185,8 +184,7 @@
                     </Button>
                     <Button Content="Đăng Xuất" 
                           Height="40"
-                          Background="LightGray"
-                          Foreground="White"
+                          Style="{StaticResource GradientButtonStyle}"
                           BorderThickness="0"
                           FontWeight="SemiBold"
                           Click="btnLogout_Click"
@@ -217,11 +215,11 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <!-- Header with Edit Button -->
-                        <Grid Margin="0,0,0,20">
+                        <Grid Margin="0,-5,0,6">
                             <TextBlock Text="Thông Tin Chi Tiết" 
-                                     FontSize="24" 
-                                     FontWeight="Bold"
-                                     Foreground="SaddleBrown"
+                                     FontSize="29" 
+                                     FontWeight="Heavy"
+                                     Foreground="Coral"
                                      />
 
                             <StackPanel Orientation="Horizontal" 
@@ -241,7 +239,7 @@
 
                         <!-- Contact Information Section -->
                         <TextBlock Text="📧 Thông Tin Liên Hệ" 
-                                  Foreground="Coral"
+                                  Foreground="SandyBrown"
                                        FontSize="14"
                                        FontWeight="SemiBold"/>
 
@@ -252,7 +250,7 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" Margin="0,0,15,0">
-                                <TextBlock Text="Email:" Style="{StaticResource InfoLabelStyle}"/>
+                                <TextBlock Text="Email:" FontWeight="DemiBold"/>
                                 <Border Background="FloralWhite"
                                       CornerRadius="8"
                                       Padding="12"
@@ -264,7 +262,7 @@
                             </StackPanel>
 
                             <StackPanel Grid.Column="1" Margin="15,0,0,0">
-                                <TextBlock Text="Số Điện Thoại:" Style="{StaticResource InfoLabelStyle}"/>
+                                <TextBlock Text="Số Điện Thoại:" FontWeight="DemiBold"/>
                                 <Border Background="FloralWhite"
                                       CornerRadius="8"
                                       Padding="12"
@@ -278,7 +276,7 @@
                         </Grid>
 
                         <!-- Address Information -->
-                        <TextBlock Text="Địa Chỉ:" Style="{StaticResource InfoLabelStyle}"/>
+                        <TextBlock Text="Địa Chỉ:" FontWeight="DemiBold"/>
                         <Border Background="FloralWhite"
                               CornerRadius="8"
                               Padding="12"
@@ -291,7 +289,7 @@
 
                         <!-- Account Information Section -->
                         <TextBlock Text="👤 Thông Tin Tài Khoản" 
-                                 Foreground="Coral"
+                                 Foreground="SandyBrown"
                                        FontSize="14"
                                        FontWeight="SemiBold"/>
 
@@ -302,7 +300,7 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" Margin="0,0,15,0">
-                                <TextBlock Text="Ngày Tạo:" Style="{StaticResource InfoLabelStyle}"/>
+                                <TextBlock Text="Ngày Tạo:" FontWeight="DemiBold"/>
                                 <Border Background="FloralWhite"
                                       CornerRadius="8"
                                       Padding="12"
@@ -315,7 +313,7 @@
                             </StackPanel>
 
                             <StackPanel Grid.Column="1" Margin="15,0,0,0">
-                                <TextBlock Text="Lần Đăng Nhập Cuối:" Style="{StaticResource InfoLabelStyle}"/>
+                                <TextBlock Text="Lần Đăng Nhập Cuối:" FontWeight="DemiBold"/>
                                 <Border Background="FloralWhite"
                                       CornerRadius="8"
                                       Padding="12"
@@ -327,18 +325,18 @@
                                 </Border>
                             </StackPanel>
                         </Grid>
-
-                        <!-- Preferences Section -->
                         <TextBlock Text="⚙️ Tùy Chọn" 
-                                  Foreground="Coral"
+                                  Foreground="SandyBrown"
                                   FontSize="14"
                                   FontWeight="SemiBold"
-                                  Margin="0,0,0,10"/>
+                                  />
+
+                        <!-- Preferences Section -->
 
                         <Border Background="FloralWhite"
                               CornerRadius="8"
                               Padding="15"
-                              Margin="0,0,0,15">
+                              Margin="0,0,0,8">
                             <StackPanel>
                                 <CheckBox x:Name="chkEmailNotifications"
                                         Content="Nhận thông báo qua Email"
@@ -346,7 +344,6 @@
                                         Foreground="DimGray"
                                         Checked="chkEmailNotifications_Changed"
                                         Unchecked="chkEmailNotifications_Changed"/>
-
                                 <CheckBox x:Name="chkSMSNotifications"
                                         Content="Nhận thông báo qua SMS"
                                         Margin="0,0,0,10"
@@ -361,20 +358,21 @@
                                         Unchecked="chkNewsletters_Changed"/>
                             </StackPanel>
                         </Border>
+                        <TextBlock Text="🎨 Tùy Chỉnh Giao Diện" 
+                                                                  Foreground="SandyBrown"
+                                  FontSize="14"
+                                  FontWeight="SemiBold"/>
 
                         <!-- Background Settings -->
-                        <TextBlock Text="🎨 Tùy Chỉnh Giao Diện" 
-                                 Style="{StaticResource MaterialDesignOverlineTextBlock}"/>
 
                         <Button Content="Thay Đổi Hình Nền" 
-                              Height="40"
-                              Background="gray"
-                              Foreground="White"
+                              Height="35"
+                              Style="{StaticResource GradientButtonStyle}"
                               BorderThickness="0"
                               FontWeight="SemiBold"
                               Click="btnChangeBackground_Click"
                               Cursor="Hand"
-                              Margin="0,0,0,30">
+                              Margin="0,5,0,0">
                             <Button.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="8"/>
