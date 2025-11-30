@@ -116,7 +116,7 @@
       <DependentUpon>ProductCard.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\ConvertLanguage.cs" />
-    <Compile Include="Models\CartService.cs" />
+    <Compile Include="Services\CartService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\ProductService.cs" />
     <Compile Include="Views\Cart.xaml.cs">
@@ -145,6 +145,9 @@
     </Compile>
     <Compile Include="Views\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProductDetailPage.xaml.cs">
+      <DependentUpon>ProductDetailPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SignIn.xaml.cs">
       <DependentUpon>SignIn.xaml</DependentUpon>
@@ -194,6 +197,10 @@
     <Page Include="Views\OrderQueuePage.xaml" />
     <Page Include="Views\Payment.xaml" />
     <Page Include="Views\Login.xaml" />
+    <Page Include="Views\ProductDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SignIn.xaml" />
     <Page Include="Views\SignUp.xaml" />
   </ItemGroup>
