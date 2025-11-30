@@ -126,40 +126,27 @@ namespace Pet_Shop_Project.Views
         }
 
         // Xử lý sau khi đăng nhập thành công
+        // File: SignIn.xaml.cs (phương thức HandleSuccessfulLogin)
+
+        // ... (các phần trước)
+
+        // Xử lý sau khi đăng nhập thành công
         private void HandleSuccessfulLogin(User user)
         {
             try
             {
-                // Lưu thông tin user vào session
-                SessionManager.CurrentUser = user;
+                // Lưu thông tin user vào session
+                SessionManager.CurrentUser = user;
 
-                // Xử lý "Ghi nhớ tôi"
-                if (RememberMeCheckBox.IsChecked == true)
+                // ... (Xử lý Ghi nhớ tôi)
+                // ... (Hiển thị thông báo)
+
+                // Chuyển đến trang Account
+                if (mainWindow != null)
                 {
-                    Properties.Settings.Default.SavedUsername = user.Username;
-                    Properties.Settings.Default.RememberMe = true;
-                }
-                else
-                {
-                    Properties.Settings.Default.SavedUsername = string.Empty;
-                    Properties.Settings.Default.RememberMe = false;
-                }
-                Properties.Settings.Default.Save();
-
-                // Hiển thị thông báo thành công
-                MessageBox.Show($"Đăng nhập thành công!\nXin chào {user.FullName}",
-                    "Thành công",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
-
-                // Chuyển đến trang Account hoặc Home
-                if (mainWindow != null)
-                {
-                    // Nếu đã có AccountPage thì navigate đến đó
-                    // mainWindow.MainFrame.Navigate(new AccountPage());
-
-                    // Tạm thời quay về HomePage
-                    mainWindow.MainScreen.Navigate(new AccountPage());
+                    // 💡 SỬA: Dùng constructor mới AccountPage(string userId)
+                    // và truyền UserId thực (giả sử UserId là string)
+                    mainWindow.MainScreen.Navigate(new AccountPage(user.UserId.ToString()));
                 }
             }
             catch (Exception ex)
@@ -167,6 +154,7 @@ namespace Pet_Shop_Project.Views
                 ShowError($"Lỗi xử lý đăng nhập: {ex.Message}");
             }
         }
+        // ...
 
         // Hiển thị thông báo lỗi
         private void ShowError(string message)

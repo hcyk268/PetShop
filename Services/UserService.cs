@@ -48,7 +48,7 @@ namespace Pet_Shop_Project.Services
                                     // Đăng nhập thành công - tạo đối tượng User
                                     User user = new User
                                     {
-                                        UserId = Convert.ToInt32(reader["UserId"]),
+                                        UserId = Convert.ToString(reader["UserId"]),
                                         Username = reader["Username"].ToString(),
                                         FullName = reader["FullName"].ToString(),
                                         Email = reader["Email"]?.ToString(),
@@ -78,7 +78,7 @@ namespace Pet_Shop_Project.Services
         }
 
         // Lấy thông tin user theo UserId
-        public User GetUserById(int userId)
+        public User GetUserById(string userId)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace Pet_Shop_Project.Services
                             {
                                 return new User
                                 {
-                                    UserId = Convert.ToInt32(reader["UserId"]),
+                                    UserId = Convert.ToString(reader["UserId"]),
                                     Username = reader["Username"].ToString(),
                                     FullName = reader["FullName"].ToString(),
                                     Email = reader["Email"]?.ToString(),

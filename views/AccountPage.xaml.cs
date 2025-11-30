@@ -14,6 +14,26 @@ namespace Pet_Shop_Project.Views
         private UserService userService;
         private User currentUser;
 
+        public AccountPage(string userId)
+        {
+            InitializeComponent();
+            userService = new UserService();
+
+            // 1. Dùng ID để query database (cần sửa UserService để chấp nhận string)
+            this.currentUser = userService.GetUserById(userId);
+
+            if (currentUser != null)
+            {
+                // 2. Load thông tin lên UI
+                LoadUserInfo();
+            }
+            else
+            {
+                // Xử lý lỗi nếu không tìm thấy User (ID không hợp lệ)
+                MessageBox.Show("Không tìm thấy thông tin tài khoản!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                NavigationService?.Navigate(new SignIn());
+            }
+        }
         public AccountPage()
         {
             InitializeComponent();
