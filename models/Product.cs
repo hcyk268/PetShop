@@ -16,6 +16,7 @@ namespace Pet_Shop_Project.Models
         private int _unitInStock;
         private double _discount;
         private string _picture;
+        private string _category;
 
         public string ProductId
         {
@@ -84,6 +85,16 @@ namespace Pet_Shop_Project.Models
             {
                 _picture = value;
                 OnPropertyChanged(nameof(Picture));
+            }
+        }
+
+        public string Category
+        {
+            get => _category;
+            set
+            {
+                _category = value;
+                OnPropertyChanged(nameof(Category));
             }
         }
 

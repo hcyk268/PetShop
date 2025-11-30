@@ -84,9 +84,8 @@
       <HintPath>packages\MaterialDesignThemes.4.9.0\lib\net462\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xaml.Behaviors.Wpf">
-  <HintPath>packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
-</Reference>
-
+      <HintPath>packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -113,12 +112,13 @@
     <Compile Include="Controls\NavigationBar.xaml.cs">
       <DependentUpon>NavigationBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Services\ConvertLanguage.cs" />
-    <Compile Include="Models\CartService.cs" />
-    <Compile Include="Services\NavigationService.cs" />
-    <Compile Include="Views\AdminOrder.xaml.cs">
-      <DependentUpon>AdminOrder.xaml</DependentUpon>
+    <Compile Include="Controls\ProductCard.xaml.cs">
+      <DependentUpon>ProductCard.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\ConvertLanguage.cs" />
+    <Compile Include="Services\CartService.cs" />
+    <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Services\ProductService.cs" />
     <Compile Include="Views\Cart.xaml.cs">
       <DependentUpon>Cart.xaml</DependentUpon>
     </Compile>
@@ -146,6 +146,9 @@
     <Compile Include="Views\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ProductDetailPage.xaml.cs">
+      <DependentUpon>ProductDetailPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SignIn.xaml.cs">
       <DependentUpon>SignIn.xaml</DependentUpon>
     </Compile>
@@ -154,6 +157,10 @@
     </Compile>
     <!-- XAML pages -->
     <Page Include="Controls\NavigationBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ProductCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -181,10 +188,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\AdminOrder.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\Cart.xaml" />
     <Page Include="Views\HomePage.xaml" />
     <Page Include="Views\OQPCanceled.xaml" />
@@ -194,6 +197,10 @@
     <Page Include="Views\OrderQueuePage.xaml" />
     <Page Include="Views\Payment.xaml" />
     <Page Include="Views\Login.xaml" />
+    <Page Include="Views\ProductDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SignIn.xaml" />
     <Page Include="Views\SignUp.xaml" />
   </ItemGroup>
@@ -253,9 +260,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets')" />
-<Import Project="packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\build\Microsoft.Xaml.Behaviors.Wpf.targets"
-        Condition="Exists('packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\build\Microsoft.Xaml.Behaviors.Wpf.targets')" />
-
+  <Import Project="packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\build\Microsoft.Xaml.Behaviors.Wpf.targets" Condition="Exists('packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\build\Microsoft.Xaml.Behaviors.Wpf.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.</ErrorText>
