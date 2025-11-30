@@ -45,7 +45,7 @@
 
             <ScrollViewer VerticalScrollBarVisibility="Auto"
                          HorizontalScrollBarVisibility="Disabled"
-                         Padding="50,30">
+                         Padding="50,3">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -121,7 +121,7 @@
                                BorderBrush="#DDD"
                                BorderThickness="1"
                                CornerRadius="10"
-                               Height="42">
+                               Height="42" Width="475">
                             <Grid Margin="12,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -160,7 +160,7 @@
                                BorderBrush="#DDD"
                                BorderThickness="1"
                                CornerRadius="10"
-                               Height="42">
+                               Height="42" Width="475">
                             <Grid Margin="12,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -199,7 +199,7 @@
                                BorderBrush="#DDD"
                                BorderThickness="1"
                                CornerRadius="10"
-                               Height="42">
+                               Height="42" Width="475">
                             <Grid Margin="12,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -238,7 +238,7 @@
                                BorderBrush="#DDD"
                                BorderThickness="1"
                                CornerRadius="10"
-                               Height="42">
+                               Height="42" Width="475">
                             <Grid Margin="12,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -277,7 +277,7 @@
                                BorderBrush="#DDD"
                                BorderThickness="1"
                                CornerRadius="10"
-                               Height="42">
+                               Height="42" Width="475">
                             <Grid Margin="12,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -315,7 +315,7 @@
                                BorderBrush="#DDD"
                                BorderThickness="1"
                                CornerRadius="10"
-                               Height="42">
+                               Height="42" Width="475">
                             <Grid Margin="12,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
