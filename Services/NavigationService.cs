@@ -11,7 +11,11 @@ namespace Pet_Shop_Project.Services
         private Frame mainFrame;
 
         private NavigationService() { }
-
+        public string userid { get; private set; }
+        public void setUserId(string userid)
+        {
+            this.userid = userid;
+        }
         public static NavigationService Instance
         {
             get
@@ -58,12 +62,18 @@ namespace Pet_Shop_Project.Services
 
         public void NavigateToOrder()
         {
-            mainFrame.Navigate(new OrderQueuePage());
+            if (mainFrame != null)
+            {
+                mainFrame.Navigate(new OrderQueuePage(userid));
+            }
         }
 
         public void NavigateToCart()
         {
-            mainFrame.Navigate(new Cart());
+            if (mainFrame != null)
+            {
+                mainFrame.Navigate(new CartPage(userid));
+            }
         }
     }
 }

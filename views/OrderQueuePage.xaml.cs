@@ -21,15 +21,22 @@ namespace Pet_Shop_Project.Views
 
         private bool _active = false;
 
+        private string _userid;
+
         SolidColorBrush defaulttext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#222")); 
         SolidColorBrush clickedtext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF6B6B"));
 
-        public OrderQueuePage()
+        public OrderQueuePage(string userid)
         {
             InitializeComponent();
-            AllOrders = _orderService.GetOrdersByUser(); //Truyen UserId vao
+
+            _userid = userid;
+
+            AllOrders = _orderService.GetOrdersByUser(userid); //Truyen UserId vao
+
             setForeColorDefault();
             odppendingbutton.Foreground = clickedtext;
+
             MainScreenOQP.Navigate(new OQPPendingApproval(AllOrders));
         }
 
