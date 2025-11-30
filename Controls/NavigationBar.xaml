@@ -44,6 +44,7 @@
                 <Button x:Name="CartButton"
                         Style="{StaticResource NavButtonStyle}" 
                         ToolTip="Giỏ hàng"
+                        Click="CartButton_Click"
                         Tag="Cart">
                     <StackPanel>
                         <materialDesign:PackIcon Kind="Cart" 
@@ -55,7 +56,8 @@
                 <!-- Accessories Button -->
                 <Button x:Name="AccessoriesButton"
                         Style="{StaticResource NavButtonStyle}" 
-                        ToolTip="Phụ kiện"
+                        ToolTip="Đơn Hàng"
+                        Click="OrderButton_Click"
                         Tag="Accessories">
                     <StackPanel>
                         <materialDesign:PackIcon Kind="ReceiptTextClock" 

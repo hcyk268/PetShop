@@ -36,5 +36,15 @@ namespace Pet_Shop_Project.Services
         {
             mainFrame.Navigate(new HomePage());
         }
+
+        public void NavigateToOrder()
+        {
+            mainFrame.Navigate(new OrderQueuePage());
+        }
+
+        public void NavigateToCart()
+        {
+            mainFrame.Navigate(new Cart());
+        }
     }
 }

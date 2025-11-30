@@ -118,6 +118,7 @@
     <Compile Include="Services\ConvertLanguage.cs" />
     <Compile Include="Models\CartService.cs" />
     <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Services\OrderService.cs" />
     <Compile Include="Services\ProductService.cs" />
     <Compile Include="Views\Cart.xaml.cs">
       <DependentUpon>Cart.xaml</DependentUpon>
