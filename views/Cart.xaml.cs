@@ -38,7 +38,7 @@ namespace Pet_Shop_Project.Views
         }
 
         // Nếu vẫn cần constructor rỗng (designer), truyền user giả:
-        public Cart() : this("USR001") { }
+        public Cart() : this("USR002") { }
 
         #region Load Data
         // Load thông tin người dùng hiện tại

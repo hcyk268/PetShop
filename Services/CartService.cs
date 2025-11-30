@@ -94,5 +94,11 @@ namespace Pet_Shop_Project.Models
         {
             return CartItems.Where(i => i.IsSelected).ToList();
         }
+
+        public static void RemoveByProductIds(IEnumerable<string> productIds)
+        {
+            var toRemove = CartItems.Where(c => productIds.Contains(c.ProductId)).ToList();
+            foreach (var item in toRemove) CartItems.Remove(item);
+        }
     }
 }

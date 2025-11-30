@@ -157,7 +157,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="border"
-                            CornerRadius="8"
+                            CornerRadius="16"
                             Background="{TemplateBinding Background}"
                             SnapsToDevicePixels="True">
                         <ContentPresenter HorizontalAlignment="Center"
@@ -273,7 +273,7 @@
         <Setter Property="Background" Value="White"/>
         <Setter Property="BorderBrush" Value="#E0E0E0"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Foreground" Value="#333"/>
+        <Setter Property="Foreground" Value="#ffc476"/>
 
         <Setter Property="Template">
             <Setter.Value>

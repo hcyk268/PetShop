@@ -75,12 +75,6 @@
                                                Foreground="#333333"
                                                VerticalAlignment="Center"/>
                                 </StackPanel>
-
-                                <Button Content="Thay đổi"
-                                        HorizontalAlignment="Right"
-                                        Click="ChangeAddress_Click"
-                                        Foreground="#FF6B6B"
-                                        Style="{StaticResource ButtonQueuePageNavigation}"/>
                             </Grid>
 
                             <!-- Address Details -->
@@ -350,61 +344,16 @@
                                                FontSize="18" 
                                                FontWeight="SemiBold"
                                                Foreground="#333333"/>
-                                    <Border Background="#E8F5E9"
-                                            BorderBrush="#4CAF50"
-                                            BorderThickness="1"
-                                            CornerRadius="4"
-                                            Padding="6,2"
-                                            HorizontalAlignment="Left"
-                                            Margin="0,4,0,0">
-                                        <TextBlock Text="PETSHOP ĐẢM BẢO" 
-                                                   FontSize="10"
-                                                   Foreground="#2E7D32"
-                                                   FontWeight="SemiBold"/>
-                                    </Border>
                                 </StackPanel>
                             </Grid>
-
-                            <!-- Credit/Debit Card -->
-                            <RadioButton x:Name="CardPaymentOption"
-                                         Style="{StaticResource PaymentMethodStyle}"
-                                         GroupName="Payment">
-                                <RadioButton.Content>
-                                    <StackPanel>
-                                        <TextBlock Text="Thẻ Tín dụng/Ghi nợ" 
-                                                   FontSize="15" 
-                                                   FontWeight="Medium"
-                                                   Foreground="#333333"
-                                                   Margin="0,0,0,0"/>
-                                    </StackPanel>
-                                </RadioButton.Content>
-                                <RadioButton.Tag>
-                                    <Border Background="{StaticResource QP.AccentBrush}"
-                                            CornerRadius="4"
-                                            Padding="8,4">
-                                        <TextBlock Text="MỚI" 
-                                                   FontSize="10"
-                                                   FontWeight="Bold"
-                                                   Foreground="White"/>
-                                    </Border>
-                                </RadioButton.Tag>
-                            </RadioButton>
-
-                            <!-- Cash on Delivery (COD) -->
-                            <RadioButton x:Name="CODPaymentOption"
-                                         Style="{StaticResource PaymentMethodStyle}"
-                                         GroupName="Payment"
-                                         IsChecked="True">
-                                <RadioButton.Content>
-                                    <StackPanel>
-                                        <TextBlock Text="Thanh toán khi nhận hàng" 
-                                                   FontSize="15" 
-                                                   FontWeight="Medium"
-                                                   Foreground="#333333"
-                                                   Margin="0,0,0,0"/>
-                                    </StackPanel>
-                                </RadioButton.Content>
-                            </RadioButton>
+                            <StackPanel>
+                                <TextBlock x:Name="CODPaymentOption"
+                                        Text="Thanh toán khi nhận hàng (COD)" 
+                                            FontSize="15" 
+                                            FontWeight="Normal"
+                                            Foreground="#333333"
+                                            Margin="0,0,0,0"/>
+                            </StackPanel>
                         </StackPanel>
                     </Border>
 
