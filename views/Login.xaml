@@ -6,7 +6,8 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="LoginWindow" Height="650" Width="1000"
-        Background="{DynamicResource MaterialDesignPaper}">
+        Background="{DynamicResource MaterialDesignPaper}"
+        ResizeMode="NoResize">
     <Grid>
         <!-- Layer 1: Hình nền mờ -->
         <Image Source="/Images/download.jpg" 

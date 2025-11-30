@@ -11,7 +11,6 @@ namespace Pet_Shop_Project.Models
     public class CartItem : INotifyPropertyChanged
     {
         private bool isSelected; // Hien them
-        private string _imageUrl; // Hien them
         private string _cartItemId;
         private string _productId;
         private int _quantity;
@@ -57,16 +56,6 @@ namespace Pet_Shop_Project.Models
             }
         }
 
-        public string ImageUrl
-        {
-            get => _imageUrl;
-            set
-            {
-                _imageUrl = value;
-                OnPropertyChanged(nameof(ImageUrl));
-            }
-        }
-
         // 👇 Tham chiếu đến Product
         public Product Product
         {
@@ -77,6 +66,7 @@ namespace Pet_Shop_Project.Models
                 OnPropertyChanged(nameof(Product));
                 OnPropertyChanged(nameof(Name));
                 OnPropertyChanged(nameof(Price));
+                OnPropertyChanged(nameof(Image));
                 OnPropertyChanged(nameof(SubTotal));
             }
         }
@@ -92,6 +82,7 @@ namespace Pet_Shop_Project.Models
         }
         public string Name => Product?.Name ?? "N/A";
         public decimal Price => Product?.FinalPrice ?? 0;
+        public string Image => Product?.Picture;
         public decimal SubTotal => Quantity * Price;
 
         // Event và method từ file gốc (GIỮ NGUYÊN)

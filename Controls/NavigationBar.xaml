@@ -5,10 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             Width="80"
-             Height="650">
+             Width="60"
+             VerticalAlignment="Stretch">
 
-    <Border Background="White"
+    <Border Background="#FFCC96"
             BorderBrush="{DynamicResource MaterialDesignDivider}"
             BorderThickness="0,0,1,0">
         <Border.Effect>
@@ -30,40 +30,37 @@
                 <!-- Home Button -->
                 <Button x:Name="HomeButton"
                         Style="{StaticResource NavButtonStyle}" 
-                        Margin="10,20,10,0"
                         Click="HomeButton_Click"
                         ToolTip="Trang chủ"
                         Tag="Home">
                     <StackPanel>
                         <materialDesign:PackIcon Kind="Home" 
-                                                Width="36" 
-                                                Height="36"/>
+                                                Width="30" 
+                                                Height="30"/>
                     </StackPanel>
                 </Button>
 
                 <!-- Shopping Cart Button -->
                 <Button x:Name="CartButton"
                         Style="{StaticResource NavButtonStyle}" 
-                        Margin="10,20,10,0"
                         ToolTip="Giỏ hàng"
                         Tag="Cart">
                     <StackPanel>
                         <materialDesign:PackIcon Kind="Cart" 
-                                                Width="36" 
-                                                Height="36"/>
+                                                Width="30" 
+                                                Height="30"/>
                     </StackPanel>
                 </Button>
 
                 <!-- Accessories Button -->
                 <Button x:Name="AccessoriesButton"
                         Style="{StaticResource NavButtonStyle}" 
-                        Margin="10,20,10,0"
                         ToolTip="Phụ kiện"
                         Tag="Accessories">
                     <StackPanel>
-                        <materialDesign:PackIcon Kind="BagPersonal" 
-                                                Width="36" 
-                                                Height="36"/>
+                        <materialDesign:PackIcon Kind="ReceiptTextClock" 
+                                                Width="30" 
+                                                Height="30"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -76,13 +73,12 @@
                 <!-- Account Button -->
                 <Button x:Name="AccountButton"
                         Style="{StaticResource NavButtonStyle}" 
-                        Margin="10,0,10,20"
                         ToolTip="Tài khoản"
                         Tag="Account">
                     <StackPanel>
                         <materialDesign:PackIcon Kind="Account" 
-                                                Width="36" 
-                                                Height="36"/>
+                                                Width="30" 
+                                                Height="30"/>
                     </StackPanel>
                 </Button>
             </StackPanel>

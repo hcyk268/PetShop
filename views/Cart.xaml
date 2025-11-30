@@ -23,7 +23,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Giỏ hàng" 
-                       FontSize="45" 
+                       FontSize="40" 
                        FontWeight="SemiBold"
                        Foreground="#333333"
                        VerticalAlignment="Top"/>
@@ -75,7 +75,6 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Checkbox -->
                                 <CheckBox Grid.Column="0"
                                           IsChecked="{Binding IsSelected, Mode=TwoWay}"
                                           VerticalAlignment="Center"
@@ -87,18 +86,49 @@
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="CheckBox">
-                                                        <Border Width="24" Height="24"
+                                                        <Border Width="24" 
+                                                                Height="24"
                                                                 CornerRadius="12"
                                                                 BorderThickness="2"
-                                                                BorderBrush="#DDDDDD"
-                                                                Background="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToGradientConverter}}">
+                                                                BorderBrush="#DDDDDD">
+
+                                                            <Border.Style>
+                                                                <Style TargetType="Border">
+                                                                    <Setter Property="Background" Value="Transparent"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+
+                                                                            <Setter Property="Background">
+                                                                                <Setter.Value>
+                                                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                                                        <GradientStop Color="#ffc476" Offset="0"/>
+                                                                                        <GradientStop Color="#ffa2a2" Offset="1"/>
+                                                                                    </LinearGradientBrush>
+                                                                                </Setter.Value>
+                                                                            </Setter>
+
+                                                                            <Setter Property="BorderBrush" Value="#ffa2a2"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Border.Style>
                                                             <TextBlock Text="✓"
                                                                        Foreground="White"
                                                                        FontSize="14"
                                                                        FontWeight="Bold"
                                                                        HorizontalAlignment="Center"
-                                                                       VerticalAlignment="Center"
-                                                                       Visibility="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                                                       VerticalAlignment="Center">
+                                                                <TextBlock.Style>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+                                                            </TextBlock>
                                                         </Border>
                                                     </ControlTemplate>
                                                 </Setter.Value>
@@ -106,14 +136,14 @@
                                         </Style>
                                     </CheckBox.Style>
                                 </CheckBox>
-
+                                
                                 <!-- Product Image -->
                                 <Border Grid.Column="1" 
                                         Width="80" Height="80"
                                         CornerRadius="8"
                                         Background="#F0F0F0"
                                         Margin="0,0,15,0">
-                                    <Image Source="{Binding ImageUrl}" Stretch="UniformToFill"/>
+                                    <Image Source="{Binding Image}" Stretch="UniformToFill"/>
                                 </Border>
 
                                 <!-- Product Details -->
@@ -161,39 +191,6 @@
                                                 Tag="{Binding}"/>
                                     </StackPanel>
                                 </StackPanel>
-
-                                <!-- Delete Button -->
-                                <Button Grid.Column="3"
-                                        Width="36" Height="36"
-                                        Background="#FFE0E0"
-                                        BorderThickness="0"
-                                        Cursor="Hand"
-                                        VerticalAlignment="Top"
-                                        Click="DeleteItem_Click"
-                                        Tag="{Binding}">
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}" CornerRadius="18">
-                                                <TextBlock Text="×" 
-                                                           Foreground="#FF6B6B" 
-                                                           FontSize="24"
-                                                           FontWeight="Bold"
-                                                           HorizontalAlignment="Center"
-                                                           VerticalAlignment="Center"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                    <Button.Style>
-                                        <Style TargetType="Button">
-                                            <Setter Property="Background" Value="#FFE0E0"/>
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Background" Value="#FF6B6B"/>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Button.Style>
-                                </Button>
                             </Grid>
                         </Border>
                     </DataTemplate>
@@ -257,7 +254,7 @@
                 <!-- Order Button -->
                 <Button x:Name="Order" 
                         Style="{StaticResource GradientButtonStyle}"
-                        Content="Đặt hàng"
+                        Content="Mua hàng"
                         Width="238"
                         Height="45"
                         FontSize="18"
