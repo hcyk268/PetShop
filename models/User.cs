@@ -1,97 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pet_Shop_Project.Models
 {
-    public class User : INotifyPropertyChanged
+    public class User
     {
-        private string _userId;
-        private string _fullName;
-        private string _email;
-        private string _password;
-        private string _phone;
-        private string _address;
-        private string _role;
+        public int UserId { get; set; }
+        public string Username { get; set; }
+        public string FullName { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+        public string Address { get; set; }
+        public string Role { get; set; } // "Customer", "Admin", "Staff"
+        public DateTime CreatedDate { get; set; }
+        public bool IsActive { get; set; }
 
-        public string UserId
+        public string PasswordHash { get; set; }  // Để lưu mật khẩu đã hash
+        public string AvatarPath { get; set; }    // Đường dẫn ảnh avatar
+
+        // Constructor
+        public User()
         {
-            get => _userId;
-            set
-            {
-                _userId = value;
-                OnPropertyChanged(nameof(UserId));
-            }
+            IsActive = true;
+            CreatedDate = DateTime.Now;
+            Role = "Customer";
         }
 
-        public string FullName
+        // Override ToString để debug dễ hơn
+        public override string ToString()
         {
-            get => _fullName;
-            set
-            {
-                _fullName = value;
-                OnPropertyChanged(nameof(FullName));
-            }
-        }
-
-        public string Email
-        {
-            get => _email;
-            set
-            {
-                _email = value;
-                OnPropertyChanged(nameof(Email));
-            }
-        }
-
-        public string Password
-        {
-            get => _password;
-            set
-            {
-                _password = value;
-                OnPropertyChanged(nameof(Password));
-            }
-        }
-
-        public string Phone
-        {
-            get => _phone;
-            set
-            {
-                _phone = value;
-                OnPropertyChanged(nameof(Phone));
-            }
-        }
-
-        public string Address
-        {
-            get => _address;
-            set
-            {
-                _address = value;
-                OnPropertyChanged(nameof(Address));
-            }
-        }
-
-        public string Role
-        {
-            get => _role;
-            set
-            {
-                _role = value;
-                OnPropertyChanged(nameof(Role));
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return $"User: {Username} - {FullName} ({Role})";
         }
     }
 }

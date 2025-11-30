@@ -1,108 +1,211 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Pet_Shop_Project.Models;
+using Pet_Shop_Project.Services;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Data.SqlClient;
-using System.Configuration;
 
-using System.Linq.Expressions; // Không cần thiết
 
 namespace Pet_Shop_Project.Views
 {
-    /// <summary>
-    /// Interaction logic for SignIn.xaml
-    /// </summary>
     public partial class SignIn : Page
     {
+        private UserService userService;
+        private MainWindow mainWindow;
+
         public SignIn()
         {
             InitializeComponent();
+            userService = new UserService();
+
+            // Lấy reference đến MainWindow
+            mainWindow = Application.Current.MainWindow as MainWindow;
+
+            // Load trạng thái "Ghi nhớ tôi" nếu có
+            LoadRememberedUser();
         }
 
-        // Phương thức xử lý sự kiện Click cho nút ĐĂNG NHẬP
-        private void Login_Click(object sender, RoutedEventArgs e)
+        // Load thông tin user đã lưu (nếu có)
+        private void LoadRememberedUser()
         {
-            // Lấy thông tin từ các trường nhập liệu
-            string email = UsernameTextBox.Text; // Đổi thành Email để phù hợp với bảng USERS
-            string password = PasswordBox.Password;
-
-            // 1. Lấy chuỗi kết nối
-            string connectionString =ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
-
-            // 2. Câu truy vấn an toàn
-            // Đã đổi Username thành Email để khớp với cấu trúc bảng USERS bạn đã cung cấp (Email là UNIQUE)
-            string query = "SELECT COUNT(1) FROM USERS WHERE Username = @Username AND Password = @Password";
-
             try
             {
-                // Khối using đảm bảo kết nối được đóng và Dispose
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                string savedUsername = Properties.Settings.Default.SavedUsername;
+                bool rememberMe = Properties.Settings.Default.RememberMe;
+
+                if (rememberMe && !string.IsNullOrEmpty(savedUsername))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        // Thêm tham số truy vấn để ngăn chặn SQL Injection
-                        command.Parameters.AddWithValue("@Email", email);
-                        command.Parameters.AddWithValue("@Password", password);
-
-                        connection.Open();
-
-                        // Thực thi truy vấn và lấy số lượng bản ghi khớp
-                        int count = (int)command.ExecuteScalar(); // Đã sửa lỗi dấu ngoặc thừa ở đây
-
-                        if (count == 1)
-                        {
-                            // Đăng nhập thành công
-                            MessageBox.Show("Succeed! LEGGOOOO!", "Notification", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                            // Mở cửa sổ chính
-                            MainWindow mainWindow = new MainWindow();
-                            mainWindow.Show();
-
-                            // Đóng LoginWindow
-                            Window.GetWindow(this)?.Close();
-                        }
-                        else
-                        {
-                            // Đăng nhập thất bại
-                            MessageBox.Show("Oops! Username and Password doesn't match!", "Notification", MessageBoxButton.OK, MessageBoxImage.Error);
-
-                            // Xóa mật khẩu để người dùng nhập lại
-                            PasswordBox.Clear();
-                        }
-                    }
+                    UsernameTextBox.Text = savedUsername;
+                    RememberMeCheckBox.IsChecked = true;
                 }
             }
             catch (Exception ex)
             {
-                // Xử lý lỗi kết nối hoặc lỗi truy vấn SQL
-                MessageBox.Show($"Lỗi kết nối Database: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                PasswordBox.Clear();
+                System.Diagnostics.Debug.WriteLine($"Lỗi load remembered user: {ex.Message}");
             }
         }
 
-        private void SignUp_Click(object sender, RoutedEventArgs e)
+        // Xử lý đăng nhập
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new SignUp());
+            PerformLogin();
         }
 
-        private void UsernameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        // Cho phép Enter để đăng nhập
+        private void PasswordBox_KeyDown(object sender, KeyEventArgs e)
         {
-            // Có thể thêm logic kiểm tra hoặc định dạng ở đây nếu cần
+            if (e.Key == Key.Enter)
+            {
+                PerformLogin();
+            }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void UsernameTextBox_KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Key == Key.Enter)
+            {
+                PasswordBox.Focus();
+            }
+        }
 
+        // Thực hiện đăng nhập
+        private void PerformLogin()
+        {
+            // Validate input
+            string username = UsernameTextBox.Text.Trim();
+            string password = PasswordBox.Password;
+
+            // Xóa thông báo lỗi cũ
+            ErrorMessage.Visibility = Visibility.Collapsed;
+            var errorTextBlock = ErrorMessage.Child as TextBlock;
+            if (errorTextBlock != null)
+            {
+                errorTextBlock.Text = string.Empty;
+            }
+            ErrorMessage.Visibility = Visibility.Collapsed;
+
+            // Kiểm tra rỗng
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                ShowError("Vui lòng nhập tên đăng nhập");
+                UsernameTextBox.Focus();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                ShowError("Vui lòng nhập mật khẩu");
+                PasswordBox.Focus();
+                return;
+            }
+
+            try
+            {
+                // Gọi service để xác thực
+                User authenticatedUser = userService.AuthenticateUser(username, password);
+
+                if (authenticatedUser != null)
+                {
+                    // Đăng nhập thành công
+                    HandleSuccessfulLogin(authenticatedUser);
+                }
+                else
+                {
+                    // Sai thông tin đăng nhập
+                    ShowError("Tên đăng nhập hoặc mật khẩu không đúng");
+                    PasswordBox.Clear();
+                    PasswordBox.Focus();
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Lỗi đăng nhập: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Login error: {ex.Message}");
+            }
+        }
+
+        // Xử lý sau khi đăng nhập thành công
+        private void HandleSuccessfulLogin(User user)
+        {
+            try
+            {
+                // Lưu thông tin user vào session
+                SessionManager.CurrentUser = user;
+
+                // Xử lý "Ghi nhớ tôi"
+                if (RememberMeCheckBox.IsChecked == true)
+                {
+                    Properties.Settings.Default.SavedUsername = user.Username;
+                    Properties.Settings.Default.RememberMe = true;
+                }
+                else
+                {
+                    Properties.Settings.Default.SavedUsername = string.Empty;
+                    Properties.Settings.Default.RememberMe = false;
+                }
+                Properties.Settings.Default.Save();
+
+                // Hiển thị thông báo thành công
+                MessageBox.Show($"Đăng nhập thành công!\nXin chào {user.FullName}",
+                    "Thành công",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+
+                // Chuyển đến trang Account hoặc Home
+                if (mainWindow != null)
+                {
+                    // Nếu đã có AccountPage thì navigate đến đó
+                    // mainWindow.MainFrame.Navigate(new AccountPage());
+
+                    // Tạm thời quay về HomePage
+                    mainWindow.MainScreen.Navigate(new AccountPage());
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Lỗi xử lý đăng nhập: {ex.Message}");
+            }
+        }
+
+        // Hiển thị thông báo lỗi
+        private void ShowError(string message)
+        {
+            // Cast Border.Child thành TextBlock
+            if (ErrorMessage.Child is TextBlock textBlock)
+            {
+                textBlock.Text = message;
+                ErrorMessage.Visibility = Visibility.Visible;
+            }
+        }
+
+        // Chuyển sang trang đăng ký (nếu có)
+        private void RegisterLink_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.NavigationService != null)
+            {
+                this.NavigationService.Navigate(new SignUp());
+            }
+            else
+            {
+                var mainWindow = Application.Current.MainWindow as MainWindow;
+                mainWindow.MainScreen.Navigate(new SignUp());
+            }
+        }
+
+        // Quên mật khẩu
+        private void ForgotPasswordLink_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Vui lòng liên hệ quản trị viên để lấy lại mật khẩu",
+                "Quên mật khẩu",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+
+        // Quay lại trang chủ
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            mainWindow?.MainScreen.Navigate(new HomePage());
         }
     }
 }

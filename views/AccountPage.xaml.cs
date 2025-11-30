@@ -1,413 +1,311 @@
 ﻿using Microsoft.Win32;
+using Pet_Shop_Project.Models;
+using Pet_Shop_Project.Services;
 using System;
-using System.Data;
-using System.Data.SqlClient;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Pet_Shop_Project.Views
 {
     public partial class AccountPage : Page
     {
-        // THAY THẾ CHUỖI KẾT NỐI VÀO ĐÂY SAU KHI RESTORE DB
-        private string connectionString = @"Data Source=DESKTOP-MEEB046;Initial Catalog=PETSHOP;Integrated Security=True";
-        private int userId;
+        private UserService userService;
+        private User currentUser;
 
-        // Hàm tạo mặc định: Cần thiết để WPF khởi động (StartupUri)
         public AccountPage()
         {
             InitializeComponent();
-            this.userId = -1; // ID không hợp lệ cho trường hợp khởi động mặc định
+            userService = new UserService();
+            Loaded += AccountPage_Loaded;
         }
 
-        // Hàm tạo chính: Dùng khi người dùng đăng nhập thành công
-        public AccountPage(int userId)
+        private void AccountPage_Loaded(object sender, RoutedEventArgs e)
         {
-            InitializeComponent();
-            this.userId = userId;
-
-            // Tải dữ liệu chỉ khi có userId hợp lệ
-            if (this.userId > 0)
+            // Kiểm tra xem có user đang đăng nhập không
+            if (!SessionManager.IsLoggedIn)
             {
-                LoadUserData();
-                LoadUserStats();
-                LoadUserPreferences();
+                MessageBox.Show("Vui lòng đăng nhập để xem thông tin tài khoản!",
+                    "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                // Chuyển về trang đăng nhập
+                NavigationService?.Navigate(new SignIn());
+                return;
+            }
+
+            // Lấy thông tin user từ session
+            currentUser = SessionManager.CurrentUser;
+
+            // Load thông tin user lên UI
+            LoadUserInfo();
+        }
+
+        /// <summary>
+        /// Load thông tin user lên giao diện
+        /// </summary>
+        private void LoadUserInfo()
+        {
+            if (currentUser == null) return;
+
+            try
+            {
+                // Hiển thị thông tin cơ bản
+                UserNameText.Text = currentUser.FullName ?? "Người dùng";
+                EmailText.Text = currentUser.Email ?? "Chưa cập nhật";
+
+                // Hiển thị role
+                RoleText.Text = GetRoleDisplayName(currentUser.Role);
+
+                // Hiển thị số điện thoại
+                PhoneText.Text = string.IsNullOrWhiteSpace(currentUser.Phone)
+                    ? "Chưa cập nhật"
+                    : currentUser.Phone;
+
+                // Hiển thị địa chỉ
+                AddressText.Text = string.IsNullOrWhiteSpace(currentUser.Address)
+                    ? "Chưa cập nhật"
+                    : currentUser.Address;
+
+                // Hiển thị ngày tham gia
+                JoinDateText.Text = currentUser.CreatedDate.ToString("dd/MM/yyyy");
+
+                // Load avatar nếu có
+                LoadAvatar();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi hiển thị thông tin: {ex.Message}",
+                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        #region Vùng Load Dữ Liệu
+        /// <summary>
+        /// Chuyển đổi role thành tên hiển thị
+        /// </summary>
+        private string GetRoleDisplayName(string role)
+        {
+            switch (role?.ToLower())
+            {
+                case "admin":
+                    return "Quản trị viên";
+                case "customer":
+                    return "Khách hàng";
+                case "staff":
+                    return "Nhân viên";
+                default:
+                    return "Khách hàng";
+            }
+        }
 
-        private void LoadUserData()
+        /// <summary>
+        /// Load avatar từ database hoặc hiển thị avatar mặc định
+        /// </summary>
+        private void LoadAvatar()
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                if (!string.IsNullOrWhiteSpace(currentUser.AvatarPath) &&
+                    File.Exists(currentUser.AvatarPath))
                 {
-                    conn.Open();
+                    BitmapImage bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.UriSource = new Uri(currentUser.AvatarPath, UriKind.Absolute);
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.EndInit();
 
-                    // Đã thêm cột NgaySinh vào truy vấn
-                    string query = @"SELECT HoTen, Email, SoDienThoai, DiaChi, PhanQuyen, 
-                                            Avatar, NgaySinh, NgayTao, LanDangNhapCuoi 
-                                     FROM NguoiDung 
-                                     WHERE ID = @UserId";
+                    AvatarBrush.ImageSource = bitmap;
+                }
+                else
+                {
+                    // Sử dụng avatar mặc định
+                    AvatarBrush.ImageSource = new BitmapImage(
+                        new Uri("pack://application:,,,/Images/default-avatar.png"));
+                }
+            }
+            catch (Exception)
+            {
+                // Nếu có lỗi, dùng avatar mặc định
+                AvatarBrush.ImageSource = new BitmapImage(
+                    new Uri("pack://application:,,,/Images/default-avatar.png"));
+            }
+        }
 
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+        /// <summary>
+        /// Thay đổi avatar
+        /// </summary>
+        private void ChangeAvatar_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    Filter = "Image files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg",
+                    Title = "Chọn ảnh đại diện"
+                };
+
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    string selectedFile = openFileDialog.FileName;
+
+                    // Tạo thư mục lưu avatar nếu chưa có
+                    string avatarFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Avatars");
+                    if (!Directory.Exists(avatarFolder))
                     {
-                        cmd.Parameters.AddWithValue("@UserId", userId);
+                        Directory.CreateDirectory(avatarFolder);
+                    }
 
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                // Thông tin cơ bản
-                                txtFullName.Text = reader["HoTen"]?.ToString() ?? "Chưa cập nhật";
-                                txtEmail.Text = reader["Email"]?.ToString() ?? "Chưa cập nhật";
-                                txtPhone.Text = reader["SoDienThoai"]?.ToString() ?? "Chưa cập nhật";
-                                txtAddress.Text = reader["DiaChi"]?.ToString() ?? "Chưa cập nhật";
+                    // Tạo tên file mới
+                    string fileName = $"avatar_{currentUser.UserId}_{DateTime.Now:yyyyMMddHHmmss}" +
+                        Path.GetExtension(selectedFile);
+                    string newAvatarPath = Path.Combine(avatarFolder, fileName);
 
-                                // Phân quyền
-                                string role = reader["PhanQuyen"]?.ToString();
-                                if (role == "NhanVien" || role == "Admin")
-                                {
-                                    txtRole.Text = "👨‍💼 Nhân Viên";
-                                    borderRole.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E53935"));
-                                }
-                                else
-                                {
-                                    txtRole.Text = "👤 Khách Hàng";
-                                    borderRole.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4CAF50"));
-                                }
+                    // Copy file vào thư mục Avatars
+                    File.Copy(selectedFile, newAvatarPath, true);
 
-                                // Ngày tạo (Năm tham gia)
-                                if (reader["NgayTao"] != DBNull.Value)
-                                {
-                                    DateTime ngayTao = Convert.ToDateTime(reader["NgayTao"]);
-                                    txtCreatedDate.Text = ngayTao.ToString("dd/MM/yyyy");
-                                    txtMemberSince.Text = ngayTao.Year.ToString();
-                                }
-                                else
-                                {
-                                    txtCreatedDate.Text = "N/A";
-                                    txtMemberSince.Text = "N/A";
-                                }
+                    // Cập nhật vào database
+                    currentUser.AvatarPath = newAvatarPath;
+                    bool success = userService.UpdateUser(currentUser);
 
-                                // Lần đăng nhập cuối
-                                if (reader["LanDangNhapCuoi"] != DBNull.Value)
-                                {
-                                    DateTime lastLogin = Convert.ToDateTime(reader["LanDangNhapCuoi"]);
-                                    txtLastLogin.Text = lastLogin.ToString("dd/MM/yyyy HH:mm");
-                                }
-                                else
-                                {
-                                    txtLastLogin.Text = "Chưa có dữ liệu";
-                                }
+                    if (success)
+                    {
+                        // Cập nhật session
+                        SessionManager.UpdateUserInfo(currentUser);
 
-                                // Load avatar
-                                LoadImage(reader["Avatar"]?.ToString(), AvatarImage);
-                            }
-                            else
-                            {
-                                ShowErrorMessage("Không tìm thấy thông tin người dùng!");
-                                // Có thể giữ cửa sổ mở với dữ liệu "Chưa cập nhật"
-                            }
-                        }
+                        // Hiển thị avatar mới
+                        BitmapImage bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.UriSource = new Uri(newAvatarPath, UriKind.Absolute);
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.EndInit();
+
+                        AvatarBrush.ImageSource = bitmap;
+
+                        MessageBox.Show("Cập nhật ảnh đại diện thành công!",
+                            "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không thể cập nhật ảnh đại diện!",
+                            "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
             catch (Exception ex)
             {
-                ShowErrorMessage($"Lỗi khi tải dữ liệu: {ex.Message}");
+                MessageBox.Show($"Lỗi thay đổi avatar: {ex.Message}",
+                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private void LoadUserStats()
+        /// <summary>
+        /// Sửa số điện thoại
+        /// </summary>
+        private void EditPhone_Click(object sender, RoutedEventArgs e)
+        {
+            string newPhone = Microsoft.VisualBasic.Interaction.InputBox(
+                "Nhập số điện thoại mới:",
+                "Cập nhật số điện thoại",
+                currentUser.Phone ?? "",
+                -1, -1);
+
+            if (!string.IsNullOrWhiteSpace(newPhone))
+            {
+                UpdateUserField("Phone", newPhone);
+            }
+        }
+
+        /// <summary>
+        /// Sửa địa chỉ
+        /// </summary>
+        private void EditAddress_Click(object sender, RoutedEventArgs e)
+        {
+            string newAddress = Microsoft.VisualBasic.Interaction.InputBox(
+                "Nhập địa chỉ mới:",
+                "Cập nhật địa chỉ",
+                currentUser.Address ?? "",
+                -1, -1);
+
+            if (!string.IsNullOrWhiteSpace(newAddress))
+            {
+                UpdateUserField("Address", newAddress);
+            }
+        }
+
+        /// <summary>
+        /// Cập nhật thông tin user
+        /// </summary>
+        private void UpdateUserField(string fieldName, string newValue)
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                switch (fieldName)
                 {
-                    conn.Open();
-                    //đếm số đơn hàng
-                    string query = @"SELECT COUNT(*) FROM DonHang WHERE UserID = @UserId";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@UserId", userId);
-                        int totalOrders = Convert.ToInt32(cmd.ExecuteScalar());
-                        txtTotalOrders.Text = totalOrders.ToString();
-                    }
+                    case "Phone":
+                        currentUser.Phone = newValue;
+                        break;
+                    case "Address":
+                        currentUser.Address = newValue;
+                        break;
                 }
-            }
-            catch
-            {
-                txtTotalOrders.Text = "0";
-            }
-        }
 
-        private void LoadUserPreferences()
-        {
-            // Logic giữ nguyên, đảm bảo các CheckBox được tải từ DB
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                bool success = userService.UpdateUser(currentUser);
+
+                if (success)
                 {
-                    conn.Open();
+                    // Cập nhật session
+                    SessionManager.UpdateUserInfo(currentUser);
 
-                    string query = @"SELECT NhanEmailThongBao, NhanSMSThongBao, DangKyKhuyenMai 
-                                     FROM NguoiDung WHERE ID = @UserId";
+                    // Reload UI
+                    LoadUserInfo();
 
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@UserId", userId);
-
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                chkEmailNotifications.IsChecked = reader["NhanEmailThongBao"] != DBNull.Value
-                                    && Convert.ToBoolean(reader["NhanEmailThongBao"]);
-                                chkSMSNotifications.IsChecked = reader["NhanSMSThongBao"] != DBNull.Value
-                                    && Convert.ToBoolean(reader["NhanSMSThongBao"]);
-                                chkNewsletters.IsChecked = reader["DangKyKhuyenMai"] != DBNull.Value
-                                    && Convert.ToBoolean(reader["DangKyKhuyenMai"]);
-                            }
-                        }
-                    }
+                    MessageBox.Show("Cập nhật thành công!",
+                        "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-            }
-            catch
-            {
-                // Giữ mặc định nếu load lỗi
-            }
-        }
-
-        private void LoadImage(string imagePath, ImageBrush imageBrush)
-        {
-            if (!string.IsNullOrEmpty(imagePath) && File.Exists(imagePath))
-            {
-                try
+                else
                 {
-                    BitmapImage image = new BitmapImage();
-                    image.BeginInit();
-                    image.UriSource = new Uri(imagePath, UriKind.Absolute);
-                    image.CacheOption = BitmapCacheOption.OnLoad;
-                    image.EndInit();
-                    imageBrush.ImageSource = image;
-                }
-                catch { }
-            }
-            else if (!string.IsNullOrEmpty(imagePath))
-            {
-                try
-                {
-                    BitmapImage image = new BitmapImage();
-                    image.BeginInit();
-                    image.UriSource = new Uri(imagePath, UriKind.Relative);
-                    image.CacheOption = BitmapCacheOption.OnLoad;
-                    image.EndInit();
-                    imageBrush.ImageSource = image;
-                }
-                catch { }
-            }
-        }
-
-        #endregion
-
-        #region Vùng Thao Tác Cơ Sở Dữ Liệu 
-
-        private void UpdatePreference(string columnName, bool value)
-        {
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-                    string query = $"UPDATE NguoiDung SET {columnName} = @Value WHERE ID = @UserId";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Value", value);
-                        cmd.Parameters.AddWithValue("@UserId", userId);
-                        cmd.ExecuteNonQuery();
-                    }
+                    MessageBox.Show("Không thể cập nhật thông tin!",
+                        "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)
             {
-                ShowErrorMessage($"Lỗi khi cập nhật tùy chọn: {ex.Message}");
+                MessageBox.Show($"Lỗi cập nhật: {ex.Message}",
+                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private void UpdateImagePath(string columnName, string imagePath)
+        /// <summary>
+        /// Đổi mật khẩu
+        /// </summary>
+        private void ChangePassword_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-                    string query = $"UPDATE NguoiDung SET {columnName} = @ImagePath WHERE ID = @UserId";
+            // Có thể tạo một dialog riêng để đổi mật khẩu
+            MessageBox.Show("Tính năng đổi mật khẩu đang được phát triển!",
+                "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@ImagePath", imagePath);
-                        cmd.Parameters.AddWithValue("@UserId", userId);
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessage($"Không thể cập nhật database: {ex.Message}");
-            }
+            // TODO: Implement change password dialog
         }
 
-        #endregion
-
-        #region Vùng Xử Lý Sự Kiện
-
-        // Thêm nút Change Avatar trong XAML để sử dụng hàm này
-        private void btnChangeAvatar_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Đăng xuất
+        /// </summary>
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
-            {
-                Title = "Chọn ảnh đại diện",
-                Filter = "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png"
-            };
-
-            if (openFileDialog.ShowDialog() == true)
-            {
-                try
-                {
-                    string fileName = Path.GetFileName(openFileDialog.FileName);
-                    string destPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "Avatars", fileName);
-
-                    Directory.CreateDirectory(Path.GetDirectoryName(destPath));
-                    File.Copy(openFileDialog.FileName, destPath, true);
-
-                    UpdateImagePath("Avatar", destPath);
-                    LoadImage(destPath, AvatarImage);
-                    ShowSuccessMessage("Cập nhật ảnh đại diện thành công!");
-                }
-                catch (Exception ex)
-                {
-                    ShowErrorMessage($"Lỗi khi cập nhật ảnh: {ex.Message}");
-                }
-            }
-        }
-
-        private void btnChangeBackground_Click(object sender, RoutedEventArgs e)
-        {
-            // Logic giữ nguyên, cho phép thay đổi hình nền
-            OpenFileDialog openFileDialog = new OpenFileDialog
-            {
-                Title = "Chọn ảnh nền",
-                Filter = "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png"
-            };
-
-            if (openFileDialog.ShowDialog() == true)
-            {
-                try
-                {
-                    string fileName = Path.GetFileName(openFileDialog.FileName);
-                    string destPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "Backgrounds", fileName);
-
-                    Directory.CreateDirectory(Path.GetDirectoryName(destPath));
-                    File.Copy(openFileDialog.FileName, destPath, true);
-
-                    // Cập nhật database nếu có cột Background
-                    // UpdateImagePath("Background", destPath);
-
-                    LoadImage(destPath, BackgroundImage);
-                    ShowSuccessMessage("Cập nhật hình nền thành công!");
-                }
-                catch (Exception ex)
-                {
-                    ShowErrorMessage($"Lỗi khi cập nhật hình nền: {ex.Message}");
-                }
-            }
-        }
-
-        // Preferences Checkboxes
-        private void chkEmailNotifications_Changed(object sender, RoutedEventArgs e)
-        {
-            UpdatePreference("NhanEmailThongBao", chkEmailNotifications.IsChecked == true);
-        }
-
-        private void chkSMSNotifications_Changed(object sender, RoutedEventArgs e)
-        {
-            UpdatePreference("NhanSMSThongBao", chkSMSNotifications.IsChecked == true);
-        }
-
-        private void chkNewsletters_Changed(object sender, RoutedEventArgs e)
-        {
-            UpdatePreference("DangKyKhuyenMai", chkNewsletters.IsChecked == true);
-        }
-
-        // Action Buttons
-        private void btnEdit_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Mở form chỉnh sửa thông tin cá nhân (Address, Phone, Email, Birth Date).",
-                            "Chỉnh Sửa", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private void btnRefresh_Click(object sender, RoutedEventArgs e)
-        {
-            LoadUserData();
-            LoadUserStats();
-            LoadUserPreferences();
-            ShowSuccessMessage("Đã làm mới dữ liệu!");
-        }
-
-        // Đổi tên từ btnChangePassword_Click thành btnPurchaseHistory_Click
-        // Và tạo hàm mới cho việc đổi mật khẩu.
-        private void btnPurchaseHistory_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Mở trang lịch sử mua hàng với danh sách đơn hàng, trạng thái và chi tiết.",
-                           "Lịch Sử Mua Hàng", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-
-        private void btnLogout_Click(object sender, RoutedEventArgs e)
-        {
-            var result = MessageBox.Show("Bạn có chắc chắn muốn đăng xuất?",
-                                         "Xác nhận Đăng Xuất", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            var result = MessageBox.Show("Bạn có chắc muốn đăng xuất?",
+                "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
             {
-                ShowSuccessMessage("Đăng xuất thành công! Quay về màn hình đăng nhập.");
-                // Mở lại cửa sổ Login
-                Window1 loginWindow = new Window1();
-                loginWindow.Show();
+                // Xóa session
+                SessionManager.Logout();
 
-                // Đóng cửa sổ hiện tại
-                Window current = Window.GetWindow(this);
-                current?.Close();
+                MessageBox.Show("Đã đăng xuất thành công!",
+                    "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // Chuyển về trang đăng nhập
+                NavigationService?.Navigate(new SignIn());
             }
         }
-
-        #endregion
-
-        #region Helpers
-
-        private void ShowErrorMessage(string message)
-        {
-            MessageBox.Show(message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-
-        private void ShowSuccessMessage(string message)
-        {
-            MessageBox.Show(message, "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        #endregion
-
-        private void btn_PurHistory_Click(object sender, RoutedEventArgs e)
-        {
-           
-        }
     }
-    
 }
