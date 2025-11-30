@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 namespace Pet_Shop_Project.Views
 {
-    public partial class AccountPage : Window
+    public partial class AccountPage : Page
     {
         // THAY THẾ CHUỖI KẾT NỐI VÀO ĐÂY SAU KHI RESTORE DB
         private string connectionString = @"Data Source=DESKTOP-MEEB046;Initial Catalog=PETSHOP;Integrated Security=True";
