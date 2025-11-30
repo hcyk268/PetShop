@@ -19,10 +19,13 @@ namespace Pet_Shop_Project
 {
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public string userid { get; set; }
+        public MainWindow() //cần truyền userId vào để truy vấn chính xác
         {
             InitializeComponent();
+            this.userid = "USR001";
             Services.NavigationService.Instance.Initialize(MainScreen);
+            Services.NavigationService.Instance.setUserId(userid);
         }
     }
 }
