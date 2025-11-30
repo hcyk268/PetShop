@@ -5,23 +5,57 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
              Width="200" Height="280"
+             MouseLeftButtonUp="ProductCard_Click"
+             Cursor="Hand"
              Margin="10">
 
     <!-- Outer Shadow -->
-    <Border CornerRadius="12"
+    <Border x:Name="OuterBorder"
+            CornerRadius="12"
             Background="Transparent">
         <Border.Effect>
-            <DropShadowEffect ShadowDepth="0"
+            <DropShadowEffect x:Name="CardShadow"
+                              ShadowDepth="0"
                               BlurRadius="10"
                               Opacity="0.15"
                               Color="Black"/>
         </Border.Effect>
 
+        <Border.Triggers>
+            <EventTrigger RoutedEvent="MouseEnter">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="CardShadow"
+                                       Storyboard.TargetProperty="BlurRadius"
+                                       To="20"
+                                       Duration="0:0:0.2"/>
+                        <DoubleAnimation Storyboard.TargetName="CardShadow"
+                                       Storyboard.TargetProperty="Opacity"
+                                       To="0.25"
+                                       Duration="0:0:0.2"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="MouseLeave">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="CardShadow"
+                                       Storyboard.TargetProperty="BlurRadius"
+                                       To="10"
+                                       Duration="0:0:0.2"/>
+                        <DoubleAnimation Storyboard.TargetName="CardShadow"
+                                       Storyboard.TargetProperty="Opacity"
+                                       To="0.15"
+                                       Duration="0:0:0.2"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Border.Triggers>
+
         <!-- Card Background with Clipping -->
         <Border Background="White"
                 CornerRadius="12"
-                ClipToBounds="True"
-                Cursor="Hand">
+                ClipToBounds="True">
 
             <Grid>
                 <Grid.RowDefinitions>

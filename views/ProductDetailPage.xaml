@@ -1,0 +1,423 @@
+﻿<Page x:Class="Pet_Shop_Project.Views.ProductDetailPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Pet_Shop_Project.Views"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      mc:Ignorable="d" 
+      d:DesignHeight="650" d:DesignWidth="940"
+      Background="#F5F5F5">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header - Background F5F5F5 (giữ nguyên) -->
+        <Grid Grid.Row="0" Background="#F5F5F5" Height="60">
+            <StackPanel Orientation="Horizontal"
+                VerticalAlignment="Center"
+                Margin="30,0,0,0">
+
+                <!-- Nút Back -->
+                <Button x:Name="BackButton"
+                Width="35" Height="35"
+                BorderThickness="0"
+                Background="White"
+                Cursor="Hand"
+                Click="BackButton_Click"
+                Margin="0,0,15,0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                            Width="35" Height="35"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="18">
+                                <materialDesign:PackIcon x:Name="icon"
+                                                 Kind="ArrowLeft"
+                                                 Width="22" Height="22"
+                                                 Foreground="#FFAD57"
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center"/>
+                            </Border>
+
+                            <ControlTemplate.Triggers>
+
+                                <!-- Hover: nền xám nhạt -->
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#FFECECEC"/>
+                                </Trigger>
+
+                                <!-- Pressed: nền gradient + icon trắng -->
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <GradientStop Color="#FFAD56" Offset="0"/>
+                                                <GradientStop Color="#FFC281" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter TargetName="icon" Property="Foreground" Value="White"/>
+                                </Trigger>
+
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <!-- Tiêu đề -->
+                <TextBlock Text="Sản phẩm"
+                   FontSize="28"
+                   FontWeight="Bold"
+                   Foreground="#FFAD57"
+                   VerticalAlignment="Center"
+                   Margin="5,0,0,0"/>
+            </StackPanel>
+        </Grid>
+
+
+        <!-- Main Content - Background F8FFFE từ đây trở xuống -->
+        <ScrollViewer Grid.Row="1" 
+                     Background="#F8FFFE"
+                     VerticalScrollBarVisibility="Hidden"
+                     Margin="0,0,0,0">
+            <StackPanel HorizontalAlignment="Center"
+                        Margin="0,10,0,10">
+                <!-- Product Info Section: 880x320 - Shadow rõ hơn -->
+                <Border Width="880"
+                       Height="320"
+                       Background="White"
+                       CornerRadius="20"
+                       Margin="0,0,0,25"
+                       HorizontalAlignment="Left">
+                    <Border.Effect>
+                        <DropShadowEffect ShadowDepth="2" 
+                                        BlurRadius="20" 
+                                        Opacity="0.2"
+                                        Direction="315"/>
+                    </Border.Effect>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="280"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Product Image: 230x230 - Border radius 20 -->
+                        <Border Grid.Column="0"
+                               Width="230"
+                               Height="230"
+                               CornerRadius="20"
+                               Background="#F5F5F5"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               ClipToBounds="True"
+                               Loaded="ImageBorder_Loaded">
+                            <Image x:Name="ProductImage"
+                                  Stretch="UniformToFill"/>
+                        </Border>
+
+                        <!-- Product Details -->
+                        <StackPanel Grid.Column="1"
+                                   Margin="20,25,30,25">
+
+                            <!-- Product Name -->
+                            <TextBlock x:Name="ProductName"
+                                      Text="Tên sản phẩm"
+                                      FontSize="20"
+                                      FontWeight="Bold"
+                                      Foreground="#333333"
+                                      TextWrapping="Wrap"
+                                      Margin="0,0,0,10"/>
+
+                            <!-- Description: 600x100 with ellipsis -->
+                            <Border Width="600"
+                                   Height="100"
+                                   HorizontalAlignment="Left"
+                                   Margin="0,0,0,10">
+                                <TextBlock x:Name="ProductDescription"
+                                          Text="Mô tả sản phẩm..."
+                                          FontSize="15"
+                                          Foreground="#343131"
+                                          TextWrapping="Wrap"
+                                          TextTrimming="CharacterEllipsis"/>
+                            </Border>
+
+                            <!-- Price and Rating -->
+                            <StackPanel Orientation="Horizontal"
+                                       Margin="0,0,0,10">
+                                <!-- Price with Gradient -->
+                                <TextBlock x:Name="ProductPrice"
+                                          FontSize="20"
+                                          FontWeight="Bold"
+                                          Margin="0,0,15,0"
+                                          VerticalAlignment="Center">
+                                    <TextBlock.Foreground>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="#FFAD56" Offset="0"/>
+                                            <GradientStop Color="#FFC281" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </TextBlock.Foreground>
+                                    <Run Text="50.000đ"/>
+                                </TextBlock>
+
+                                <!-- Rating -->
+                                <StackPanel Orientation="Horizontal"
+                                           VerticalAlignment="Center">
+                                    <StackPanel x:Name="StarPanel" 
+                                               Orientation="Horizontal"
+                                               Margin="0,0,5,0"/>
+                                    <TextBlock x:Name="RatingText"
+                                              Text="5/5"
+                                              FontSize="15"
+                                              Foreground="#FFA500"
+                                              FontWeight="SemiBold"
+                                              VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- Stock -->
+                            <TextBlock Margin="0,0,0,15">
+                                <Run Text="Còn: " 
+                                     FontSize="15" 
+                                     Foreground="#666666"/>
+                                <Run x:Name="StockText"
+                                     Text="40" 
+                                     FontSize="15" 
+                                     FontWeight="Bold"
+                                     Foreground="#333333"/>
+                            </TextBlock>
+
+                            <!-- Add to Cart Button and Quantity Selector -->
+                            <StackPanel Orientation="Horizontal">
+                                <!-- Add to Cart Button: 165x40 với effect -->
+                                <Button x:Name="AddToCartButton"
+                                       Width="165"
+                                       Height="40"
+                                       FontSize="15"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       BorderThickness="0"
+                                       Cursor="Hand"
+                                       Margin="0,0,15,0"
+                                       Click="AddToCartButton_Click">
+                                    <Button.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="#FFAD56" Offset="0"/>
+                                            <GradientStop Color="#FFC281" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Button.Background>
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="border"
+                                                   Background="{TemplateBinding Background}"
+                                                   CornerRadius="20"
+                                                   Padding="15,0">
+                                                <StackPanel Orientation="Horizontal"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center">
+                                                    <materialDesign:PackIcon Kind="CartPlus"
+                                                                           Width="20"
+                                                                           Height="20"
+                                                                           Foreground="White"
+                                                                           Margin="0,0,8,0"
+                                                                           VerticalAlignment="Center"/>
+                                                    <TextBlock Text="Thêm vào giỏ"
+                                                              FontSize="{TemplateBinding FontSize}"
+                                                              FontWeight="{TemplateBinding FontWeight}"
+                                                              Foreground="{TemplateBinding Foreground}"
+                                                              VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="border" Property="Effect">
+                                                        <Setter.Value>
+                                                            <DropShadowEffect ShadowDepth="0" BlurRadius="15" Opacity="0.3"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                                <Trigger Property="IsPressed" Value="True">
+                                                    <Setter TargetName="border" Property="Background">
+                                                        <Setter.Value>
+                                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                                <GradientStop Color="#FF9D46" Offset="0"/>
+                                                                <GradientStop Color="#FFB271" Offset="1"/>
+                                                            </LinearGradientBrush>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Setter TargetName="border" Property="Effect">
+                                                        <Setter.Value>
+                                                            <DropShadowEffect ShadowDepth="0" BlurRadius="8" Opacity="0.2"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+
+                                <!-- Quantity Selector -->
+                                <Border BorderBrush="#E0E0E0"
+                                       BorderThickness="1"
+                                       CornerRadius="20"
+                                       Height="40"
+                                       Padding="5,0">
+                                    <StackPanel Orientation="Horizontal"
+                                               VerticalAlignment="Center">
+                                        <Button x:Name="DecreaseButton"
+                                               Style="{StaticResource QtyButtonStyle}"
+                                               Content="−"
+                                               Width="25"
+                                               Height="25"
+                                               Click="DecreaseButton_Click"/>
+
+                                        <TextBlock x:Name="QuantityText"
+                                                  Text="2"
+                                                  FontSize="16"
+                                                  FontWeight="Bold"
+                                                  Foreground="#333333"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center"
+                                                  Width="40"
+                                                  TextAlignment="Center"/>
+
+                                        <Button x:Name="IncreaseButton"
+                                               Style="{StaticResource QtyButtonStyle}"
+                                               Content="+"
+                                               Width="25"
+                                               Height="25"
+                                               Click="IncreaseButton_Click"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Reviews Section - Shadow rõ hơn -->
+                <Border Background="White"
+                       CornerRadius="20"
+                       Padding="30"
+                       Margin="0,0,0,25"
+                       HorizontalAlignment="Left"
+                       Width="880">
+                    <Border.Effect>
+                        <DropShadowEffect ShadowDepth="2" 
+                                        BlurRadius="20" 
+                                        Opacity="0.2"
+                                        Direction="315"/>
+                    </Border.Effect>
+
+                    <StackPanel>
+                        <TextBlock Text="Đánh giá"
+                                  FontSize="24"
+                                  FontWeight="Bold"
+                                  Foreground="#FFAD57"
+                                  Margin="0,0,0,20"/>
+
+                        <!-- Review Item 1 -->
+                        <Border Background="#FFF1E2"
+                               CornerRadius="20"
+                               Padding="20"
+                               Margin="0,0,0,15">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Avatar -->
+                                <Border Grid.Column="0"
+                                       Width="60"
+                                       Height="60"
+                                       CornerRadius="30"
+                                       Background="#E0E0E0"
+                                       Margin="0,0,20,0">
+                                    <TextBlock Text="👤"
+                                             FontSize="28"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"/>
+                                </Border>
+
+                                <!-- Review Content -->
+                                <StackPanel Grid.Column="1">
+                                    <StackPanel Orientation="Horizontal"
+                                               Margin="0,0,0,8">
+                                        <TextBlock Text="Tên người dùng"
+                                                  FontSize="18"
+                                                  FontWeight="Bold"
+                                                  Foreground="#333333"
+                                                  Margin="0,0,15,0"/>
+
+                                        <TextBlock Text="5/5"
+                                                  FontSize="16"
+                                                  FontWeight="Bold"
+                                                  Foreground="#FFA500"
+                                                  VerticalAlignment="Center"/>
+                                    </StackPanel>
+
+                                    <TextBlock Text="Comment này chỉ mang tính chất minh họa"
+                                              FontSize="15"
+                                              Foreground="#666666"
+                                              TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <!-- Review Item 2 -->
+                        <Border Background="#FFF1E2"
+                               CornerRadius="20"
+                               Padding="20">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Avatar -->
+                                <Border Grid.Column="0"
+                                       Width="60"
+                                       Height="60"
+                                       CornerRadius="30"
+                                       Background="#E0E0E0"
+                                       Margin="0,0,20,0">
+                                    <TextBlock Text="👤"
+                                             FontSize="28"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"/>
+                                </Border>
+
+                                <!-- Review Content -->
+                                <StackPanel Grid.Column="1">
+                                    <StackPanel Orientation="Horizontal"
+                                               Margin="0,0,0,8">
+                                        <TextBlock Text="Tên người dùng"
+                                                  FontSize="18"
+                                                  FontWeight="Bold"
+                                                  Foreground="#333333"
+                                                  Margin="0,0,15,0"/>
+
+                                        <TextBlock Text="5/5"
+                                                  FontSize="16"
+                                                  FontWeight="Bold"
+                                                  Foreground="#FFA500"
+                                                  VerticalAlignment="Center"/>
+                                    </StackPanel>
+
+                                    <TextBlock Text="Comment này chỉ mang tính chất minh họa"
+                                              FontSize="15"
+                                              Foreground="#666666"
+                                              TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>
