@@ -19,39 +19,40 @@ using System.Windows.Shapes;
 namespace Pet_Shop_Project.Views
 {
     /// <summary>
-    /// Interaction logic for AORejected.xaml
+    /// Interaction logic for AOShipped.xaml
     /// </summary>
-    public partial class AORejected : Page, INotifyPropertyChanged
+    public partial class AODelivered : Page, INotifyPropertyChanged
     {
-        private ObservableCollection<Order> _orderRejected;
+        private ObservableCollection<Order> _orderDelivered;
         private ObservableCollection<Order> _allOrders;
-        public AORejected(ObservableCollection<Order> allOrders)
+        public AODelivered(ObservableCollection<Order> allOrders)
         {
             InitializeComponent();
             _allOrders = allOrders;
-            OrderRejected = new ObservableCollection<Order>();
+            OrderDelivered = new ObservableCollection<Order>();
             FilterOrders();
             _allOrders.CollectionChanged += (s, e) => FilterOrders();
             DataContext = this;
         }
+
         protected void FilterOrders()
         {
-            OrderRejected.Clear();
+            OrderDelivered.Clear();
             foreach (var order in _allOrders)
-                if (order.ApprovalStatus == "Rejected")
-                    OrderRejected.Add(order);
+                if (order.ShippingStatus == "Delivered")
+                    OrderDelivered.Add(order);
 
-            OnPropertyChanged(nameof(TotalOrderRejected));
+            OnPropertyChanged(nameof(TotalOrderDelivered));
         }
-        public int TotalOrderRejected => _orderRejected.Count;
 
-        public ObservableCollection<Order> OrderRejected
+        public int TotalOrderDelivered => _orderDelivered.Count;
+        public ObservableCollection<Order> OrderDelivered
         {
-            get => _orderRejected;
+            get => _orderDelivered;
             set
             {
-                _allOrders = value;
-                OnPropertyChanged(nameof(OrderRejected));
+                _orderDelivered = value;
+                OnPropertyChanged(nameof(OrderDelivered));
             }
         }
 
