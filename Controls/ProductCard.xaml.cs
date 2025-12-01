@@ -81,5 +81,13 @@ namespace Pet_Shop_Project.Controls
                 LoadProductData();
             }
         }
+        private void ProductCard_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (_product != null)
+            {
+                // Navigate to ProductDetailPage using NavigationService
+                Services.NavigationService.Instance.NavigateToProductDetail(_product);
+            }
+        }
     }
 }
