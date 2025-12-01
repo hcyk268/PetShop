@@ -50,7 +50,7 @@ namespace Pet_Shop_Project.Views
             get => _orderShipping;
             set
             {
-                _allOrders = value;
+                _orderShipping = value;
                 OnPropertyChanged(nameof(OrderShipping));
             }
         }
@@ -59,6 +59,11 @@ namespace Pet_Shop_Project.Views
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void removeorderbtn_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("ok");
         }
     }
 }

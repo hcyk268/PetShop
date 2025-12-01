@@ -69,18 +69,21 @@ namespace Pet_Shop_Project.Views
         {
             setForeColorDefault();
             shippingbtn.Foreground = clickedtext;
+            AdminOrderScreen.Navigate(new AOShipping(AllOrders));
         }
 
         private void shippedbtn_Click(object sender, RoutedEventArgs e)
         {
             setForeColorDefault();
             shippedbtn.Foreground = clickedtext;
+            AdminOrderScreen.Navigate(new AODelivered(AllOrders));
         }
 
         private void rejectedbtn_Click(object sender, RoutedEventArgs e)
         {
             setForeColorDefault();
             rejectedbtn.Foreground = clickedtext;
+            AdminOrderScreen.Navigate(new AORejected(AllOrders));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

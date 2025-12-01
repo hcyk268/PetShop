@@ -50,7 +50,7 @@ namespace Pet_Shop_Project.Views
             get => _orderRejected;
             set
             {
-                _allOrders = value;
+                _orderRejected = value;
                 OnPropertyChanged(nameof(OrderRejected));
             }
         }

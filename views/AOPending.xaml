@@ -92,7 +92,7 @@
                                             <Border Background="#FFF0F0" BorderBrush="#FFE0E0" BorderThickness="1" CornerRadius="8" Padding="10,6" Margin="0,0,8,0">
                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                     <materialDesign:PackIcon Kind="ClockAlertOutline" Width="18" Height="18" Foreground="#FF6B6B"/>
-                                                    <TextBlock Text="Đang chờ duyệt" Margin="8,0,0,0" FontWeight="SemiBold" Foreground="#D84315"/>
+                                                    <TextBlock Text="{Binding ApprovalStatus, Converter={StaticResource LangConverter}}" Margin="8,0,0,0" FontWeight="SemiBold" Foreground="#D84315"/>
                                                 </StackPanel>
                                             </Border>
                                             <Border Background="#FFF7FF" BorderBrush="#F1D5FF" BorderThickness="1" CornerRadius="8" Padding="10,6">
