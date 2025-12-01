@@ -17,18 +17,7 @@
             </LinearGradientBrush>
         </Grid.Background>
 
-        <!-- Back Button -->
-        <Button Style="{StaticResource MaterialDesignIconButton}"
-                Width="40" Height="40"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Margin="20,20,0,0"
-                Click="BackButton_Click"
-                ToolTip="Quay lại">
-            <materialDesign:PackIcon Kind="ArrowLeft"
-                                   Width="24" Height="24"
-                                   Foreground="#666"/>
-        </Button>
+        
 
         <!-- Login Card -->
         <Border Width="450" Height="550"
@@ -63,7 +52,7 @@
                     <Border Width="80" Height="80" 
                            Background="Transparent"
                            CornerRadius="40"
-                           Margin="0,0,0,5">
+                           Margin="0,0,0,15">
                         <Image Source="/Images/peach.png" 
                                Stretch="Uniform"/>
                     </Border>
@@ -79,15 +68,14 @@
                                 <GradientStop Color="#FFCC96" Offset="1"/>
                             </LinearGradientBrush>
                         </TextBlock.Foreground>
-                        <Run Text="NAME"/>
+                        <Run Text="FETCH"/>
                     </TextBlock>
 
                     <!-- Subtitle -->
                     <TextBlock Text="Đăng nhập vào tài khoản"
                               FontSize="16"
                               Foreground="#666"
-                              HorizontalAlignment="Center"
-                              Margin="0,0,0,-10"/>
+                              HorizontalAlignment="Center"/>
                 </StackPanel>
 
                 <!-- Error Message -->
@@ -107,7 +95,7 @@
                 </Border>
 
                 <!-- Username -->
-                <StackPanel Grid.Row="2" Margin="0,0,0,10">
+                <StackPanel Grid.Row="2" Margin="0,-10,0,20">
                     <TextBlock Text="Tên đăng nhập"
                               FontSize="14"
                               FontWeight="SemiBold"
@@ -141,13 +129,13 @@
                                     Foreground="#333"
                                     KeyDown="UsernameTextBox_KeyDown"
                                     materialDesign:HintAssist.Hint="Nhập tên đăng nhập"
-                                    materialDesign:HintAssist.Foreground="#999"/>
+                                    materialDesign:HintAssist.Foreground="#999" TextChanged="UsernameTextBox_TextChanged"/>
                         </Grid>
                     </Border>
                 </StackPanel>
 
                 <!-- Password -->
-                <StackPanel Grid.Row="3" Margin="0,0,0,10">
+                <StackPanel Grid.Row="3" Margin="0,0,0,15">
                     <TextBlock Text="Mật khẩu"
                               FontSize="14"
                               FontWeight="SemiBold"
@@ -186,19 +174,22 @@
                 </StackPanel>
 
                 <!-- Remember Me & Forgot Password -->
-                <Grid Grid.Row="4" Margin="0,0,0,15">
-                    <CheckBox x:Name="RememberMeCheckBox"
-                             Content="Ghi nhớ tôi"
-                             FontSize="14"
-                             Foreground="#666"
-                             HorizontalAlignment="Left"
-                             VerticalAlignment="Center"/>
-
-                    <TextBlock HorizontalAlignment="Right"
+                <Grid Grid.Row="4" Margin="0,0,0,25">
+                    <TextBlock HorizontalAlignment="Left"
                               VerticalAlignment="Center">
                         <Hyperlink Click="ForgotPasswordLink_Click"
                                   TextDecorations="None">
                             <TextBlock Text="Quên mật khẩu?"
+                                      FontSize="14"
+                                      Foreground="#F78272"/>
+                        </Hyperlink>
+                    </TextBlock>
+
+                    <TextBlock HorizontalAlignment="Right"
+                              VerticalAlignment="Center">
+                        <Hyperlink Click="SignUp_Click"
+                                  TextDecorations="None">
+                            <TextBlock Text="Đăng ký?"
                                       FontSize="14"
                                       Foreground="#F78272"/>
                         </Hyperlink>
@@ -255,23 +246,9 @@
                 </Button>
 
                 <!-- Register Link -->
-                <StackPanel Grid.Row="6" 
-                           Orientation="Horizontal"
-                           HorizontalAlignment="Center">
-                    <TextBlock Text="Chưa có tài khoản? "
-                              FontSize="14"
-                              Foreground="#666"
-                              VerticalAlignment="Center"/>
-                    <TextBlock VerticalAlignment="Center">
-                        <Hyperlink Click="RegisterLink_Click"
-                                  TextDecorations="None">
-                            <TextBlock Text="Đăng ký ngay"
-                                      FontSize="14"
-                                      FontWeight="SemiBold"
-                                      Foreground="#F78272"/>
-                        </Hyperlink>
-                    </TextBlock>
-                </StackPanel>
+                
+                    
+                
             </Grid>
         </Border>
     </Grid>

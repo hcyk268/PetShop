@@ -1,9 +1,15 @@
-﻿using Pet_Shop_Project.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Security.Cryptography;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Net;
+
+using Pet_Shop_Project.Models;
+
+using System.Security.Cryptography;
+
 
 namespace Pet_Shop_Project.Services
 {
@@ -13,14 +19,11 @@ namespace Pet_Shop_Project.Services
 
         public UserService()
         {
-            // Thay đổi connection string theo database của bạn
-            connectionString = @"Server=YOUR_SERVER;Database=PetShopDB;Integrated Security=True;";
-
-            // Hoặc dùng SQL Server Authentication:
-            // connectionString = @"Server=YOUR_SERVER;Database=PetShopDB;User Id=YOUR_USER;Password=YOUR_PASSWORD;";
+            // ✅ Thay đổi connection string theo database của bạn
+            connectionString = @"Server=DESKTOP-MEEB046;Database=PETSHOP;Integrated Security=True;";
         }
 
-        // Xác thực người dùng - trả về User nếu đúng, null nếu sai
+        // ✅ METHOD XÁC THỰC - So sánh username/password với database
         public User AuthenticateUser(string username, string password)
         {
             try
@@ -29,10 +32,10 @@ namespace Pet_Shop_Project.Services
                 {
                     conn.Open();
 
-                    string query = @"SELECT UserId, Username, PasswordHash, FullName, Email, 
-                                           Phone, Address, Role, CreatedDate, IsActive
-                                    FROM Users 
-                                    WHERE Username = @Username AND IsActive = 1";
+                    // Query lấy thông tin user theo username
+                    string query = @"SELECT UserId, Username, Password, FullName, Email, Phone, Address, Role
+                            FROM Users 
+                            WHERE Username = @Username";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -42,22 +45,21 @@ namespace Pet_Shop_Project.Services
                         {
                             if (reader.Read())
                             {
-                                string storedHash = reader["PasswordHash"].ToString();
-                                if (HashPassword(password) == storedHash) // So sánh trực tiếp
+                                // 1. Lấy mật khẩu gốc (clear-text) từ database
+                                string storedPassword = reader["Password"].ToString();
+
+                                // ❌ BỎ QUA HASHING và so sánh trực tiếp
+                                if (password == storedPassword)
                                 {
-                                    // Đăng nhập thành công - tạo đối tượng User
+                                    // Đăng nhập thành công - Tạo User object
                                     User user = new User
                                     {
-                                        UserId = Convert.ToString(reader["UserId"]),
-                                        Username = reader["Username"].ToString(),
+                                        UserId = reader["UserId"].ToString(),
                                         FullName = reader["FullName"].ToString(),
                                         Email = reader["Email"]?.ToString(),
                                         Phone = reader["Phone"]?.ToString(),
                                         Address = reader["Address"]?.ToString(),
-                                        Role = reader["Role"].ToString(),
-                                        CreatedDate = Convert.ToDateTime(reader["CreatedDate"]),
-                                        IsActive = Convert.ToBoolean(reader["IsActive"]),
-                                        AvatarPath = reader["AvatarPath"]?.ToString()
+                                        Role = reader["Role"].ToString()
                                     };
 
                                     return user;
@@ -67,13 +69,28 @@ namespace Pet_Shop_Project.Services
                     }
                 }
 
-                // Sai username hoặc password
+                // ❌ Sai username hoặc password
                 return null;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Authentication error: {ex.Message}");
                 throw new Exception($"Lỗi xác thực: {ex.Message}");
+            }
+        }
+
+        // Hash password bằng SHA256
+        private string HashPassword(string password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in bytes)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+                return builder.ToString();
             }
         }
 
@@ -86,10 +103,9 @@ namespace Pet_Shop_Project.Services
                 {
                     conn.Open();
 
-                    string query = @"SELECT UserId, Username, FullName, Email, Phone, 
-                                           Address, Role, CreatedDate, IsActive
+                    string query = @"SELECT UserId, FullName, Email, Phone, Address, Role
                                     FROM Users 
-                                    WHERE UserId = @UserId AND IsActive = 1";
+                                    WHERE UserId = @UserId";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -101,15 +117,12 @@ namespace Pet_Shop_Project.Services
                             {
                                 return new User
                                 {
-                                    UserId = Convert.ToString(reader["UserId"]),
-                                    Username = reader["Username"].ToString(),
+                                    UserId = reader["UserId"].ToString(),
                                     FullName = reader["FullName"].ToString(),
                                     Email = reader["Email"]?.ToString(),
                                     Phone = reader["Phone"]?.ToString(),
                                     Address = reader["Address"]?.ToString(),
-                                    Role = reader["Role"].ToString(),
-                                    CreatedDate = Convert.ToDateTime(reader["CreatedDate"]),
-                                    IsActive = Convert.ToBoolean(reader["IsActive"])
+                                    Role = reader["Role"].ToString()
                                 };
                             }
                         }
@@ -177,8 +190,8 @@ namespace Pet_Shop_Project.Services
             }
         }
 
-        // Đăng ký user mới (INSERT vào database)
-        public bool RegisterUser(User user, string password)
+        // Đăng ký user mới
+        public bool RegisterUser(User user, string username, string password)
         {
             try
             {
@@ -187,22 +200,18 @@ namespace Pet_Shop_Project.Services
                     conn.Open();
 
                     string query = @"INSERT INTO Users 
-                                    (Username, Password, FullName, Email, Phone, 
-                                     Role, CreatedDate, IsActive)
+                                    (Username, FullName, Email, Phone, Password, Role) 
                                     VALUES 
-                                    (@Username, @Password, @FullName, @Email, @Phone, 
-                                     @Role, @CreatedDate, @IsActive)";
+                                    (@Username, @FullName, @Email, @Phone, @Password, @Role)";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@Username", user.Username);
-                        cmd.Parameters.AddWithValue("@Password", HashPassword(password)); // Hash password
+                        cmd.Parameters.AddWithValue("@Username", username);
                         cmd.Parameters.AddWithValue("@FullName", user.FullName);
                         cmd.Parameters.AddWithValue("@Email", user.Email ?? "");
                         cmd.Parameters.AddWithValue("@Phone", user.Phone ?? "");
-                        cmd.Parameters.AddWithValue("@Role", user.Role);
-                        cmd.Parameters.AddWithValue("@CreatedDate", user.CreatedDate);
-                        cmd.Parameters.AddWithValue("@IsActive", user.IsActive);
+                        cmd.Parameters.AddWithValue("@Password", HashPassword(password));
+                        cmd.Parameters.AddWithValue("@Role", user.Role ?? "Customer");
 
                         int rowsAffected = cmd.ExecuteNonQuery();
                         return rowsAffected > 0;
@@ -215,29 +224,6 @@ namespace Pet_Shop_Project.Services
                 throw new Exception($"Không thể đăng ký tài khoản: {ex.Message}");
             }
         }
-
-        // Hash password - SHA256 (tạm thời, nên dùng BCrypt trong thực tế)
-        private string HashPassword(string password)
-        {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                StringBuilder builder = new StringBuilder();
-                foreach (byte b in bytes)
-                {
-                    builder.Append(b.ToString("x2"));
-                }
-                return builder.ToString();
-            }
-        }
-
-        // Verify password với BCrypt (nếu dùng BCrypt.Net-Next package)
-        /*
-        private bool VerifyPassword(string password, string hashedPassword)
-        {
-            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
-        }
-        */
 
         // Cập nhật thông tin user
         public bool UpdateUser(User user)
@@ -271,47 +257,6 @@ namespace Pet_Shop_Project.Services
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"UpdateUser error: {ex.Message}");
-                return false;
-            }
-        }
-
-        // Đổi mật khẩu
-        public bool ChangePassword(int userId, string oldPassword, string newPassword)
-        {
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-
-                    // Kiểm tra mật khẩu cũ
-                    string checkQuery = "SELECT PasswordHash FROM Users WHERE UserId = @UserId";
-                    using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
-                    {
-                        checkCmd.Parameters.AddWithValue("@UserId", userId);
-                        string storedHash = checkCmd.ExecuteScalar()?.ToString();
-
-                        if (storedHash == null || HashPassword(oldPassword) != storedHash)
-                        {
-                            return false; // Mật khẩu cũ không đúng
-                        }
-                    }
-
-                    // Cập nhật mật khẩu mới
-                    string updateQuery = "UPDATE Users SET PasswordHash = @NewHash WHERE UserId = @UserId";
-                    using (SqlCommand updateCmd = new SqlCommand(updateQuery, conn))
-                    {
-                        updateCmd.Parameters.AddWithValue("@UserId", userId);
-                        updateCmd.Parameters.AddWithValue("@NewHash", HashPassword(newPassword));
-
-                        int rowsAffected = updateCmd.ExecuteNonQuery();
-                        return rowsAffected > 0;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"ChangePassword error: {ex.Message}");
                 return false;
             }
         }

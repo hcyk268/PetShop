@@ -1,42 +1,38 @@
-﻿using Pet_Shop_Project.Models;
-using Pet_Shop_Project.Services;
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace Pet_Shop_Project.Views
 {
     public partial class SignUp : Page
     {
-        private UserService userService;
-
         public SignUp()
         {
             InitializeComponent();
-            userService = new UserService();
         }
 
-        // Xử lý đăng ký
-        private void SignUpButton_Click(object sender, RoutedEventArgs e)
+        private void SignUp_Click(object sender, RoutedEventArgs e)
         {
             PerformSignUp();
         }
 
-        // Cho phép Enter để submit
         private void ConfirmPasswordBox_KeyDown(object sender, KeyEventArgs e)
         {
+            // Cho phép nhấn Enter để đăng ký
             if (e.Key == Key.Enter)
             {
                 PerformSignUp();
             }
         }
 
-        // Thực hiện đăng ký
         private void PerformSignUp()
         {
+            // Ẩn thông báo lỗi cũ
+            
+
             // Lấy dữ liệu từ form
             string fullName = FullNameTextBox.Text.Trim();
             string username = UsernameTextBox.Text.Trim();
@@ -44,192 +40,122 @@ namespace Pet_Shop_Project.Views
             string phone = PhoneTextBox.Text.Trim();
             string password = PasswordBox.Password;
             string confirmPassword = ConfirmPasswordBox.Password;
-            bool termsAccepted = TermsCheckBox.IsChecked == true;
 
-            // Validate tất cả các trường
-            if (!ValidateInput(fullName, username, email, phone, password, confirmPassword, termsAccepted))
+            // Validation
+            if (string.IsNullOrEmpty(fullName))
             {
+                ShowError("Please enter your full name");
+                FullNameTextBox.Focus();
                 return;
             }
 
-            try
+            if (string.IsNullOrEmpty(username))
             {
-                // Kiểm tra username đã tồn tại chưa
-                if (userService.IsUsernameExists(username))
-                {
-                    ShowError("Tên đăng nhập đã tồn tại. Vui lòng chọn tên khác.");
-                    UsernameTextBox.Focus();
-                    return;
-                }
-
-                // Kiểm tra email đã tồn tại chưa
-                if (userService.IsEmailExists(email))
-                {
-                    ShowError("Email đã được đăng ký. Vui lòng sử dụng email khác.");
-                    EmailTextBox.Focus();
-                    return;
-                }
-
-                // Tạo đối tượng User mới
-                User newUser = new User
-                {
-                    FullName = fullName,
-                    Username = username,
-                    Email = email,
-                    Phone = phone,
-                    Role = "Customer", // Mặc định là Customer
-                    CreatedDate = DateTime.Now,
-                    IsActive = true
-                };
-
-                // Gọi service để đăng ký (insert vào database)
-                bool success = userService.RegisterUser(newUser, password);
-
-                if (success)
-                {
-                    // Đăng ký thành công
-                    ShowSuccess("Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.");
-
-                    // Đợi 2 giây rồi chuyển sang trang đăng nhập
-                    System.Threading.Tasks.Task.Delay(2000).ContinueWith(t =>
-                    {
-                        Dispatcher.Invoke(() =>
-                        {
-                            NavigateToSignIn();
-                        });
-                    });
-                }
-                else
-                {
-                    ShowError("Đăng ký thất bại. Vui lòng thử lại.");
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowError($"Lỗi đăng ký: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine($"SignUp error: {ex.Message}");
-            }
-        }
-
-        // Validate tất cả input
-        private bool ValidateInput(string fullName, string username, string email,
-                                   string phone, string password, string confirmPassword,
-                                   bool termsAccepted)
-        {
-            // Kiểm tra họ tên
-            if (string.IsNullOrWhiteSpace(fullName))
-            {
-                ShowError("Vui lòng nhập họ và tên");
-                FullNameTextBox.Focus();
-                return false;
-            }
-
-            if (fullName.Length < 2)
-            {
-                ShowError("Họ và tên phải có ít nhất 2 ký tự");
-                FullNameTextBox.Focus();
-                return false;
-            }
-
-            // Kiểm tra username
-            if (string.IsNullOrWhiteSpace(username))
-            {
-                ShowError("Vui lòng nhập tên đăng nhập");
+                ShowError("Please enter username");
                 UsernameTextBox.Focus();
-                return false;
+                return;
             }
 
             if (username.Length < 4)
             {
-                ShowError("Tên đăng nhập phải có ít nhất 4 ký tự");
+                ShowError("Username must be at least 4 characters");
                 UsernameTextBox.Focus();
-                return false;
+                return;
             }
 
-            if (!Regex.IsMatch(username, @"^[a-zA-Z0-9_]+$"))
+            if (string.IsNullOrEmpty(email))
             {
-                ShowError("Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới");
-                UsernameTextBox.Focus();
-                return false;
-            }
-
-            // Kiểm tra email
-            if (string.IsNullOrWhiteSpace(email))
-            {
-                ShowError("Vui lòng nhập email");
+                ShowError("Please enter email");
                 EmailTextBox.Focus();
-                return false;
+                return;
             }
 
             if (!IsValidEmail(email))
             {
-                ShowError("Email không hợp lệ");
+                ShowError("Please enter a valid email address");
                 EmailTextBox.Focus();
-                return false;
+                return;
             }
 
-            // Kiểm tra số điện thoại
-            if (string.IsNullOrWhiteSpace(phone))
+            if (string.IsNullOrEmpty(phone))
             {
-                ShowError("Vui lòng nhập số điện thoại");
+                ShowError("Please enter phone number");
                 PhoneTextBox.Focus();
-                return false;
+                return;
             }
 
             if (!IsValidPhone(phone))
             {
-                ShowError("Số điện thoại không hợp lệ (10-11 số)");
+                ShowError("Please enter a valid phone number");
                 PhoneTextBox.Focus();
-                return false;
+                return;
             }
 
-            // Kiểm tra mật khẩu
-            if (string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrEmpty(password))
             {
-                ShowError("Vui lòng nhập mật khẩu");
+                ShowError("Please enter password");
                 PasswordBox.Focus();
-                return false;
+                return;
             }
 
             if (password.Length < 6)
             {
-                ShowError("Mật khẩu phải có ít nhất 6 ký tự");
+                ShowError("Password must be at least 6 characters");
                 PasswordBox.Focus();
-                return false;
+                return;
             }
 
-            // Kiểm tra xác nhận mật khẩu
-            if (string.IsNullOrWhiteSpace(confirmPassword))
+            if (string.IsNullOrEmpty(confirmPassword))
             {
-                ShowError("Vui lòng xác nhận mật khẩu");
+                ShowError("Please confirm your password");
                 ConfirmPasswordBox.Focus();
-                return false;
+                return;
             }
 
             if (password != confirmPassword)
             {
-                ShowError("Mật khẩu xác nhận không khớp");
+                ShowError("Passwords do not match");
                 ConfirmPasswordBox.Focus();
-                return false;
+                return;
             }
 
-            // Kiểm tra điều khoản
-            if (!termsAccepted)
+            
+
+            // TODO: Thực hiện logic đăng ký
+            bool registrationSuccess = RegisterUser(fullName, username, email, phone, password);
+
+            if (registrationSuccess)
             {
-                ShowError("Bạn phải đồng ý với điều khoản dịch vụ");
-                return false;
-            }
+                MessageBox.Show("Registration successful! Please sign in.",
+                    "Success",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
 
+                // Chuyển về trang đăng nhập
+                NavigateToSignIn();
+            }
+            else
+            {
+                ShowError("Registration failed. Username or email may already exist.");
+            }
+        }
+
+        private bool RegisterUser(string fullName, string username, string email, string phone, string password)
+        {
+            // TODO: Implement registration logic
+            // - Kiểm tra username/email đã tồn tại chưa
+            // - Hash password
+            // - Lưu vào database
+            // Tạm thời return true để test
             return true;
         }
 
-        // Validate email
         private bool IsValidEmail(string email)
         {
             try
             {
-                var regex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
-                return regex.IsMatch(email);
+                string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+                return Regex.IsMatch(email, pattern);
             }
             catch
             {
@@ -237,74 +163,41 @@ namespace Pet_Shop_Project.Views
             }
         }
 
-        // Validate phone
         private bool IsValidPhone(string phone)
         {
-            // Chỉ chấp nhận số, 10-11 ký tự
-            return Regex.IsMatch(phone, @"^[0-9]{10,11}$");
+            // Chấp nhận số điện thoại 10-11 số, có thể có dấu cách, dấu gạch ngang
+            string cleanPhone = Regex.Replace(phone, @"[\s\-\(\)]", "");
+            return Regex.IsMatch(cleanPhone, @"^\d{10,11}$");
         }
 
-        // Hiển thị thông báo lỗi
         private void ShowError(string message)
         {
-            MessageText.Text = message;
-            MessageBorder.Background = new SolidColorBrush(Color.FromRgb(255, 235, 238)); // #FFEBEE
-            MessageBorder.BorderBrush = new SolidColorBrush(Color.FromRgb(239, 83, 80)); // #EF5350
-            MessageText.Foreground = new SolidColorBrush(Color.FromRgb(198, 40, 40)); // #C62828
-            MessageBorder.Visibility = Visibility.Visible;
+            
         }
 
-        // Hiển thị thông báo thành công
-        private void ShowSuccess(string message)
-        {
-            MessageText.Text = message;
-            MessageBorder.Background = new SolidColorBrush(Color.FromRgb(232, 245, 233)); // #E8F5E9
-            MessageBorder.BorderBrush = new SolidColorBrush(Color.FromRgb(76, 175, 80)); // #4CAF50
-            MessageText.Foreground = new SolidColorBrush(Color.FromRgb(27, 94, 32)); // #1B5E20
-            MessageBorder.Visibility = Visibility.Visible;
-        }
-
-        // Chuyển sang trang đăng nhập
-        private void SignInLink_Click(object sender, RoutedEventArgs e)
+        private void SignIn_Click(object sender, RoutedEventArgs e)
         {
             NavigateToSignIn();
         }
 
         private void NavigateToSignIn()
         {
-            try
-            {
-                if (this.NavigationService != null)
-                {
-                    this.NavigationService.Navigate(new SignIn());
-                }
-                else
-                {
-                    var mainWindow = Application.Current.MainWindow as MainWindow;
-                    mainWindow?.MainScreen?.Navigate(new SignIn());
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Không thể mở trang đăng nhập: {ex.Message}",
-                    "Lỗi",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-            }
+            // TODO: Navigate to SignIn page
+            NavigationService?.Navigate(new SignIn());
         }
 
-        // Quay lại trang chủ
-        private void BackButton_Click(object sender, RoutedEventArgs e)
+        private void Terms_Click(object sender, RoutedEventArgs e)
         {
-            if (this.NavigationService != null)
-            {
-                this.NavigationService.Navigate(new SignIn());
-            }
-            else
-            {
-                var mainWindow = Application.Current.MainWindow as MainWindow;
-                mainWindow.MainScreen.Navigate(new SignIn());
-            }
+            // TODO: Hiển thị Terms and Conditions
+            MessageBox.Show("Terms and Conditions content will be displayed here.",
+                "Terms and Conditions",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+
+        private void AgreeTermsCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

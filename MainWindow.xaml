@@ -22,7 +22,7 @@
         <Frame Grid.Column="1" 
                x:Name="MainScreen"
                NavigationUIVisibility="Hidden"
-               Source="Views/AccountPage.xaml">
+               Source="Views/SignIn.xaml">
         </Frame>
     </Grid>
 </Window>
