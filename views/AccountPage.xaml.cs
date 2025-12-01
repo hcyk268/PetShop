@@ -40,7 +40,8 @@ namespace Pet_Shop_Project.Views
                     AddressText.Text = currentUser.Address ?? "Đang cập nhật...";
                     RoleText.Text = GetRoleDisplayName(currentUser.Role); //viết hàm bổ sung
 
-                    JoinDateText.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                    JoinDateText.Text = currentUser.CreatedDate.ToString("dd/MM/yyyy");
+                  
                 }
                 else
                 {
@@ -59,10 +60,10 @@ namespace Pet_Shop_Project.Views
         //chuyển role,
         private string GetRoleDisplayName(string role) {
             switch (role?.ToLower()) {
-                case "admin":
+                case "Admin":
                     return "Nhân viên";
-                case "customer":
-                case "user":
+                
+                case "User":
                     return "Khách hàng";
                 default:
                     return "Khách hàng";

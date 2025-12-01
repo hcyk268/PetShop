@@ -1,4 +1,4 @@
-﻿<Page x:Class="Pet_Shop_Project.Views.SignIn"
+﻿ <Page x:Class="Pet_Shop_Project.Views.SignIn"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -17,10 +17,10 @@
             </LinearGradientBrush>
         </Grid.Background>
 
-        
+
 
         <!-- Login Card -->
-        <Border Width="450" Height="550"
+        <Border Width="550" Height="600"
                 Background="White"
                 CornerRadius="20"
                 VerticalAlignment="Center"
@@ -246,9 +246,9 @@
                 </Button>
 
                 <!-- Register Link -->
-                
-                    
-                
+
+
+
             </Grid>
         </Border>
     </Grid>

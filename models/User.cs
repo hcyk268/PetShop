@@ -17,6 +17,17 @@ namespace Pet_Shop_Project.Models
         private string _address;
         private string _role;
         private string _username;
+        private DateTime _createddate;
+
+        public DateTime CreatedDate 
+        { get => _createddate;
+            set 
+            {
+                _createddate = value;
+                OnPropertyChanged(nameof(CreatedDate));
+            
+            } 
+        }
 
         public string UserId
         {

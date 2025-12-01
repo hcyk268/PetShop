@@ -103,7 +103,7 @@ namespace Pet_Shop_Project.Services
                 {
                     conn.Open();
 
-                    string query = @"SELECT UserId, FullName, Email, Phone, Address, Role
+                    string query = @"SELECT UserId, FullName, Email, Phone, Address, Role, CreatedDate
                                     FROM Users 
                                     WHERE UserId = @UserId";
 
@@ -122,7 +122,8 @@ namespace Pet_Shop_Project.Services
                                     Email = reader["Email"]?.ToString(),
                                     Phone = reader["Phone"]?.ToString(),
                                     Address = reader["Address"]?.ToString(),
-                                    Role = reader["Role"].ToString()
+                                    Role = reader["Role"].ToString(),
+                                    CreatedDate = (DateTime)reader["CreatedDate"],
                                 };
                             }
                         }
@@ -210,8 +211,8 @@ namespace Pet_Shop_Project.Services
                         cmd.Parameters.AddWithValue("@FullName", user.FullName);
                         cmd.Parameters.AddWithValue("@Email", user.Email ?? "");
                         cmd.Parameters.AddWithValue("@Phone", user.Phone ?? "");
-                        cmd.Parameters.AddWithValue("@Password", HashPassword(password));
-                        cmd.Parameters.AddWithValue("@Role", user.Role ?? "Customer");
+                        cmd.Parameters.AddWithValue("@Password", password);
+                        cmd.Parameters.AddWithValue("@Role", user.Role ?? "User");
 
                         int rowsAffected = cmd.ExecuteNonQuery();
                         return rowsAffected > 0;
