@@ -40,11 +40,11 @@
                                                  HorizontalAlignment="Center"/>
                     </Border>
                     <StackPanel Margin="12,2,0,0">
-                        <TextBlock Text="Quan ly don hang"
+                        <TextBlock Text="Quản Lý Đơn Hàng"
                                    FontSize="26"
                                    FontWeight="SemiBold"
                                    Foreground="#222"/>
-                        <TextBlock Text="Theo doi trang thai va duyet don nhanh chong."
+                        <TextBlock Text="Theo dõi trạng thái và xử lý các đơn hàng"
                                    FontSize="14"
                                    Foreground="#6A6A6A"
                                    Margin="0,4,0,0"/>
@@ -63,7 +63,7 @@
                                                      Width="20" Height="20"
                                                      Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
                                                      VerticalAlignment="Center"/>
-                            <TextBlock Text="Dang cho duyet"
+                            <TextBlock Text="Đang Chờ Duyệt"
                                        Margin="8,0,0,0"
                                        VerticalAlignment="Center"
                                        FontWeight="SemiBold"
@@ -80,7 +80,7 @@
                                                      Width="20" Height="20"
                                                      Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
                                                      VerticalAlignment="Center"/>
-                            <TextBlock Text="Dang giao"
+                            <TextBlock Text="Đang Giao Hàng"
                                        Margin="8,0,0,0"
                                        VerticalAlignment="Center"
                                        FontWeight="SemiBold"
@@ -97,7 +97,7 @@
                                                      Width="20" Height="20"
                                                      Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
                                                      VerticalAlignment="Center"/>
-                            <TextBlock Text="Da nhan hang"
+                            <TextBlock Text="Đã Nhận Hàng"
                                        Margin="8,0,0,0"
                                        VerticalAlignment="Center"
                                        FontWeight="SemiBold"
@@ -114,7 +114,7 @@
                                                      Width="20" Height="20"
                                                      Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
                                                      VerticalAlignment="Center"/>
-                            <TextBlock Text="Da huy bo"
+                            <TextBlock Text="Đã Hủy Bỏ"
                                        Margin="8,0,0,0"
                                        VerticalAlignment="Center"
                                        FontWeight="SemiBold"
@@ -133,7 +133,7 @@
                 BorderBrush="#FFEDEDED"
                 BorderThickness="1"
                 materialDesign:ShadowAssist.ShadowDepth="Depth1">
-            <Frame x:Name="AdminOrderPage"
+            <Frame x:Name="AdminOrderScreen"
                    Background="Transparent">
             </Frame>
         </Border>

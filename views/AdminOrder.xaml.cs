@@ -41,6 +41,7 @@ namespace Pet_Shop_Project.Views
 
             setForeColorDefault();
             pendingbtn.Foreground = clickedtext;
+            AdminOrderScreen.Navigate(new AOPending(AllOrders));
         }
 
         public ObservableCollection<Order> AllOrders
@@ -61,6 +62,7 @@ namespace Pet_Shop_Project.Views
         {
             setForeColorDefault();
             pendingbtn.Foreground = clickedtext;
+            AdminOrderScreen.Navigate(new AOPending(AllOrders));
         }
 
         private void shippingbtn_Click(object sender, RoutedEventArgs e)
