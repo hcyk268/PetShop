@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Pet_Shop_Project.Views"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       Title="OrderQueuePage"
       Height="650" 
@@ -27,8 +28,16 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0"
-                       Style="{StaticResource TextHeaderOderQueuePage}" >
-            Hàng Duyệt
+                       Style="{StaticResource TextHeaderOderQueuePage}">
+                <InlineUIContainer>
+                    <materialDesign:PackIcon Kind="ClipboardListOutline"
+                                              Width="32"
+                                              Height="32"
+                                              Foreground="#FF6B6B"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,10,0"/>
+                </InlineUIContainer>
+                <Run Text="Hàng Duyệt"/>
             </TextBlock>
 
             <Grid Grid.Row="1" Margin="10,5,10,5">
@@ -41,20 +50,60 @@
 
                 <Button x:Name="odppendingbutton" Grid.Column="0"
                     Margin="10,5,10,0"
-                    Content="Đang Duyệt"
-                    Style="{StaticResource ButtonQueuePageNavigation}" Click="odppendingbutton_Click" />
+                    Style="{StaticResource ButtonQueuePageNavigation}" Click="odppendingbutton_Click">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="ClockOutline"
+                                                 Width="20" Height="20"
+                                                 Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                 VerticalAlignment="Center"/>
+                        <TextBlock Text="Đang Duyệt"
+                                   Margin="8,0,0,0"
+                                   VerticalAlignment="Center"
+                                   Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                    </StackPanel>
+                </Button>
                 <Button x:Name="odpshippingbutton" Grid.Column="1"
                     Margin="10,5,10,0"
-                    Content="Đang Giao"
-                    Style="{StaticResource ButtonQueuePageNavigation}" Click="odpshippingbutton_Click" />
+                    Style="{StaticResource ButtonQueuePageNavigation}" Click="odpshippingbutton_Click">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Truck"
+                                                 Width="20" Height="20"
+                                                 Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                 VerticalAlignment="Center"/>
+                        <TextBlock Text="Đang Giao"
+                                   Margin="8,0,0,0"
+                                   VerticalAlignment="Center"
+                                   Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                    </StackPanel>
+                </Button>
                 <Button x:Name="odpsuccessbutton" Grid.Column="2"
                     Margin="10,5,10,0"
-                    Content="Đã Nhận"
-                    Style="{StaticResource ButtonQueuePageNavigation}" Click="odpsuccessbutton_Click" />
+                    Style="{StaticResource ButtonQueuePageNavigation}" Click="odpsuccessbutton_Click">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="CheckCircleOutline"
+                                                 Width="20" Height="20"
+                                                 Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                 VerticalAlignment="Center"/>
+                        <TextBlock Text="Đã Nhận"
+                                   Margin="8,0,0,0"
+                                   VerticalAlignment="Center"
+                                   Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                    </StackPanel>
+                </Button>
                 <Button x:Name="odpcanceledbutton" Grid.Column="3"
                     Margin="10,5,10,0"
-                    Content="Đã Hủy"
-                    Style="{StaticResource ButtonQueuePageNavigation}" Click="odpcanceledbutton_Click" />
+                    Style="{StaticResource ButtonQueuePageNavigation}" Click="odpcanceledbutton_Click">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="CloseCircleOutline"
+                                                 Width="20" Height="20"
+                                                 Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                 VerticalAlignment="Center"/>
+                        <TextBlock Text="Đã Hủy"
+                                   Margin="8,0,0,0"
+                                   VerticalAlignment="Center"
+                                   Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                    </StackPanel>
+                </Button>
             </Grid>
         </Grid>
 

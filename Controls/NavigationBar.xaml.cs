@@ -35,5 +35,10 @@ namespace Pet_Shop_Project.Controls
         {
             Services.NavigationService.Instance.NavigateToOrder();
         }
+
+        private void CartButton_Click(object sender, RoutedEventArgs e)
+        {
+            Services.NavigationService.Instance.NavigateToCart();
+        }
     }
 }

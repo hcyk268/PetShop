@@ -3,7 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,44 +24,67 @@ namespace Pet_Shop_Project.Views
     /// <summary>
     /// Interaction logic for Cart.xaml
     /// </summary>
-    public partial class Cart : Page
+    public partial class CartPage : Page
     {
-
+        private readonly string _conn = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
+        private readonly string _userId;
         private ObservableCollection<CartItem> cartItems;
         private bool isAllSelected = false;
         private User currentUser; // Thông tin người dùng hiện tại
-        public Cart()
+        public CartPage(string userid)
         {
             InitializeComponent();
-            LoadCurrentUser();
-            InitializeCart();
+            _userId = userid;
+            Loaded += Cart_Loaded; // async void event, OK
         }
 
         #region Load Data
-
         // Load thông tin người dùng hiện tại
-        private void LoadCurrentUser()
+        private void Cart_Loaded(object sender, RoutedEventArgs e)
         {
-            // TODO: Lấy từ Session hoặc Database
-            currentUser = new User
-            {
-                UserId = "U001",
-                FullName = "Nguyễn Văn A",
-                Phone = "(+84) 0123 456 789",
-                Address = "123 Đường Nguyễn Văn Cừ, Phường 4, Quận 5, Thành phố Hồ Chí Minh, Việt Nam",
-                Email = "nguyenvana@example.com",
-                Role = "Customer"
-            };
+            LoadCurrentUser();   // sync
+            LoadCartFromDb();    // dùng bản sync bạn đã viết
         }
 
+        private void LoadCurrentUser()
+        {
+            const string sql = @"SELECT UserId, FullName, Phone, Address, Email, Role
+                                FROM USERS WHERE UserId = @UserId";
+
+            try
+            {
+                using (var conn = new SqlConnection(_conn))
+                {
+                    conn.Open();
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserId", _userId);
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                currentUser = new User
+                                {
+                                    UserId = reader["UserId"].ToString(),
+                                    FullName = reader["FullName"].ToString(),
+                                    Phone = reader["Phone"].ToString(),
+                                    Address = reader["Address"].ToString(),
+                                    Email = reader["Email"].ToString(),
+                                    Role = reader["Role"].ToString()
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi tải thông tin người dùng: " + ex.Message);
+            }
+        }
+        /*
         private void InitializeCart()
         {
-            // Kiểm tra xem CartService có dữ liệu chưa
-            if (CartService.CartItems == null || CartService.CartItems.Count == 0)
-            {
-                LoadSampleData();
-            }
-
             // Sử dụng CartService để quản lý giỏ hàng chung
             cartItems = CartService.CartItems;
 
@@ -70,57 +96,70 @@ namespace Pet_Shop_Project.Views
 
             CartItemsControl.ItemsSource = cartItems;
             UpdateSummary();
-        }
+        } */
 
-        // Load dữ liệu mẫu vào giỏ hàng
-        private void LoadSampleData()
+        // Load dữ liệu vào giỏ hàng
+        private void LoadCartFromDb()
         {
-            // Tạo các sản phẩm mẫu
-            var product1 = new Product
+            try
             {
-                ProductId = "P001",
-                Name = "Thức ăn cho chó Royal Canin Medium Adult",
-                Description = "5kg - Vị gà",
-                UnitPrice = 500000,
-                UnitInStock = 50,
-                Picture = "https://www.petmart.vn/wp-content/uploads/2021/06/thuc-an-cho-cho-truong-thanh-royal-canin-medium-adult1-768x768.jpg"
-            };
+                CartService.ClearCart();
 
-            var product2 = new Product
+                const string sql = @"
+                    SELECT ci.CartItemId, ci.ProductId, ci.Quantity,
+                        p.ProductId AS PId, p.Name, p.Description, p.UnitPrice, p.UnitInStock,
+                        p.Discount, p.Picture
+                    FROM CART_ITEMS ci
+                    JOIN CART c     ON c.CartId = ci.CartId   -- dùng bảng có UserId
+                    JOIN PRODUCTS p ON p.ProductId = ci.ProductId
+                    WHERE c.UserId = @UserId";                
+
+                using (var conn = new SqlConnection(_conn))
+                {
+                    conn.Open();
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserId", _userId);
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            
+                            while (reader.Read())
+                            {
+                                
+                                var product = new Product
+                                {
+                                    ProductId = reader["PId"].ToString(),
+                                    Name = reader["Name"].ToString(),
+                                    Description = reader["Description"].ToString(),
+                                    UnitPrice = (decimal)reader["UnitPrice"],
+                                    UnitInStock = (int)reader["UnitInStock"],
+                                    Discount = (double)reader["Discount"],
+                                    Picture = reader["Picture"].ToString()
+                                };
+                                var item = new CartItem
+                                {
+                                    CartItemId = reader["CartItemId"].ToString(),
+                                    ProductId = reader["ProductId"].ToString(),
+                                    Quantity = (int)reader["Quantity"],
+                                    Product = product,
+                                    IsSelected = false
+                                };
+                                CartService.AddToCart(item);
+                                item.PropertyChanged += CartItem_PropertyChanged;
+                            }
+                            
+                        }
+                    }
+                }
+
+                cartItems = CartService.CartItems;
+                CartItemsControl.ItemsSource = cartItems;
+                UpdateSummary();
+            }
+            catch (Exception ex)
             {
-                ProductId = "P002",
-                Name = "Đồ chơi cho mèo - Tháp bóng",
-                Description = "Size M",
-                UnitPrice = 150000,
-                UnitInStock = 100,
-                Picture = "https://dathangsi.vn/upload/products/2023/07/0459-do-choi-cho-meo.jpg"
-            };
-
-            var product3 = new Product
-            {
-                ProductId = "P003",
-                Name = "Vòng cổ cho chó SmartCollar",
-                Description = "Size L - Màu đỏ",
-                UnitPrice = 250000,
-                UnitInStock = 30,
-                Picture = "https://sanytuong.vn/wp-content/uploads/2022/08/Petpuls-Smart-Collar.png"
-            };
-
-            var product4 = new Product
-            {
-                ProductId = "P004",
-                Name = "Lồng hamster cao cấp",
-                Description = "40x30x25cm - Màu hồng",
-                UnitPrice = 400000,
-                UnitInStock = 20,
-                Picture = "https://cocapet.net/wp-content/uploads/2022/11/12.-Meo-3-tang-47-x-30-x-60-cm-750.jpg"
-            };
-
-            // Thêm vào giỏ hàng qua CartService
-            CartService.AddToCart(product1, 2, "5kg - Vị gà");
-            CartService.AddToCart(product2, 3, "Size M");
-            CartService.AddToCart(product3, 1, "Size L - Màu đỏ");
-            CartService.AddToCart(product4, 1, "40x30x25cm - Màu hồng");
+                MessageBox.Show("Lỗi tải giỏ hàng: " + ex.Message);
+            }
         }
 
         #endregion

@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pet_Shop_Project"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:controls="clr-namespace:Pet_Shop_Project.Controls"
-        mc:Ignorable="d"
+        xmlns:controls="clr-namespace:Pet_Shop_Project.Controls" 
+        mc:Ignorable="d" 
         Title="Pet Shop" 
         Height="650" Width="1000" 
         WindowStartupLocation="CenterScreen" 
@@ -20,10 +20,9 @@
         <controls:NavigationBar Grid.Column="0" Margin="0,0,0,0"/>
         <!-- Main Content Frame -->
         <Frame Grid.Column="1" 
-               x:Name="MainScreen"
-               NavigationUIVisibility="Hidden"
-               Source="Views/Cart.xaml">
+               x:Name="MainScreen" 
+               NavigationUIVisibility="Hidden" 
+               Source="Views/HomePage.xaml">
         </Frame>
-
     </Grid>
 </Window>

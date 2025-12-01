@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Configuration;
+using System.Data.SqlClient;
 
 namespace Pet_Shop_Project.Views
 {
@@ -27,80 +29,153 @@ namespace Pet_Shop_Project.Views
         private decimal subtotal = 0;
         private decimal shippingFee = 0;
         private string selectedShippingMethod = "Viettel Post";
+        private readonly string _conn = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
 
         public Payment()
         {
             InitializeComponent();
-            LoadSampleData();
-            UpdateUI();
+            Loaded += Payment_Loaded;
         }
 
         // Constructor nhận dữ liệu từ Cart
-        public Payment(List<OrderDetail> cartItems, User user) : this()
+        public Payment(List<OrderDetail> cartItems, User user)
         {
-            orderDetails = cartItems;
-            currentUser = user;
-            LoadData();
+            currentUser = user ?? throw new ArgumentNullException(nameof(user));
+            orderDetails = cartItems ?? throw new ArgumentNullException(nameof(cartItems));
+            if (!orderDetails.Any())
+            throw new InvalidOperationException("Giỏ hàng trống");
+            InitializeComponent();
+            Loaded += Payment_Loaded;
         }
+
+        private bool HasSufficientStock()
+        {
+            const string sql = "SELECT UnitInStock FROM PRODUCTS WHERE ProductId=@ProductId";
+            using (var conn = new SqlConnection(_conn))
+            {
+                conn.Open();
+                foreach (var od in orderDetails)
+                {
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ProductId", od.ProductId);
+                        var stock = (int?)cmd.ExecuteScalar() ?? 0;
+                        if (od.Quantity > stock)
+                        {
+                            MessageBox.Show($"Sản phẩm '{od.Product?.Name}' chỉ còn {stock} trong kho.",
+                                "Không đủ hàng", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        private bool SaveOrderToDatabase(Order order)
+        {
+            const string insertOrder = @"INSERT INTO ORDERS (UserId, OrderDate, TotalAmount, ApprovalStatus,
+                                        PaymentStatus, ShippingStatus, Address, Note)
+                                        OUTPUT INSERTED.OrderId
+                                        VALUES (@UserId,@OrderDate,@TotalAmount,@ApprovalStatus,
+                                        @PaymentStatus,@ShippingStatus,@Address,@Note)";
+
+            const string insertDetail = @"INSERT INTO ORDER_DETAILS (OrderId, ProductId, Quantity)
+                                        VALUES (@OrderId,@ProductId,@Quantity)";
+            const string updateStock = @"UPDATE PRODUCTS SET UnitInStock = UnitInStock - @Quantity WHERE ProductId=@ProductId";
+            const string deleteCart = @"DELETE ci FROM CART_ITEMS ci
+                                        JOIN CART c ON c.CartId = ci.CartId
+                                        WHERE c.UserId=@UserId AND ci.ProductId=@ProductId";
+
+            using (var conn = new SqlConnection(_conn))
+            {
+                conn.Open();
+                using (var tx = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        // Order
+                        using (var cmd = new SqlCommand(insertOrder, conn, tx))
+                        {
+                            cmd.Parameters.AddWithValue("@UserId", order.UserId);
+                            cmd.Parameters.AddWithValue("@OrderDate", order.OrderDate);
+                            cmd.Parameters.AddWithValue("@TotalAmount", order.TotalAmount);
+                            cmd.Parameters.AddWithValue("@ApprovalStatus", order.ApprovalStatus);
+                            cmd.Parameters.AddWithValue("@PaymentStatus", order.PaymentStatus);
+                            cmd.Parameters.AddWithValue("@ShippingStatus", order.ShippingStatus);
+                            cmd.Parameters.AddWithValue("@Address", order.Address);
+                            cmd.Parameters.AddWithValue("@Note", (object)order.Note ?? DBNull.Value);
+
+                            var generatedId = cmd.ExecuteScalar();
+                            order.OrderId = generatedId?.ToString();
+                        }
+
+                        // Details + stock + cart cleanup
+                        foreach (var d in order.Details)
+                        {
+                            using (var cmd = new SqlCommand(insertDetail, conn, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@OrderId", order.OrderId);
+                                cmd.Parameters.AddWithValue("@ProductId", d.ProductId);
+                                cmd.Parameters.AddWithValue("@Quantity", d.Quantity);
+                                cmd.Parameters.AddWithValue("@UnitPrice", d.Product?.UnitPrice ?? 0);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            using (var cmd = new SqlCommand(updateStock, conn, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@ProductId", d.ProductId);
+                                cmd.Parameters.AddWithValue("@Quantity", d.Quantity);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            using (var cmd = new SqlCommand(deleteCart, conn, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@UserId", order.UserId);
+                                cmd.Parameters.AddWithValue("@ProductId", d.ProductId);
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+
+                        tx.Commit();
+                        return true;
+                    }
+                    catch
+                    {
+                        tx.Rollback();
+                        throw;
+                    }
+                }
+            }
+        }
+
+        private void ClearPurchasedItemsFromDb(IEnumerable<OrderDetail> details)
+        {
+            const string sql = @"DELETE ci FROM CART_ITEMS ci
+                                JOIN CART c ON c.CartId = ci.CartId
+                                WHERE c.UserId = @UserId AND ci.ProductId = @ProductId";
+
+            using (var conn = new SqlConnection(_conn))
+            {
+                conn.Open();
+                foreach (var d in details)
+                {
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserId", currentUser.UserId);
+                        cmd.Parameters.AddWithValue("@ProductId", d.ProductId);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
 
         #region Load Data
 
-        // Load dữ liệu mẫu
-        private void LoadSampleData()
-        {
-            // Dữ liệu địa chỉ mẫu
-            currentUser = new User
-            {
-                UserId = "U001",
-                FullName = "Nguyễn Văn A",
-                Phone = "(+84) 0123 456 789",
-                Address = "123 Đường Nguyễn Văn Cừ, Phường 4, Quận 5, Thành phố Hồ Chí Minh, Việt Nam",
-                Email = "nguyenvana@example.com"
-            };
-
-            // Dữ liệu sản phẩm mẫu
-            orderDetails = new List<OrderDetail>
-            {
-                new OrderDetail
-                {
-                    OrderDetailId = "OD001",
-                    ProductId = "P001",
-                    Quantity = 1,
-                    Product = new Product
-                    {
-                        ProductId = "P001",
-                        Name = "Thức ăn cho chó Royal Canin",
-                        Description = "Size 5kg",
-                        UnitPrice = 500000,
-                        Picture = "https://www.petmart.vn/wp-content/uploads/2021/06/thuc-an-cho-cho-poodle-con-royal-canin-poodle-puppy1.jpg",
-                        UnitInStock = 50
-                    }
-                },
-                new OrderDetail
-                {
-                    OrderDetailId = "OD002",
-                    ProductId = "P002",
-                    Quantity = 2,
-                    Product = new Product
-                    {
-                        ProductId = "P002",
-                        Name = "Đồ chơi cho mèo",
-                        Description = "Tháp bóng",
-                        UnitPrice = 150000,
-                        Picture = "https://dathangsi.vn/upload/products/2023/07/0459-do-choi-cho-meo.jpg",
-                        UnitInStock = 100
-                    }
-                }
-            };
-        }
-
         // Load dữ liệu thực từ Cart
-        private void LoadData()
+        private void Payment_Loaded(object sender, RoutedEventArgs e)
         {
-            if (orderDetails == null || orderDetails.Count == 0)
-            {
-                LoadSampleData();
-            }
             UpdateUI();
         }
 
@@ -110,6 +185,10 @@ namespace Pet_Shop_Project.Views
 
         private void UpdateUI()
         {
+            if (!IsLoaded) return;
+            if (orderDetails == null || currentUser == null) return;
+            if (CustomerNameText == null || CustomerPhoneText == null || CustomerAddressText == null) return;
+            
             UpdateAddress();
             UpdateProducts();
             UpdateSummary();
@@ -120,6 +199,10 @@ namespace Pet_Shop_Project.Views
         {
             if (currentUser != null)
             {
+                if (currentUser == null ||
+                    CustomerNameText == null || CustomerPhoneText == null ||
+                    CustomerAddressText == null || DefaultAddressBadge == null)
+                    return;
                 CustomerNameText.Text = currentUser.FullName;
                 CustomerPhoneText.Text = currentUser.Phone;
                 CustomerAddressText.Text = currentUser.Address;
@@ -185,7 +268,7 @@ namespace Pet_Shop_Project.Views
             decimal total = subtotal + shippingFee;
             if (SummarySubtotalText != null)
             {
-                TotalAmountText.Text = $"₫ {total:N0}";
+                TotalAmountText.Text = $"₫ {subtotal + shippingFee:N0}";
             }
         }
 
@@ -202,14 +285,6 @@ namespace Pet_Shop_Project.Views
             }
         }
 
-        // Thay đổi địa chỉ
-        private void ChangeAddress_Click(object sender, RoutedEventArgs e)
-        {
-            // TODO: Mở dialog chọn địa chỉ khác hoặc chỉnh sửa địa chỉ
-            MessageBox.Show("Chức năng thay đổi địa chỉ đang được phát triển!",
-                "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
         // Thay đổi phương thức vận chuyển
         private void ShippingOptionChanged(object sender, RoutedEventArgs e)
         {
@@ -219,28 +294,18 @@ namespace Pet_Shop_Project.Views
         // Đặt hàng
         private void PlaceOrder_Click(object sender, RoutedEventArgs e)
         {
-            // Kiểm tra phương thức thanh toán
-            string paymentMethod = CODPaymentOption.IsChecked == true
-                ? "COD"
-                : "Card";
-
-            if (CardPaymentOption.IsChecked == true)
+            if (currentUser == null || orderDetails == null || !orderDetails.Any())
             {
-                MessageBox.Show("Chức năng thanh toán bằng thẻ đang được phát triển!",
-                    "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Thiếu thông tin đơn hàng hoặc người dùng.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+            if (!HasSufficientStock()) return;
 
-            // Lấy ghi chú
+            const string paymentMethod = "COD";
+            const string paymentMethodDisplay = "Thanh toán khi nhận hàng (COD)";
+
             string note = SellerNoteTextBox.Text.Trim();
-
-            // Tính tổng tiền
             decimal total = subtotal + shippingFee;
-
-            // Tạo thông tin đơn hàng để hiển thị
-            string paymentMethodDisplay = paymentMethod == "COD"
-                ? "Thanh toán khi nhận hàng (COD)"
-                : "Thẻ Tín dụng/Ghi nợ";
 
             string orderInfo = $"Xác nhận đặt hàng?\n\n" +
                               $"Người nhận: {currentUser.FullName}\n" +
@@ -249,7 +314,7 @@ namespace Pet_Shop_Project.Views
                               $"Số sản phẩm: {orderDetails.Sum(od => od.Quantity)}\n" +
                               $"Tạm tính: {subtotal:N0}đ\n" +
                               $"Phí ship: {shippingFee:N0}đ\n";
-
+                              
             orderInfo += $"Tổng cộng: {total:N0}đ\n\n" +
                         $"Phương thức vận chuyển: {selectedShippingMethod}\n" +
                         $"Phương thức thanh toán: {paymentMethodDisplay}\n";
@@ -270,6 +335,16 @@ namespace Pet_Shop_Project.Views
                 // TODO: Lưu đơn hàng vào database
                 // bool success = SaveOrderToDatabase(newOrder);
                 bool success = true; // Giả lập thành công
+                try
+                {
+                    success = SaveOrderToDatabase(newOrder);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lưu đơn hàng thất bại: " + ex.Message,
+                        "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
                 if (success)
                 {
@@ -280,15 +355,16 @@ namespace Pet_Shop_Project.Views
                         $"Cảm ơn bạn đã mua hàng. Chúng tôi sẽ liên hệ với bạn sớm nhất.",
                         "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    // TODO: Xóa giỏ hàng và chuyển đến trang đơn hàng hoặc trang chủ
-                    // ClearCart();
-                    // NavigationService?.Navigate(new OrderHistory());
+                    ClearPurchasedItemsFromDb(orderDetails); // xóa khỏi CART_ITEMS của user
+                    CartService.RemoveByProductIds(orderDetails.Select(d => d.ProductId));
                 }
                 else
                 {
-                    MessageBox.Show("Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!",
-                        "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Đặt hàng thất bại. Vui lòng thử lại sau.",
+                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+                // Quay về trang chính hoặc trang đơn hàng
+                NavigationService?.GoBack();
             }
         }
 
@@ -306,7 +382,7 @@ namespace Pet_Shop_Project.Views
                 OrderDate = DateTime.Now,
                 TotalAmount = total,
                 ApprovalStatus = "Waiting",
-                PaymentStatus = paymentMethod == "COD" ? "Pending" : "Paid",
+                PaymentStatus = "Pending",
                 ShippingStatus = "Pending",
                 Address = currentUser.Address,
                 Note = note,

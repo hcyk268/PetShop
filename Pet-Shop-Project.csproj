@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -112,11 +113,8 @@
     <Compile Include="Controls\NavigationBar.xaml.cs">
       <DependentUpon>NavigationBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Services\ConvertLanguage.cs" />
-    <Compile Include="Models\CartService.cs" />
-    <Compile Include="Services\NavigationService.cs" />
-    <Compile Include="Views\AdminOrder.xaml.cs">
-      <DependentUpon>AdminOrder.xaml</DependentUpon>
+    <Compile Include="Controls\ProductCard.xaml.cs">
+      <DependentUpon>ProductCard.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AOPending.xaml.cs">
       <DependentUpon>AOPending.xaml</DependentUpon>
@@ -130,8 +128,13 @@
     <Compile Include="Views\AOShipping.xaml.cs">
       <DependentUpon>AOShipping.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Cart.xaml.cs">
-      <DependentUpon>Cart.xaml</DependentUpon>
+    <Compile Include="Services\ConvertLanguage.cs" />
+    <Compile Include="Services\CartService.cs" />
+    <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Services\OrderService.cs" />
+    <Compile Include="Services\ProductService.cs" />
+    <Compile Include="Views\CartPage.xaml.cs">
+      <DependentUpon>CartPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
@@ -157,14 +160,24 @@
     <Compile Include="Views\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ProductDetailPage.xaml.cs">
+      <DependentUpon>ProductDetailPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SignIn.xaml.cs">
       <DependentUpon>SignIn.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SignUp.xaml.cs">
       <DependentUpon>SignUp.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\AdminOrder.xaml.cs">
+      <DependentUpon>AdminOrder.xaml</DependentUpon>
+    </Compile>
     <!-- XAML pages -->
     <Page Include="Controls\NavigationBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ProductCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -192,7 +205,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\AdminOrder.xaml">
+    <Page Include="Views\CartPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -212,7 +225,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Cart.xaml" />
+    <Page Include="Views\AdminOrder.xaml" />
     <Page Include="Views\HomePage.xaml" />
     <Page Include="Views\OQPCanceled.xaml" />
     <Page Include="Views\OQPPendingApproval.xaml" />
@@ -221,6 +234,10 @@
     <Page Include="Views\OrderQueuePage.xaml" />
     <Page Include="Views\Payment.xaml" />
     <Page Include="Views\Login.xaml" />
+    <Page Include="Views\ProductDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SignIn.xaml" />
     <Page Include="Views\SignUp.xaml" />
   </ItemGroup>
