@@ -201,9 +201,9 @@ namespace Pet_Shop_Project.Services
                     conn.Open();
 
                     string query = @"INSERT INTO Users 
-                                    (Username, FullName, Email, Phone, Password, Role) 
+                                    (Username, FullName, Email, Phone, Address, Password, Role, CreatedDate) 
                                     VALUES 
-                                    (@Username, @FullName, @Email, @Phone, @Password, @Role)";
+                                    (@Username, @FullName, @Email, @Phone, @Address, @Password, @Role, @CreatedDate)";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -211,8 +211,10 @@ namespace Pet_Shop_Project.Services
                         cmd.Parameters.AddWithValue("@FullName", user.FullName);
                         cmd.Parameters.AddWithValue("@Email", user.Email ?? "");
                         cmd.Parameters.AddWithValue("@Phone", user.Phone ?? "");
+                        cmd.Parameters.AddWithValue("@Address", user.Address ?? "");
                         cmd.Parameters.AddWithValue("@Password", password);
                         cmd.Parameters.AddWithValue("@Role", user.Role ?? "User");
+                        cmd.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
 
                         int rowsAffected = cmd.ExecuteNonQuery();
                         return rowsAffected > 0;
@@ -249,7 +251,7 @@ namespace Pet_Shop_Project.Services
                         cmd.Parameters.AddWithValue("@Email", user.Email ?? "");
                         cmd.Parameters.AddWithValue("@Phone", user.Phone ?? "");
                         cmd.Parameters.AddWithValue("@Address", user.Address ?? "");
-
+                        cmd.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
                         int rowsAffected = cmd.ExecuteNonQuery();
                         return rowsAffected > 0;
                     }

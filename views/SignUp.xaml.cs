@@ -43,6 +43,7 @@ namespace Pet_Shop_Project.Views
             string username = UsernameTextBox.Text.Trim();
             string email = EmailTextBox.Text.Trim();
             string phone = PhoneTextBox.Text.Trim();
+            string address = AddressTextBox.Text.Trim();
             string password = PasswordBox.Password;
             string confirmPassword = ConfirmPasswordBox.Password;
             bool termsAccepted = TermsCheckBox.IsChecked == true;
@@ -77,6 +78,7 @@ namespace Pet_Shop_Project.Views
                     FullName = fullName,
                     Email = email,
                     Phone = phone,
+                    Address =address,
                     Role = "User", // Mặc định là Customer
 
                     CreatedDate = DateTime.Now
