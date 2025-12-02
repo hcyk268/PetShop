@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +27,7 @@ namespace Pet_Shop_Project.Views
     {
         private ObservableCollection<Order> _orderShipping;
         private ObservableCollection<Order> _allOrders;
+        private readonly string _connectionDB = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
         public AOShipping(ObservableCollection<Order> allOrders)
         {
             InitializeComponent();
@@ -63,7 +66,62 @@ namespace Pet_Shop_Project.Views
 
         private void removeorderbtn_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("ok");
+            var btn = sender as Button;
+            Order order = btn.Tag as Order;
+
+            var dialog = MessageBox.Show(
+                "Có chắc chắn hủy đơn hàng này?",
+                "Xác Nhận Hủy",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question
+            );
+
+            if (dialog != MessageBoxResult.Yes) return;
+
+            try
+            {
+                using (var conn = new SqlConnection(_connectionDB))
+                {
+                    conn.Open();
+
+                    const string query = @"
+                        UPDATE ORDERS
+                        SET ApprovalStatus = @ApprovalStatus,
+                            PaymentStatus = @PaymentStatus,
+                            ShippingStatus = @ShippingStatus
+                        WHERE OrderId = @OrderId";
+
+                    using (var cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ApprovalStatus", "Rejected");
+                        cmd.Parameters.AddWithValue("@PaymentStatus", "Pending");
+                        cmd.Parameters.AddWithValue("@ShippingStatus", "Pending");
+                        cmd.Parameters.AddWithValue("@OrderId", order.OrderId);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                order.ApprovalStatus = "Rejected";
+                order.PaymentStatus = "Pending";
+                order.ShippingStatus = "Pending";
+                FilterOrders();
+
+                MessageBox.Show(
+                    "Đã hủy đơn hàng thành công.",
+                    "Thành Công",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Hủy đơn hàng thất bại: {ex.Message}",
+                    "Lỗi",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+
         }
     }
 }

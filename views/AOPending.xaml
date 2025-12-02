@@ -155,11 +155,19 @@
                                             Margin="0,0,10,0"
                                             Tag="{Binding}"
                                             Click="ViewOrderDetail_Click">
-                                        <StackPanel Orientation="Horizontal">
-                                            <materialDesign:PackIcon Kind="EyeOutline" Width="20" Height="20" Margin="0,0,6,0"/>
-                                            <TextBlock Text="Xem chi tiết" FontWeight="SemiBold" Margin="0,0,6,0"/>
+                                        <StackPanel Orientation="Horizontal"
+                                                    VerticalAlignment="Center">
+                                            <materialDesign:PackIcon Kind="EyeOutline"
+                                                                    Width="20" Height="20"
+                                                                    Margin="0,0,6,0"
+                                                                    VerticalAlignment="Center"/>
+                                            <TextBlock Text="Xem chi tiết"
+                                                        FontWeight="SemiBold"
+                                                        Margin="0,0,6,0"
+                                                        VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Button>
+
 
                                     <Button Style="{StaticResource GradientButtonStyle}"
                                             Padding="12,8"
