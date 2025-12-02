@@ -84,10 +84,19 @@ namespace Pet_Shop_Project.Views
                     MessageBoxButton.OK, MessageBoxImage.Information);
 
                     var currWindow = Window.GetWindow(this);
-                    MainWindow mainWindow = new MainWindow(user.UserId);
-                    
-                    mainWindow.Show();
-                    
+
+                    if (user.Role == "User")
+                    {
+                        MainWindow mainWindow = new MainWindow(user.UserId);
+                        mainWindow.Show();
+
+                    }
+                    else
+                    {
+                        //Mở AdminWindow cập nhật sau
+                    }
+
+
                     await Task.Delay(150);
                     
                     currWindow.Close();
