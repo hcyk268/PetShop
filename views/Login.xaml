@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         Title="LoginWindow" Height="650" Width="1000"
         Background="{DynamicResource MaterialDesignPaper}"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <!-- Layer 1: Hình nền mờ -->
         <Image Source="/Images/download.jpg" 
@@ -22,8 +23,8 @@
 
             <materialDesign:Card Grid.Row="1" 
                              Padding="30" 
-                             Width="400" 
-                             MaxHeight="500"
+                             Width="600" 
+                             MaxHeight="550"
                              UniformCornerRadius="8" 
                              materialDesign:ElevationAssist.Elevation="Dp8" 
                              HorizontalAlignment="Center" 
@@ -31,6 +32,8 @@
                              Background="{DynamicResource MaterialDesignBackground}">
 
                 <Frame x:Name="MainFrame"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch"
                     NavigationUIVisibility="Hidden"/>
                 
             </materialDesign:Card>
