@@ -23,7 +23,7 @@ namespace Pet_Shop_Project
         public MainWindow() //cần truyền userId vào để truy vấn chính xác
         {
             InitializeComponent();
-            this.userid = "USR004";
+            this.userid = "USR002";
             Services.NavigationService.Instance.Initialize(MainScreen);
             Services.NavigationService.Instance.setUserId(userid);
         }
