@@ -118,13 +118,11 @@
     <Compile Include="Services\ConvertLanguage.cs" />
     <Compile Include="Services\CartService.cs" />
     <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Services\OrderService.cs" />
     <Compile Include="Services\ProductService.cs" />
     <Compile Include="Services\UserService.cs" />
-    <Compile Include="Views\AccountPage.xaml.cs">
-      <DependentUpon>AccountPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Cart.xaml.cs">
-      <DependentUpon>Cart.xaml</DependentUpon>
+    <Compile Include="Views\CartPage.xaml.cs">
+      <DependentUpon>CartPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
@@ -192,11 +190,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\AccountPage.xaml">
+    <Page Include="Views\CartPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Cart.xaml" />
     <Page Include="Views\HomePage.xaml" />
     <Page Include="Views\OQPCanceled.xaml" />
     <Page Include="Views\OQPPendingApproval.xaml" />

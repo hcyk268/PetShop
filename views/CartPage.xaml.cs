@@ -3,7 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,30 +18,25 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Configuration;
-using System.Data.SqlClient;
 
 namespace Pet_Shop_Project.Views
 {
     /// <summary>
     /// Interaction logic for Cart.xaml
     /// </summary>
-    public partial class Cart : Page
+    public partial class CartPage : Page
     {
         private readonly string _conn = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
         private readonly string _userId;
         private ObservableCollection<CartItem> cartItems;
         private bool isAllSelected = false;
         private User currentUser; // Thông tin người dùng hiện tại
-        public Cart(string userId)
+        public CartPage(string userid)
         {
             InitializeComponent();
-            _userId = userId ?? throw new ArgumentNullException(nameof(userId));
+            _userId = userid;
             Loaded += Cart_Loaded; // async void event, OK
         }
-
-        // Nếu vẫn cần constructor rỗng (designer), truyền user giả:
-        public Cart() : this("USR001") { }
 
         #region Load Data
         // Load thông tin người dùng hiện tại
