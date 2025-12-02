@@ -1,5 +1,4 @@
 ﻿using Pet_Shop_Project.Models;
-using Pet_Shop_Project.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,74 +21,62 @@ using System.Windows.Shapes;
 namespace Pet_Shop_Project.Views
 {
     /// <summary>
-    /// Interaction logic for OQPShipping.xaml
+    /// Interaction logic for AOShipping.xaml
     /// </summary>
-    public partial class OQPShipping : Page, INotifyPropertyChanged
+    public partial class AOShipping : Page, INotifyPropertyChanged
     {
-        private ObservableCollection<Order> _ordersShippings;
+        private ObservableCollection<Order> _orderShipping;
         private ObservableCollection<Order> _allOrders;
         private readonly string _connectionDB = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
-
-        public OQPShipping(ObservableCollection<Order> allOrders)
+        public AOShipping(ObservableCollection<Order> allOrders)
         {
             InitializeComponent();
             _allOrders = allOrders;
-            OrderShippings = new ObservableCollection<Order>();
+            OrderShipping = new ObservableCollection<Order>();
             FilterOrders();
             _allOrders.CollectionChanged += (s, e) => FilterOrders();
             DataContext = this;
         }
-
         protected void FilterOrders()
         {
-            OrderShippings.Clear();
+            OrderShipping.Clear();
             foreach (var order in _allOrders)
                 if (order.ShippingStatus == "Shipped")
-                    OrderShippings.Add(order);
+                    OrderShipping.Add(order);
 
             OnPropertyChanged(nameof(TotalOrderShipping));
         }
+        public int TotalOrderShipping => _orderShipping.Count;
 
-        public ObservableCollection<Order> OrderShippings
+        public ObservableCollection<Order> OrderShipping
         {
-            get => _ordersShippings;
+            get => _orderShipping;
             set
             {
-                _ordersShippings = value;
-                OnPropertyChanged(nameof(OrderShippings));
+                _orderShipping = value;
+                OnPropertyChanged(nameof(OrderShipping));
             }
         }
 
-        public int TotalOrderShipping => _ordersShippings.Count;
-
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string nameProperty)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameProperty));
-
-        private void ImageBorder_Loaded(object sender, RoutedEventArgs e)
+        protected void OnPropertyChanged(string propertyName)
         {
-            var border = sender as Border;
-
-            border.Clip = new RectangleGeometry()
-            {
-                Rect = new Rect(0, 0, border.ActualWidth, border.ActualHeight),
-                RadiusX = border.CornerRadius.TopLeft,
-                RadiusY = border.CornerRadius.TopLeft
-            };
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void receivedbtn_Click(object sender, RoutedEventArgs e)
+        private void removeorderbtn_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
             Order order = btn.Tag as Order;
 
-            var confirm = MessageBox.Show(
-                "Bạn chắc chắn đã nhận được đơn hàng?",
-                "Xác nhận",
+            var dialog = MessageBox.Show(
+                "Có chắc chắn hủy đơn hàng này?",
+                "Xác Nhận Hủy",
                 MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
+                MessageBoxImage.Question
+            );
 
-            if (confirm != MessageBoxResult.Yes) return;
+            if (dialog != MessageBoxResult.Yes) return;
 
             try
             {
@@ -99,31 +86,29 @@ namespace Pet_Shop_Project.Views
 
                     const string query = @"
                         UPDATE ORDERS
-                        SET ShippingStatus = @ShippingStatus,
-                            PaymentStatus = @PaymentStatus
-                        WHERE OrderId = @OrderId;
-
-                        UPDATE SHIPMENTS
-                        SET Status = @ShipmentStatus
-                        WHERE OrderId = @OrderId;";
+                        SET ApprovalStatus = @ApprovalStatus,
+                            PaymentStatus = @PaymentStatus,
+                            ShippingStatus = @ShippingStatus
+                        WHERE OrderId = @OrderId";
 
                     using (var cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@ShippingStatus", "Delivered");
-                        cmd.Parameters.AddWithValue("@PaymentStatus", "Paid");
-                        cmd.Parameters.AddWithValue("@ShipmentStatus", "Delivered");
+                        cmd.Parameters.AddWithValue("@ApprovalStatus", "Rejected");
+                        cmd.Parameters.AddWithValue("@PaymentStatus", "Pending");
+                        cmd.Parameters.AddWithValue("@ShippingStatus", "Pending");
                         cmd.Parameters.AddWithValue("@OrderId", order.OrderId);
 
                         cmd.ExecuteNonQuery();
                     }
                 }
 
-                order.ShippingStatus = "Delivered";
-                order.PaymentStatus = "Paid";
+                order.ApprovalStatus = "Rejected";
+                order.PaymentStatus = "Pending";
+                order.ShippingStatus = "Pending";
                 FilterOrders();
 
                 MessageBox.Show(
-                    "Cảm ơn quý khách đã xác nhận, quý khách có gì không hài lòng vui lòng feedback cho shop để shop cải thiện hơn.",
+                    "Đã hủy đơn hàng thành công.",
                     "Thành Công",
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
@@ -131,11 +116,12 @@ namespace Pet_Shop_Project.Views
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    $"Cập nhật thất bại: {ex.Message}",
+                    $"Hủy đơn hàng thất bại: {ex.Message}",
                     "Lỗi",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
+
         }
     }
 }

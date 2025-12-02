@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +27,7 @@ namespace Pet_Shop_Project.Views
     {
         private ObservableCollection<Order> _orderSuccesses;
         private ObservableCollection<Order> _allOrders;
+        private readonly string _connectionDB = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
         public OQPSuccess(ObservableCollection<Order> allOrders)
         {
             InitializeComponent();
@@ -60,6 +63,181 @@ namespace Pet_Shop_Project.Views
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string nameProperty)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameProperty));
+
+        private void ImageBorder_Loaded(object sender, RoutedEventArgs e)
+        {
+            var border = sender as Border;
+
+            border.Clip = new RectangleGeometry()
+            {
+                Rect = new Rect(0, 0, border.ActualWidth, border.ActualHeight),
+                RadiusX = border.CornerRadius.TopLeft,
+                RadiusY = border.CornerRadius.TopLeft
+            };
+        }
+
+        private void reorderbtn_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            Order oldOrder = btn.Tag as Order;
+
+            if (oldOrder.Details == null || oldOrder.Details.Count == 0)
+            {
+                MessageBox.Show("Đơn hàng không có sẵn để đặt.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var confirm = MessageBox.Show("Bạn muốn đặt lại đơn hàng này?", "Xác Nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (confirm != MessageBoxResult.Yes) return;
+
+            var newOrder = BuildReorder(oldOrder);
+            if (!checkStock(newOrder.Details)) return;
+
+            if (SaveReorderToDatabase(newOrder))
+            {
+                _allOrders.Add(newOrder);
+                MessageBox.Show($"Đặt lại đơn hàng thành công!", "Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private Order BuildReorder(Order oldOrder)
+        {
+            var details = new ObservableCollection<OrderDetail>();
+
+            foreach (var detail in oldOrder.Details ?? Enumerable.Empty<OrderDetail>())
+            {
+                if (detail == null) continue;
+
+                details.Add(new OrderDetail
+                {
+                    ProductId = string.IsNullOrWhiteSpace(detail.ProductId) ? detail.Product?.ProductId : detail.ProductId,
+                    Product = detail.Product,
+                    Quantity = detail.Quantity
+                });
+            }
+
+            var order = new Order
+            {
+                UserId = oldOrder.UserId,
+                OrderDate = DateTime.Now,
+                ApprovalStatus = "Waiting",
+                PaymentStatus = "Pending",
+                ShippingStatus = "Pending",
+                Address = oldOrder.Address,
+                Note = oldOrder.Note,
+                Details = details
+            };
+
+            order.TotalAmount = details.Sum(d => d.Product != null
+                ? d.Quantity * d.Product.UnitPrice : 0);
+
+            return order;
+        }
+
+        private bool checkStock(IEnumerable<OrderDetail> details)
+        {
+            const string sql = "SELECT UnitInStock FROM PRODUCTS WHERE ProductId=@ProductId";
+
+            using (var conn = new SqlConnection(_connectionDB))
+            {
+                conn.Open();
+                foreach (var detail in details)
+                {
+                    if (detail == null || string.IsNullOrWhiteSpace(detail.ProductId)) continue;
+
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ProductId", detail.ProductId);
+                        var stock = (int?)cmd.ExecuteScalar() ?? 0;
+                        if (detail.Quantity > stock)
+                        {
+                            var productName = detail.Product?.Name ?? detail.ProductId;
+                            MessageBox.Show(
+                                $"Sản phẩm '{productName}' chỉ còn {stock} trong kho.",
+                                "Không Đủ Hàng",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning
+                            );
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private bool SaveReorderToDatabase(Order order)
+        {
+            const string insertOrder = @"INSERT INTO ORDERS (UserId, OrderDate, TotalAmount, ApprovalStatus,
+                                        PaymentStatus, ShippingStatus, Address, Note)
+                                        OUTPUT INSERTED.OrderId
+                                        VALUES (@UserId,@OrderDate,@TotalAmount,@ApprovalStatus,
+                                        @PaymentStatus,@ShippingStatus,@Address,@Note)";
+
+            const string insertDetail = @"INSERT INTO ORDER_DETAILS (OrderId, ProductId, Quantity)
+                                        VALUES (@OrderId,@ProductId,@Quantity)";
+
+            const string updateStock = @"UPDATE PRODUCTS SET UnitInStock = UnitInStock - @Quantity WHERE ProductId=@ProductId";
+
+            using (var conn = new SqlConnection(_connectionDB))
+            {
+                conn.Open();
+                using (var tx = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        using (var cmd = new SqlCommand(insertOrder, conn, tx))
+                        {
+                            cmd.Parameters.AddWithValue("@UserId", order.UserId);
+                            cmd.Parameters.AddWithValue("@OrderDate", order.OrderDate);
+                            cmd.Parameters.AddWithValue("@TotalAmount", order.TotalAmount);
+                            cmd.Parameters.AddWithValue("@ApprovalStatus", order.ApprovalStatus);
+                            cmd.Parameters.AddWithValue("@PaymentStatus", order.PaymentStatus);
+                            cmd.Parameters.AddWithValue("@ShippingStatus", order.ShippingStatus);
+                            cmd.Parameters.AddWithValue("@Address", (object)order.Address ?? DBNull.Value);
+                            cmd.Parameters.AddWithValue("@Note", (object)order.Note ?? DBNull.Value);
+
+                            order.OrderId = cmd.ExecuteScalar()?.ToString();
+                        }
+
+                        foreach (var detail in order.Details)
+                        {
+                            detail.OrderId = order.OrderId;
+
+                            using (var cmd = new SqlCommand(insertDetail, conn, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@OrderId", order.OrderId);
+                                cmd.Parameters.AddWithValue("@ProductId", detail.ProductId);
+                                cmd.Parameters.AddWithValue("@Quantity", detail.Quantity);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            using (var cmd = new SqlCommand(updateStock, conn, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@ProductId", detail.ProductId);
+                                cmd.Parameters.AddWithValue("@Quantity", detail.Quantity);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            if (detail.Product != null)
+                            {
+                                detail.Product.UnitInStock -= detail.Quantity;
+                            }
+                        }
+
+                        tx.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        tx.Rollback();
+                        MessageBox.Show($"Không thể đặt lại đơn hàng: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return false;
+                    }
+                }
+            }
+        }
 
     }
 }
