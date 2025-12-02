@@ -21,8 +21,7 @@
         <!-- Main Content Frame -->
         <Frame Grid.Column="1" 
                x:Name="MainScreen" 
-               NavigationUIVisibility="Hidden" 
-               Source="Views/HomePage.xaml">
+               NavigationUIVisibility="Hidden" >
         </Frame>
     </Grid>
 </Window>

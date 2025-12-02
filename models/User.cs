@@ -16,6 +16,19 @@ namespace Pet_Shop_Project.Models
         private string _phone;
         private string _address;
         private string _role;
+        private string _username;
+        private DateTime _createddate;
+
+        public DateTime CreatedDate
+        {
+            get => _createddate;
+            set
+            {
+                _createddate = value;
+                OnPropertyChanged(nameof(CreatedDate));
+
+            }
+        }
 
         public string UserId
         {
@@ -84,6 +97,15 @@ namespace Pet_Shop_Project.Models
             {
                 _role = value;
                 OnPropertyChanged(nameof(Role));
+            }
+        }
+        public string Username
+        {
+            get => _username;
+            set
+            {
+                _username = value;
+                OnPropertyChanged(nameof(Username));
             }
         }
 

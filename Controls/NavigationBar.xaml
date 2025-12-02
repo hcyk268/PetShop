@@ -76,7 +76,7 @@
                 <Button x:Name="AccountButton" 
                         Style="{StaticResource NavButtonStyle}" 
                         ToolTip="Tài khoản" 
-                        Tag="Account">
+                        Tag="Account" Click="AccountButton_Click">
                     <StackPanel>
                         <materialDesign:PackIcon Kind="Account" 
                                                  Width="30" 
