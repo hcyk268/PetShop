@@ -7,13 +7,11 @@
       mc:Ignorable="d" 
       d:DesignHeight="650" d:DesignWidth="940"
       Background="#F5F5F5">
-
     <Grid Margin="25">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
         <!-- Header -->
         <StackPanel Grid.Row="0" Margin="0,0,0,30">
             <TextBlock Text="THÔNG TIN TÀI KHOẢN"
@@ -22,14 +20,12 @@
                       Foreground="#F78272"
                       HorizontalAlignment="Center"/>
         </StackPanel>
-
         <!-- Main Content -->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="300"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-
             <!-- Left Panel - Avatar & Role -->
             <Border Grid.Column="0"
                    Background="White"
@@ -39,7 +35,6 @@
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="0" BlurRadius="20" Opacity="0.1"/>
                 </Border.Effect>
-
                 <StackPanel HorizontalAlignment="Center">
                     <!-- Avatar -->
                     <Grid Width="150" Height="150" Margin="0,0,0,20">
@@ -47,7 +42,6 @@
                         <Ellipse Fill="#F8FFFE"
                                 Stroke="#F78272"
                                 StrokeThickness="3"/>
-
                         <!-- Avatar Image -->
                         <Ellipse x:Name="AvatarEllipse">
                             <Ellipse.Fill>
@@ -56,7 +50,6 @@
                                            Stretch="UniformToFill"/>
                             </Ellipse.Fill>
                         </Ellipse>
-
                         <!-- Camera Icon Overlay -->
                         <Border Width="40" Height="40"
                                Background="#F78272"
@@ -74,7 +67,6 @@
                                                    VerticalAlignment="Bottom" Margin="0,0,0,8"/>
                         </Border>
                     </Grid>
-
                     <!-- User Name -->
                     <TextBlock x:Name="UserNameText"
                               Text="Tên người dùng"
@@ -85,7 +77,6 @@
                               TextWrapping="Wrap"
                               TextAlignment="Center"
                               Margin="0,0,0,10"/>
-
                     <!-- Role Badge -->
                     <Border Background="#FFCC96"
                            CornerRadius="15"
@@ -106,7 +97,6 @@
                                       VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
-
                     <!-- Logout Button -->
                     <Button Content="Đăng xuất"
                            Background="#FF6B6B"
@@ -141,7 +131,6 @@
                     </Button>
                 </StackPanel>
             </Border>
-
             <!-- Right Panel - User Details -->
             <Border Grid.Column="1"
                    Background="White"
@@ -150,7 +139,6 @@
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="0" BlurRadius="20" Opacity="0.1"/>
                 </Border.Effect>
-
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                              HorizontalScrollBarVisibility="Disabled">
                     <StackPanel>
@@ -160,7 +148,6 @@
                                   FontWeight="Bold"
                                   Foreground="#F78272"
                                   Margin="0,0,0,30"/>
-
                         <!-- Email -->
                         <StackPanel Margin="0,0,0,20">
                             <TextBlock Text="Email"
@@ -188,7 +175,6 @@
                                 </StackPanel>
                             </Border>
                         </StackPanel>
-
                         <!-- Phone -->
                         <StackPanel Margin="0,0,0,20">
                             <TextBlock Text="Số điện thoại"
@@ -206,7 +192,6 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-
                                     <StackPanel Grid.Column="0" Orientation="Horizontal">
                                         <materialDesign:PackIcon Kind="Phone"
                                                                Width="20"
@@ -220,7 +205,6 @@
                                                   Foreground="#333333"
                                                   VerticalAlignment="Center"/>
                                     </StackPanel>
-
                                     <Button Grid.Column="1"
                                            Content="Sửa"
                                            FontSize="12"
@@ -232,7 +216,6 @@
                                 </Grid>
                             </Border>
                         </StackPanel>
-
                         <!-- Address -->
                         <StackPanel Margin="0,0,0,20">
                             <TextBlock Text="Địa chỉ"
@@ -250,7 +233,6 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-
                                     <StackPanel Grid.Column="0" Orientation="Horizontal">
                                         <materialDesign:PackIcon Kind="MapMarker"
                                                                Width="20"
@@ -265,7 +247,6 @@
                                                   VerticalAlignment="Center"
                                                   TextWrapping="Wrap"/>
                                     </StackPanel>
-
                                     <Button Grid.Column="1"
                                            Content="Sửa"
                                            FontSize="12"
@@ -277,7 +258,6 @@
                                 </Grid>
                             </Border>
                         </StackPanel>
-
                         <!-- Join Date -->
                         <StackPanel Margin="0,0,0,20">
                             <TextBlock Text="Ngày tham gia"
@@ -305,7 +285,6 @@
                                 </StackPanel>
                             </Border>
                         </StackPanel>
-
                         <!-- Change Password Button -->
                         <Button Content="Đổi mật khẩu"
                                Background="#FFCC96"

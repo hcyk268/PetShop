@@ -43,7 +43,7 @@ namespace Pet_Shop_Project.Views
             string username = UsernameTextBox.Text.Trim();
             string email = EmailTextBox.Text.Trim();
             string phone = PhoneTextBox.Text.Trim();
-            string address = AddressTextBox.Text.Trim();
+            string address = AddressTextBox.Text.Trim(); // NEW
             string password = PasswordBox.Password;
             string confirmPassword = ConfirmPasswordBox.Password;
             bool termsAccepted = TermsCheckBox.IsChecked == true;

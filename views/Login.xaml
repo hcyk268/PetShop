@@ -5,40 +5,55 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="LoginWindow" Height="650" Width="1000"
-        Background="{DynamicResource MaterialDesignPaper}"
+        Title="Pet Shop - Đăng nhập" 
+        Height="650" 
+        Width="1000"
+        WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
     <Grid>
-        <!-- Layer 1: Hình nền mờ -->
+        <!-- Layer 1: Hình nền -->
         <Image Source="/Images/download.jpg" 
                Stretch="UniformToFill"
-               Opacity="0.1"/>
+               Opacity="1"/>
+
         <Grid Margin="40">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <materialDesign:Card Grid.Row="1" 
-                             Padding="30" 
-                             Width="400" 
-                             MaxHeight="500"
-                             UniformCornerRadius="8" 
-                             materialDesign:ElevationAssist.Elevation="Dp8" 
-                             HorizontalAlignment="Center" 
-                             VerticalAlignment="Center"
-                             Background="{DynamicResource MaterialDesignBackground}" Height="442">
+            <!-- ✅ CARD CHỨA FRAME ĐỂ LOAD PAGE -->
+            <materialDesign:Card Grid.Row="0" 
+                                 Padding="0" 
+                                 Width="550" 
+                                 MaxHeight="600"
+                                 UniformCornerRadius="20" 
+                                 materialDesign:ElevationAssist.Elevation="Dp16" 
+                                 HorizontalAlignment="Center" 
+                                 VerticalAlignment="Center"
+                                 Background="White">
 
+                <!-- Frame để load SignIn.xaml hoặc SignUp.xaml -->
                 <Frame x:Name="MainFrame"
-                    NavigationUIVisibility="Hidden" Margin="-37,-46,-40,-39"/>
-
+                       NavigationUIVisibility="Hidden" 
+                       Margin="0"/>
             </materialDesign:Card>
 
-            <TextBlock Grid.Row="2" Text="© Pet Shop Management 2025"
-                   Foreground="Gray"
-                   HorizontalAlignment="Center"
-                   Margin="0 20 0 10"/>
+            <!-- Footer -->
+            <TextBlock Grid.Row="1" 
+                       Text="© Pet Shop Management 2025"
+                       Foreground="LightGray"
+                       FontSize="15"
+                       FontWeight="Light"
+                       HorizontalAlignment="Center"
+                       Margin="0,15,0,0">
+                <TextBlock.Effect>
+                    <DropShadowEffect BlurRadius="2" 
+                                     ShadowDepth="1" 
+                                     Opacity="1"
+                                     Color="Black"/>
+                </TextBlock.Effect>
+            </TextBlock>
         </Grid>
     </Grid>
 </Window>
