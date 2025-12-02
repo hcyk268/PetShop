@@ -42,7 +42,7 @@
                         <Border Width="60" Height="60" 
                                Background="Transparent"
                                CornerRadius="30"
-                               Margin="0,0,0,10">
+                               Margin="0,-10,0,10">
                             <Image Source="/Images/peach.png" 
                                    Stretch="Uniform"/>
                         </Border>
