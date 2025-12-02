@@ -1,26 +1,23 @@
-﻿using System;
+﻿using Pet_Shop_Project.Models;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
-using System.Net;
-
-using Pet_Shop_Project.Models;
-
-using System.Security.Cryptography;
 
 
 namespace Pet_Shop_Project.Services
 {
     public class UserService
     {
-        private readonly string connectionString;
+        private readonly string connectionString = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
 
         public UserService()
         {
-            // ✅ Thay đổi connection string theo database của bạn
-            connectionString = @"Server=DESKTOP-MEEB046;Database=PETSHOP;Integrated Security=True;";
         }
 
         // ✅ METHOD XÁC THỰC - So sánh username/password với database

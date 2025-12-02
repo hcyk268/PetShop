@@ -5,8 +5,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d"
-      d:DesignHeight="650"
-      d:DesignWidth="940"
+      Height="600"
+      Width="550"
       Background="#F5F5F5">
     <Grid>
         <!-- Background Decoration -->

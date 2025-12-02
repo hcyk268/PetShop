@@ -14,7 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Pet_Shop_Project.Models;      // ✅ Để dùng User class
+using Pet_Shop_Project.Models;
+using System.Threading;      // ✅ Để dùng User class
 
 
 
@@ -57,7 +58,7 @@ namespace Pet_Shop_Project.Views
         }
 
         //thực hiện đăng nhập
-        private void PerformLogin()
+        private async void PerformLogin()
         {
             //dữ liệu từ form
             string username = UsernameTextBox.Text.Trim();
@@ -82,7 +83,14 @@ namespace Pet_Shop_Project.Views
                     MessageBox.Show($"Đăng nhập thành công!\nXin chào {user.FullName}", "Thành công",
                     MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    this.NavigationService.Navigate(new AccountPage(user.UserId));
+                    var currWindow = Window.GetWindow(this);
+                    MainWindow mainWindow = new MainWindow(user.UserId);
+                    
+                    mainWindow.Show();
+                    
+                    await Task.Delay(150);
+                    
+                    currWindow.Close();
                 }
                 else
                 {
