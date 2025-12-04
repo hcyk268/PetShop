@@ -33,8 +33,9 @@ namespace Pet_Shop_Project.Views
             InitializeComponent();
             _allOrders = allOrders;
             OrderShipping = new ObservableCollection<Order>();
+            SubscribeOrders();
             FilterOrders();
-            _allOrders.CollectionChanged += (s, e) => FilterOrders();
+            _allOrders.CollectionChanged += (s, e) => { SubscribeOrders(); FilterOrders(); };
             DataContext = this;
         }
         protected void FilterOrders()
@@ -122,6 +123,24 @@ namespace Pet_Shop_Project.Views
                     MessageBoxImage.Error);
             }
 
+        }
+
+        private void SubscribeOrders()
+        {
+            foreach (var o in _allOrders)
+                o.PropertyChanged -= Order_PropertyChanged;
+            foreach (var o in _allOrders)
+                o.PropertyChanged += Order_PropertyChanged;
+        }
+
+        private void Order_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Order.ApprovalStatus) ||
+                e.PropertyName == nameof(Order.ShippingStatus) ||
+                e.PropertyName == nameof(Order.PaymentStatus))
+            {
+                FilterOrders();
+            }
         }
     }
 }
