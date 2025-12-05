@@ -1,5 +1,6 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Pet_Shop_Project.Models;
+using Pet_Shop_Project.Services;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,10 +12,12 @@ namespace Pet_Shop_Project.Controls
     public partial class ProductCard : UserControl
     {
         private Product _product;
+        private ReviewService _reviewService;
 
         public ProductCard()
         {
             InitializeComponent();
+            _reviewService = new ReviewService();
         }
 
         public ProductCard(Product product) : this()
@@ -81,19 +84,67 @@ namespace Pet_Shop_Project.Controls
                 OriginalPrice.Visibility = Visibility.Collapsed;
             }
 
-            // Generate rating stars (assuming 5-star rating system)
-            GenerateStars(5);
+            // Lấy rating thực tế từ database
+            LoadRating();
         }
 
-        private void GenerateStars(int rating)
+        private void LoadRating()
+        {
+            try
+            {
+                double avgRating = _reviewService.GetAverageRating(_product.ProductId);
+                int reviewCount = _reviewService.GetReviewCount(_product.ProductId);
+
+                // Làm tròn rating đến 0.5
+                int displayRating = (int)Math.Round(avgRating * 2) / 2;
+                if (displayRating > 5) displayRating = 5;
+                if (displayRating < 0) displayRating = 0;
+
+                GenerateStars(avgRating);
+
+                // Hiển thị rating trung bình với số lượng reviews
+                if (reviewCount > 0)
+                {
+                    RatingText.Text = $"{avgRating:F1}";
+                }
+                else
+                {
+                    RatingText.Text = "0.0";
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Lỗi load rating: {ex.Message}");
+                // Fallback to default
+                GenerateStars(0);
+                RatingText.Text = "(0/5)";
+            }
+        }
+
+        private void GenerateStars(double rating)
         {
             StarPanel.Children.Clear();
 
             for (int i = 0; i < 5; i++)
             {
+                PackIconKind iconKind;
+
+                if (rating >= i + 1)
+                {
+                    iconKind = PackIconKind.Star; // Full star
+                }
+                else if (rating >= i + 0.5)
+                {
+                    iconKind = PackIconKind.StarHalfFull; // Half star
+                }
+                else
+                {
+                    iconKind = PackIconKind.StarOutline; // Empty star
+                }
+
                 var starIcon = new PackIcon
                 {
-                    Kind = i < rating ? PackIconKind.Star : PackIconKind.StarOutline,
+                    Kind = iconKind,
                     Width = 12,
                     Height = 12,
                     Foreground = new SolidColorBrush(Color.FromRgb(255, 165, 0)),
@@ -101,8 +152,6 @@ namespace Pet_Shop_Project.Controls
                 };
                 StarPanel.Children.Add(starIcon);
             }
-
-            RatingText.Text = $"({rating}/5)";
         }
 
         public Product Product
