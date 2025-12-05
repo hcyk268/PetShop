@@ -71,6 +71,31 @@
                                         Stretch="UniformToFill"/>
                         </Rectangle.Fill>
                     </Rectangle>
+
+                    <!-- DISCOUNT BADGE: Góc trên bên phải (27x12) -->
+                    <Grid x:Name="DiscountBadge"
+                          Width="40"
+                          Height="16"
+                          HorizontalAlignment="Right"
+                          VerticalAlignment="Top"
+                          Margin="0,8,8,0"
+                          Visibility="Collapsed">
+
+                        <!-- Arrow shape path -->
+                        <Path Fill="#FF8284"
+                              Data="M 8,0 L 40,0 L 40,16 L 8,16 L 0,8 Z"
+                              Stretch="Fill"/>
+
+                        <!-- Text overlay -->
+                        <TextBlock x:Name="DiscountText"
+                                   Text="-15%"
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Margin="4,0,0,0"/>
+                    </Grid>
                 </Grid>
 
                 <!-- PRODUCT INFO -->
@@ -85,20 +110,48 @@
                                TextWrapping="Wrap"
                                Margin="0,0,0,8"/>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                        <StackPanel x:Name="StarPanel" Orientation="Horizontal"/>
-                        <TextBlock x:Name="RatingText"
-                                   Text="5/5"
-                                   FontSize="12"
-                                   Foreground="#FFA500"
-                                   VerticalAlignment="Center"/>
-                    </StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                       HorizontalAlignment="Left"
+                                       Margin="0,0,0,10">
+                                <StackPanel x:Name="StarPanel" 
+                                           Orientation="Horizontal"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,0,0"/>
+                                <TextBlock x:Name="RatingText"
+                                          Text="5/5"
+                                          FontSize="12"
+                                          Foreground="#FFA500"
+                                          FontWeight="SemiBold"
+                                          VerticalAlignment="Center"/>
+                            </StackPanel>
+                    <!-- PRICE SECTION -->
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <!-- Giá sau giảm (hoặc giá thường) -->
+                        <TextBlock x:Name="ProductPrice"
+                                   Text="75.000 đ"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="#FF6B6B"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,8,0"/>
 
-                    <TextBlock x:Name="ProductPrice"
-                               Text="75.000 đ"
-                               FontSize="18"
-                               FontWeight="Bold"
-                               Foreground="#FF6B6B"/>
+                        <!-- Giá gốc gạch ngang (chỉ hiện khi có discount) -->
+                        <TextBlock x:Name="OriginalPrice"
+                                   Text="90.000 đ"
+                                   FontSize="13"
+                                   FontWeight="Light"
+                                   Foreground="#767676"
+                                   VerticalAlignment="Center"
+                                   Visibility="Collapsed">
+                            <TextBlock.TextDecorations>
+                                <TextDecoration Location="Strikethrough">
+                                    <TextDecoration.Pen>
+                                        <Pen Brush="#767676" Thickness="1"/>
+                                    </TextDecoration.Pen>
+                                </TextDecoration>
+                            </TextBlock.TextDecorations>
+                        </TextBlock>
+                    </StackPanel>
                 </StackPanel>
 
                 <!-- Hidden Image as ImageBrush Source -->

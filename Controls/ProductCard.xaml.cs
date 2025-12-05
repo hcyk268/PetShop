@@ -3,7 +3,6 @@ using Pet_Shop_Project.Models;
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -45,8 +44,42 @@ namespace Pet_Shop_Project.Controls
                 }
             }
 
-            // Set price (format with VND)
-            ProductPrice.Text = $"{_product.FinalPrice:N0} đ";
+            // Xử lý discount
+            bool hasDiscount = _product.Discount > 0;
+
+            if (hasDiscount)
+            {
+                // 1. Hiển thị discount badge
+                DiscountBadge.Visibility = Visibility.Visible;
+                DiscountText.Text = $"-{(_product.Discount * 100):0}%";
+
+                // 2. Giá có gradient
+                ProductPrice.Foreground = new LinearGradientBrush
+                {
+                    StartPoint = new Point(0, 0),
+                    EndPoint = new Point(1, 0),
+                    GradientStops = new GradientStopCollection
+                    {
+                        new GradientStop(Color.FromRgb(0xFF, 0xC4, 0x76), 0),
+                        new GradientStop(Color.FromRgb(0xFF, 0xA2, 0xA2), 1)
+                    }
+                };
+
+                // 3. Hiển thị giá sau giảm
+                ProductPrice.Text = $"{_product.FinalPrice:N0} đ";
+
+                // 4. Hiển thị giá gốc gạch ngang
+                OriginalPrice.Text = $"{_product.UnitPrice:N0} đ";
+                OriginalPrice.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                // Không có discount: giá bình thường
+                DiscountBadge.Visibility = Visibility.Collapsed;
+                ProductPrice.Foreground = new SolidColorBrush(Color.FromRgb(0xFF, 0x6B, 0x6B));
+                ProductPrice.Text = $"{_product.UnitPrice:N0} đ";
+                OriginalPrice.Visibility = Visibility.Collapsed;
+            }
 
             // Generate rating stars (assuming 5-star rating system)
             GenerateStars(5);
@@ -69,7 +102,7 @@ namespace Pet_Shop_Project.Controls
                 StarPanel.Children.Add(starIcon);
             }
 
-            RatingText.Text = $"{rating}/5";
+            RatingText.Text = $"({rating}/5)";
         }
 
         public Product Product
@@ -81,6 +114,7 @@ namespace Pet_Shop_Project.Controls
                 LoadProductData();
             }
         }
+
         private void ProductCard_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (_product != null)
