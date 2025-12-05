@@ -115,6 +115,7 @@
     <Compile Include="Controls\ProductCard.xaml.cs">
       <DependentUpon>ProductCard.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\ReviewService.cs" />
     <Compile Include="Services\SessionManager.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Views\AccountPage.xaml.cs">

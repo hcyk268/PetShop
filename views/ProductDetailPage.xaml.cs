@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Windows;
@@ -18,6 +19,7 @@ namespace Pet_Shop_Project.Views
         private readonly string _connectionDB = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
         private Product _product;
         private int _quantity = 1;
+        private ReviewService _reviewService;
 
         private void ImageBorder_Loaded(object sender, RoutedEventArgs e)
         {
@@ -34,12 +36,14 @@ namespace Pet_Shop_Project.Views
         public ProductDetailPage()
         {
             InitializeComponent();
+            _reviewService = new ReviewService();
         }
 
         public ProductDetailPage(Product product) : this()
         {
             _product = product;
             LoadProductDetails();
+            LoadReviews();
         }
 
         private void LoadProductDetails()
@@ -99,19 +103,63 @@ namespace Pet_Shop_Project.Views
             }
 
             StockText.Text = _product.UnitInStock.ToString();
-            GenerateStars(5);
+
+            // Load rating thực tế
+            LoadRating();
+
             QuantityText.Text = _quantity.ToString();
         }
 
-        private void GenerateStars(int rating)
+        private void LoadRating()
+        {
+            try
+            {
+                double avgRating = _reviewService.GetAverageRating(_product.ProductId);
+                int reviewCount = _reviewService.GetReviewCount(_product.ProductId);
+
+                GenerateStars(avgRating);
+
+                if (reviewCount > 0)
+                {
+                    RatingText.Text = $"{avgRating:F1}";
+                }
+                else
+                {
+                    RatingText.Text = "0.0";
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Lỗi load rating: {ex.Message}");
+                GenerateStars(0);
+                RatingText.Text = "0.0";
+            }
+        }
+
+        private void GenerateStars(double rating)
         {
             StarPanel.Children.Clear();
 
             for (int i = 0; i < 5; i++)
             {
+                PackIconKind iconKind;
+
+                if (rating >= i + 1)
+                {
+                    iconKind = PackIconKind.Star;
+                }
+                else if (rating >= i + 0.5)
+                {
+                    iconKind = PackIconKind.StarHalfFull;
+                }
+                else
+                {
+                    iconKind = PackIconKind.StarOutline;
+                }
+
                 var starIcon = new PackIcon
                 {
-                    Kind = i < rating ? PackIconKind.Star : PackIconKind.StarOutline,
+                    Kind = iconKind,
                     Width = 12,
                     Height = 12,
                     Foreground = new SolidColorBrush(Color.FromRgb(255, 165, 0)),
@@ -119,8 +167,166 @@ namespace Pet_Shop_Project.Views
                 };
                 StarPanel.Children.Add(starIcon);
             }
+        }
 
-            RatingText.Text = $"({rating}/5)";
+        private void LoadReviews()
+        {
+            try
+            {
+                var reviews = _reviewService.GetReviewsByProductId(_product.ProductId);
+
+                // Xóa các review placeholder
+                ReviewsPanel.Children.Clear();
+
+                if (reviews.Count == 0)
+                {
+                    // Hiển thị thông báo không có review
+                    TextBlock noReviewText = new TextBlock
+                    {
+                        Text = "Chưa có đánh giá nào cho sản phẩm này",
+                        FontSize = 15,
+                        Foreground = new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66)),
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        Margin = new Thickness(0, 20, 0, 20)
+                    };
+                    ReviewsPanel.Children.Add(noReviewText);
+                    return;
+                }
+
+                // Tạo review items từ database
+                foreach (var review in reviews)
+                {
+                    string userFullName = _reviewService.GetUserFullName(review.UserId);
+                    var reviewItem = CreateReviewItem(userFullName, review.Rating, review.Comment, review.ReviewDate);
+                    ReviewsPanel.Children.Add(reviewItem);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Lỗi load reviews: {ex.Message}");
+            }
+        }
+
+        private Border CreateReviewItem(string userName, int rating, string comment, DateTime reviewDate)
+        {
+            Border reviewBorder = new Border
+            {
+                Background = new SolidColorBrush(Color.FromRgb(0xFF, 0xF1, 0xE2)),
+                CornerRadius = new CornerRadius(20),
+                Padding = new Thickness(20),
+                Margin = new Thickness(0, 0, 0, 15)
+            };
+
+            Grid grid = new Grid();
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+            // Avatar
+            Border avatarBorder = new Border
+            {
+                Width = 60,
+                Height = 60,
+                CornerRadius = new CornerRadius(30),
+                Background = new SolidColorBrush(Color.FromRgb(0xE0, 0xE0, 0xE0)),
+                Margin = new Thickness(0, 0, 20, 0)
+            };
+
+            TextBlock avatarText = new TextBlock
+            {
+                Text = "👤",
+                FontSize = 28,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            avatarBorder.Child = avatarText;
+            Grid.SetColumn(avatarBorder, 0);
+
+            // Review Content
+            StackPanel contentPanel = new StackPanel();
+
+            // Header: Tên, Rating và Date trên cùng một hàng
+            StackPanel headerPanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Margin = new Thickness(0, 0, 0, 8)
+            };
+
+            // User name
+            TextBlock nameText = new TextBlock
+            {
+                Text = userName,
+                FontSize = 18,
+                FontWeight = FontWeights.Bold,
+                Foreground = new SolidColorBrush(Color.FromRgb(0x33, 0x33, 0x33)),
+                Margin = new Thickness(0, 0, 15, 0),
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            // Rating
+            TextBlock ratingText = new TextBlock
+            {
+                Text = $"{rating} ★",
+                FontSize = 16,
+                FontWeight = FontWeights.Bold,
+                Foreground = new SolidColorBrush(Color.FromRgb(0xFF, 0xA5, 0x00)),
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 15, 0)
+            };
+
+            // Date với icon đồng hồ
+            StackPanel datePanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            PackIcon clockIcon = new PackIcon
+            {
+                Kind = PackIconKind.ClockOutline,
+                Width = 14,
+                Height = 14,
+                Foreground = new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66)),
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 5, 0)
+            };
+
+            TextBlock dateText = new TextBlock
+            {
+                Text = reviewDate.ToString("dd/MM/yyyy"),
+                FontSize = 16,
+                FontWeight = FontWeights.Light,
+                Foreground = new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66)),
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            datePanel.Children.Add(clockIcon);
+            datePanel.Children.Add(dateText);
+
+            headerPanel.Children.Add(nameText);
+            headerPanel.Children.Add(ratingText);
+            headerPanel.Children.Add(datePanel);
+
+            // Comment
+            TextBlock commentText = new TextBlock
+            {
+                Text = comment,
+                FontSize = 15,
+                Foreground = new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66)),
+                TextWrapping = TextWrapping.Wrap
+            };
+
+            contentPanel.Children.Add(headerPanel);
+            contentPanel.Children.Add(commentText);
+
+            Grid.SetColumn(contentPanel, 1);
+
+            grid.Children.Add(avatarBorder);
+            grid.Children.Add(contentPanel);
+
+            reviewBorder.Child = grid;
+
+            return reviewBorder;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

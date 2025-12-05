@@ -357,102 +357,10 @@
                                   Foreground="#FFAD57"
                                   Margin="0,0,0,20"/>
 
-                        <!-- Review Item 1 -->
-                        <Border Background="#FFF1E2"
-                               CornerRadius="20"
-                               Padding="20"
-                               Margin="0,0,0,15">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Avatar -->
-                                <Border Grid.Column="0"
-                                       Width="60"
-                                       Height="60"
-                                       CornerRadius="30"
-                                       Background="#E0E0E0"
-                                       Margin="0,0,20,0">
-                                    <TextBlock Text="👤"
-                                             FontSize="28"
-                                             HorizontalAlignment="Center"
-                                             VerticalAlignment="Center"/>
-                                </Border>
-
-                                <!-- Review Content -->
-                                <StackPanel Grid.Column="1">
-                                    <StackPanel Orientation="Horizontal"
-                                               Margin="0,0,0,8">
-                                        <TextBlock Text="Tên người dùng"
-                                                  FontSize="18"
-                                                  FontWeight="Bold"
-                                                  Foreground="#333333"
-                                                  Margin="0,0,15,0"/>
-
-                                        <TextBlock Text="5/5"
-                                                  FontSize="16"
-                                                  FontWeight="Bold"
-                                                  Foreground="#FFA500"
-                                                  VerticalAlignment="Center"/>
-                                    </StackPanel>
-
-                                    <TextBlock Text="Comment này chỉ mang tính chất minh họa"
-                                              FontSize="15"
-                                              Foreground="#666666"
-                                              TextWrapping="Wrap"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-
-                        <!-- Review Item 2 -->
-                        <Border Background="#FFF1E2"
-                               CornerRadius="20"
-                               Padding="20">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Avatar -->
-                                <Border Grid.Column="0"
-                                       Width="60"
-                                       Height="60"
-                                       CornerRadius="30"
-                                       Background="#E0E0E0"
-                                       Margin="0,0,20,0">
-                                    <TextBlock Text="👤"
-                                             FontSize="28"
-                                             HorizontalAlignment="Center"
-                                             VerticalAlignment="Center"/>
-                                </Border>
-
-                                <!-- Review Content -->
-                                <StackPanel Grid.Column="1">
-                                    <StackPanel Orientation="Horizontal"
-                                               Margin="0,0,0,8">
-                                        <TextBlock Text="Tên người dùng"
-                                                  FontSize="18"
-                                                  FontWeight="Bold"
-                                                  Foreground="#333333"
-                                                  Margin="0,0,15,0"/>
-
-                                        <TextBlock Text="5/5"
-                                                  FontSize="16"
-                                                  FontWeight="Bold"
-                                                  Foreground="#FFA500"
-                                                  VerticalAlignment="Center"/>
-                                    </StackPanel>
-
-                                    <TextBlock Text="Comment này chỉ mang tính chất minh họa"
-                                              FontSize="15"
-                                              Foreground="#666666"
-                                              TextWrapping="Wrap"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
+                        <!-- Reviews Container - sẽ được load động từ code-behind -->
+                        <StackPanel x:Name="ReviewsPanel">
+                            <!-- Reviews sẽ được thêm vào đây từ code-behind -->
+                        </StackPanel>
                     </StackPanel>
                 </Border>
             </StackPanel>
