@@ -29,19 +29,20 @@ namespace Pet_Shop_Project.Views
 
         private ObservableCollection<Order> _allOrders;
 
-        private string _userid;
-
         SolidColorBrush defaulttext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#222"));
         SolidColorBrush clickedtext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF6B6B"));
         public AdminOrder()
         {
             InitializeComponent();
 
-            _allOrders = _orderService.GetOrdersByUser();
+            AllOrders = new ObservableCollection<Order>();
+            AdminOrderScreen.Visibility = Visibility.Collapsed;
+            loadingIndicatorAdmin.Visibility = Visibility.Visible;
 
             setForeColorDefault();
             pendingbtn.Foreground = clickedtext;
-            AdminOrderScreen.Navigate(new AOPending(AllOrders));
+
+            Loaded += AdminOrder_Loaded;
         }
 
         public ObservableCollection<Order> AllOrders
@@ -58,6 +59,27 @@ namespace Pet_Shop_Project.Views
             pendingbtn.Foreground = shippedbtn.Foreground 
                 = shippingbtn.Foreground = rejectedbtn.Foreground = defaulttext;
         }
+
+        private async void AdminOrder_Loaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= AdminOrder_Loaded;
+            await LoadOrders();
+        }
+
+        private async Task LoadOrders()
+        {
+            try
+            {
+                AllOrders = await _orderService.GetOrdersByUser();
+                AdminOrderScreen.Navigate(new AOPending(AllOrders));
+            }
+            finally
+            {
+                loadingIndicatorAdmin.Visibility = Visibility.Collapsed;
+                AdminOrderScreen.Visibility = Visibility.Visible;
+            }
+        }
+
         private void pendingbtn_Click(object sender, RoutedEventArgs e)
         {
             setForeColorDefault();

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -30,8 +31,9 @@ namespace Pet_Shop_Project.Views
             InitializeComponent();
             _allOrders = allOrders;
             OrderCanceled = new ObservableCollection<Order>();
+            AttachExistingOrders();
             FilterOrders();
-            _allOrders.CollectionChanged += (s, e) => FilterOrders();
+            _allOrders.CollectionChanged += AllOrders_CollectionChanged;
             DataContext = this;
         }
 
@@ -71,6 +73,48 @@ namespace Pet_Shop_Project.Views
                 RadiusX = border.CornerRadius.TopLeft,
                 RadiusY = border.CornerRadius.TopLeft
             };
+        }
+
+        private void AttachExistingOrders()
+        {
+            foreach (var order in _allOrders)
+                AttachOrder(order);
+        }
+
+        private void AllOrders_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.OldItems != null)
+                foreach (Order ord in e.OldItems)
+                    DetachOrder(ord);
+
+            if (e.NewItems != null)
+                foreach (Order ord in e.NewItems)
+                    AttachOrder(ord);
+
+            FilterOrders();
+        }
+
+        private void AttachOrder(Order order)
+        {
+            if (order == null) return;
+            order.PropertyChanged -= Order_PropertyChanged;
+            order.PropertyChanged += Order_PropertyChanged;
+        }
+
+        private void DetachOrder(Order order)
+        {
+            if (order == null) return;
+            order.PropertyChanged -= Order_PropertyChanged;
+        }
+
+        private void Order_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Order.ApprovalStatus) ||
+                e.PropertyName == nameof(Order.ShippingStatus) ||
+                e.PropertyName == nameof(Order.PaymentStatus))
+            {
+                FilterOrders();
+            }
         }
     }
 }

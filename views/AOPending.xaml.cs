@@ -1,9 +1,10 @@
-using Pet_Shop_Project.Models;
+﻿using Pet_Shop_Project.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -23,8 +24,9 @@ namespace Pet_Shop_Project.Views
             InitializeComponent();
             _allOrders = allOrders;
             OrderPendings = new ObservableCollection<Order>();
+            SubscribeOrders();
             FilterOrders();
-            _allOrders.CollectionChanged += (s, e) => FilterOrders();
+            _allOrders.CollectionChanged += (s, e) => { SubscribeOrders(); FilterOrders(); };
             DataContext = this;
         }
 
@@ -52,14 +54,18 @@ namespace Pet_Shop_Project.Views
         private void ViewOrderDetail_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
-            Order order = btn.Tag as Order;
+            var order = btn?.Tag as Order;
+            if (order == null) return;
+
             int countproduct = 0;
-            string namedetailproducts = "🛍️ Sản phẩm trong hóa đơn: \n";
+            var detailBuilder = new StringBuilder();
+            detailBuilder.AppendLine("🛍️ Sản phẩm trong hóa đơn:");
             foreach (var deta in order.Details)
             {
                 countproduct += (int)deta.Quantity;
-                namedetailproducts += $"    • {deta.Product.Name} \n";
+                detailBuilder.AppendLine($"  • {deta.Product?.Name}");
             }
+
             MessageBox.Show(
                 $"📦 Mã đơn hàng: {order.OrderId}\n"
                 + $"👤 Mã khách hàng: {order.UserId}\n"
@@ -68,35 +74,37 @@ namespace Pet_Shop_Project.Views
                 + $"🏠 Địa chỉ giao hàng: {order.Address}\n"
                 + $"📝 Ghi chú thêm: {order.Note}\n"
                 + $"🔢 Tổng số sản phẩm: {countproduct}\n\n"
-                + namedetailproducts,
+                + detailBuilder.ToString(),
                 "Thông tin hóa đơn 🧾"
             );
         }
 
-        private void ApproveOrder_Click(object sender, RoutedEventArgs e)
+        private async void ApproveOrder_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
-            Order order = btn.Tag as Order;
-            UpdateOrder(order, "Approved", "Xác nhận đơn hàng", "Đơn hàng đã được duyệt và chuyển đi giao hàng", "Shipped");
+            var order = btn?.Tag as Order;
+            await UpdateOrder(order, "Approved", "Xác nhận đơn hàng", "Đơn hàng đã được duyệt và chuyển đi giao hàng", "Shipped");
         }
 
-        private void RejectOrder_Click(object sender, RoutedEventArgs e)
+        private async void RejectOrder_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
-            Order order = btn.Tag as Order;
-            UpdateOrder(order, "Rejected", "Hủy bỏ đơn hàng", "Đơn hàng đã được hủy bỏ", "Pending");
+            var order = btn?.Tag as Order;
+            await UpdateOrder(order, "Rejected", "Hủy bỏ đơn hàng", "Đơn hàng đã được hủy bỏ", "Pending");
         }
 
-        private void UpdateOrder(Order order, string newStatus, string confirmMessage, string successMessage, string shipStatus)
+        private async Task UpdateOrder(Order order, string newStatus, string confirmMessage, string successMessage, string shipStatus)
         {
-            var confirm = MessageBox.Show(confirmMessage, "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (order == null) return;
+
+            var confirm = MessageBox.Show(confirmMessage, "Xac nhan", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (confirm != MessageBoxResult.Yes) return;
 
             try
             {
                 using (SqlConnection conn = new SqlConnection(_connectionDB))
                 {
-                    conn.Open();
+                    await conn.OpenAsync();
                     string query = @"
                         UPDATE ORDERS 
                         SET ApprovalStatus = @Status,
@@ -107,7 +115,7 @@ namespace Pet_Shop_Project.Views
                         cmd.Parameters.AddWithValue("@Status", newStatus);
                         cmd.Parameters.AddWithValue("@OrderId", order.OrderId);
                         cmd.Parameters.AddWithValue("@ShipStatus", shipStatus);
-                        cmd.ExecuteNonQuery();
+                        await cmd.ExecuteNonQueryAsync();
                     }
                 }
 
@@ -127,6 +135,24 @@ namespace Pet_Shop_Project.Views
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void SubscribeOrders()
+        {
+            foreach (var o in _allOrders)
+                o.PropertyChanged -= Order_PropertyChanged;
+            foreach (var o in _allOrders)
+                o.PropertyChanged += Order_PropertyChanged;
+        }
+
+        private void Order_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Order.ApprovalStatus) ||
+                e.PropertyName == nameof(Order.ShippingStatus) ||
+                e.PropertyName == nameof(Order.PaymentStatus))
+            {
+                FilterOrders();
+            }
         }
     }
 }
