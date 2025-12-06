@@ -1,22 +1,15 @@
 ﻿using Pet_Shop_Project.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Pet_Shop_Project.Views
@@ -65,7 +58,7 @@ namespace Pet_Shop_Project.Views
         protected void OnPropertyChanged(string nameProperty)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameProperty));
 
-        private void buttondeleteorder_Click(object sender, RoutedEventArgs e)
+        private async void buttondeleteorder_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult messageBoxResult = MessageBox.Show(
                 "Bạn có thực sự muốn xóa bỏ không?",
@@ -75,7 +68,7 @@ namespace Pet_Shop_Project.Views
             );
             if (messageBoxResult == MessageBoxResult.No) return;
             var btn = sender as Button;
-            string ordid = btn.Tag.ToString();
+            string ordid = btn?.Tag?.ToString();
             var ord = _allOrders.FirstOrDefault(x => x.OrderId == ordid);
             if (ord != null)
             {
@@ -85,8 +78,7 @@ namespace Pet_Shop_Project.Views
                 {
                     try
                     {
-                        conn.Open();
-                        Console.WriteLine("Connected Successfully");
+                        await conn.OpenAsync();
 
                         string query = @"
                             UPDATE ORDERS
@@ -97,15 +89,12 @@ namespace Pet_Shop_Project.Views
                         SqlCommand cmd = new SqlCommand(query, conn);
                         cmd.Parameters.AddWithValue("@OrderId", ordid);
 
-                        cmd.ExecuteNonQuery();
-
-                        Console.WriteLine("Delete success");
+                        await cmd.ExecuteNonQueryAsync();
                     }
                     catch (Exception ex)
                     {
                         check = false;
-                        Console.WriteLine("Connected UnSuccessfully Or Delete Error");
-                        Console.WriteLine("Error: " + ex.Message);
+                        Console.WriteLine("Delete error: " + ex.Message);
                     }
                 }
 

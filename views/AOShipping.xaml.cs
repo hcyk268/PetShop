@@ -1,22 +1,11 @@
-﻿using Pet_Shop_Project.Models;
-using System;
-using System.Collections.Generic;
+using Pet_Shop_Project.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Pet_Shop_Project.Views
 {
@@ -28,6 +17,7 @@ namespace Pet_Shop_Project.Views
         private ObservableCollection<Order> _orderShipping;
         private ObservableCollection<Order> _allOrders;
         private readonly string _connectionDB = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
+
         public AOShipping(ObservableCollection<Order> allOrders)
         {
             InitializeComponent();
@@ -65,10 +55,11 @@ namespace Pet_Shop_Project.Views
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void removeorderbtn_Click(object sender, RoutedEventArgs e)
+        private async void removeorderbtn_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
-            Order order = btn.Tag as Order;
+            var order = btn?.Tag as Order;
+            if (order == null) return;
 
             var dialog = MessageBox.Show(
                 "Có chắc chắn hủy đơn hàng này?",
@@ -83,7 +74,7 @@ namespace Pet_Shop_Project.Views
             {
                 using (var conn = new SqlConnection(_connectionDB))
                 {
-                    conn.Open();
+                    await conn.OpenAsync();
 
                     const string query = @"
                         UPDATE ORDERS
@@ -99,7 +90,7 @@ namespace Pet_Shop_Project.Views
                         cmd.Parameters.AddWithValue("@ShippingStatus", "Pending");
                         cmd.Parameters.AddWithValue("@OrderId", order.OrderId);
 
-                        cmd.ExecuteNonQuery();
+                        await cmd.ExecuteNonQueryAsync();
                     }
                 }
 
@@ -114,7 +105,7 @@ namespace Pet_Shop_Project.Views
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 MessageBox.Show(
                     $"Hủy đơn hàng thất bại: {ex.Message}",

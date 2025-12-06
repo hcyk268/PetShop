@@ -133,9 +133,19 @@
                 BorderBrush="#FFEDEDED"
                 BorderThickness="1"
                 materialDesign:ShadowAssist.ShadowDepth="Depth1">
-            <Frame x:Name="AdminOrderScreen"
-                   Background="Transparent">
-            </Frame>
+            <Grid>
+                <TextBlock x:Name="loadingIndicatorAdmin"
+                           Text="Đang tải..."
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           Foreground="#666"/>
+                <Frame x:Name="AdminOrderScreen"
+                       Background="Transparent"
+                       Visibility="Collapsed">
+                </Frame>
+            </Grid>
         </Border>
     </Grid>
 </Page>

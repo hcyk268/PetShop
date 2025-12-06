@@ -1,23 +1,14 @@
 ﻿using Pet_Shop_Project.Models;
-using Pet_Shop_Project.Services;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Pet_Shop_Project.Views
@@ -80,10 +71,11 @@ namespace Pet_Shop_Project.Views
             };
         }
 
-        private void receivedbtn_Click(object sender, RoutedEventArgs e)
+        private async void receivedbtn_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
-            Order order = btn.Tag as Order;
+            var order = btn?.Tag as Order;
+            if (order == null) return;
 
             var confirm = MessageBox.Show(
                 "Bạn chắc chắn đã nhận được đơn hàng?",
@@ -97,7 +89,7 @@ namespace Pet_Shop_Project.Views
             {
                 using (var conn = new SqlConnection(_connectionDB))
                 {
-                    conn.Open();
+                    await conn.OpenAsync();
 
                     const string query = @"
                         UPDATE ORDERS
@@ -116,7 +108,7 @@ namespace Pet_Shop_Project.Views
                         cmd.Parameters.AddWithValue("@ShipmentStatus", "Delivered");
                         cmd.Parameters.AddWithValue("@OrderId", order.OrderId);
 
-                        cmd.ExecuteNonQuery();
+                        await cmd.ExecuteNonQueryAsync();
                     }
                 }
 
@@ -130,7 +122,7 @@ namespace Pet_Shop_Project.Views
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 MessageBox.Show(
                     $"Cập nhật thất bại: {ex.Message}",
