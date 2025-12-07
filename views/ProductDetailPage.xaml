@@ -351,11 +351,61 @@
                     </Border.Effect>
 
                     <StackPanel>
-                        <TextBlock Text="Đánh giá"
-                                  FontSize="24"
-                                  FontWeight="Bold"
-                                  Foreground="#FFAD57"
-                                  Margin="0,0,0,20"/>
+                        <!-- Header với Title và Filter -->
+                        <Grid Margin="0,0,0,20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Title Đánh giá -->
+                            <TextBlock Grid.Column="0"
+                                      Text="Đánh giá"
+                                      FontSize="24"
+                                      FontWeight="Bold"
+                                      Foreground="#FFAD57"
+                                      VerticalAlignment="Center"/>
+
+                            <!-- Filter Section -->
+                            <StackPanel Grid.Column="1"
+                                       Orientation="Horizontal"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center">
+                                <materialDesign:PackIcon Kind="Filter"
+                                                       Width="25"
+                                                       Height="25"
+                                                       Foreground="#FFA500"
+                                                       VerticalAlignment="Center"
+                                                       Margin="0,0,8,0"/>
+
+                                <TextBlock Text="Filter by"
+                                          FontSize="15"
+                                          FontWeight="SemiBold"
+                                          Foreground="#FFA500"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,12,0"/>
+
+                                <Border Background="White"
+                                       BorderBrush="#FFA500"
+                                       BorderThickness="1.5"
+                                       CornerRadius="15"
+                                       Height="30"
+                                       MinWidth="150"
+                                       Padding="12,0">
+                                    <ComboBox x:Name="ReviewFilterComboBox"
+                                            BorderThickness="0"
+                                            Background="Transparent"
+                                            FontSize="13"
+                                            VerticalContentAlignment="Center"
+                                            SelectionChanged="ReviewFilterComboBox_SelectionChanged">
+                                        <ComboBoxItem Content="Mới nhất" IsSelected="True"/>
+                                        <ComboBoxItem Content="Cũ nhất"/>
+                                        <ComboBoxItem Content="Đánh giá cao nhất"/>
+                                        <ComboBoxItem Content="Đánh giá thấp nhất"/>
+                                    </ComboBox>
+                                </Border>
+                            </StackPanel>
+                        </Grid>
 
                         <!-- Reviews Container - sẽ được load động từ code-behind -->
                         <StackPanel x:Name="ReviewsPanel">

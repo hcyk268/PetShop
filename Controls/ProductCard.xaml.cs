@@ -2,6 +2,7 @@
 using Pet_Shop_Project.Models;
 using Pet_Shop_Project.Services;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -23,10 +24,10 @@ namespace Pet_Shop_Project.Controls
         public ProductCard(Product product) : this()
         {
             _product = product;
-            LoadProductData();
+            _ = LoadProductDataAsync();
         }
 
-        private void LoadProductData()
+        private async Task LoadProductDataAsync()
         {
             if (_product == null) return;
 
@@ -85,15 +86,15 @@ namespace Pet_Shop_Project.Controls
             }
 
             // Lấy rating thực tế từ database
-            LoadRating();
+            await LoadRatingAsync();
         }
 
-        private void LoadRating()
+        private async Task LoadRatingAsync()
         {
             try
             {
-                double avgRating = _reviewService.GetAverageRating(_product.ProductId);
-                int reviewCount = _reviewService.GetReviewCount(_product.ProductId);
+                double avgRating = await _reviewService.GetAverageRatingAsync(_product.ProductId);
+                int reviewCount = await _reviewService.GetReviewCountAsync(_product.ProductId);
 
                 // Làm tròn rating đến 0.5
                 int displayRating = (int)Math.Round(avgRating * 2) / 2;
@@ -160,7 +161,7 @@ namespace Pet_Shop_Project.Controls
             set
             {
                 _product = value;
-                LoadProductData();
+                _ = LoadProductDataAsync();
             }
         }
 

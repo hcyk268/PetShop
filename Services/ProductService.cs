@@ -7,7 +7,6 @@ using System.Configuration;
 using System.Data.SqlClient;
 using Pet_Shop_Project.Models;
 
-
 namespace Pet_Shop_Project.Services
 {
     public class ProductService
@@ -20,7 +19,7 @@ namespace Pet_Shop_Project.Services
         }
 
         // Lấy tất cả sản phẩm
-        public List<Product> GetAllProducts()
+        public async Task<List<Product>> GetAllProductsAsync()
         {
             List<Product> products = new List<Product>();
 
@@ -28,15 +27,15 @@ namespace Pet_Shop_Project.Services
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
+                    await conn.OpenAsync();
                     string query = "SELECT ProductId, Name, Description, UnitPrice, UnitInStock, Discount, Picture, Category " +
                                  "FROM dbo.PRODUCTS WHERE UnitInStock > 0";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
                         {
-                            while (reader.Read())
+                            while (await reader.ReadAsync())
                             {
                                 Product product = new Product
                                 {
@@ -65,7 +64,7 @@ namespace Pet_Shop_Project.Services
         }
 
         // Lọc sản phẩm theo category
-        public List<Product> GetProductsByCategory(string category)
+        public async Task<List<Product>> GetProductsByCategoryAsync(string category)
         {
             List<Product> products = new List<Product>();
 
@@ -73,7 +72,7 @@ namespace Pet_Shop_Project.Services
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
+                    await conn.OpenAsync();
                     string query = "SELECT ProductId, Name, Description, UnitPrice, UnitInStock, Discount, Picture, Category " +
                                  "FROM dbo.PRODUCTS " +
                                  "WHERE Category = @category AND UnitInStock > 0";
@@ -82,9 +81,9 @@ namespace Pet_Shop_Project.Services
                     {
                         cmd.Parameters.AddWithValue("@category", category);
 
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
                         {
-                            while (reader.Read())
+                            while (await reader.ReadAsync())
                             {
                                 Product product = new Product
                                 {
@@ -113,7 +112,7 @@ namespace Pet_Shop_Project.Services
         }
 
         // Tìm kiếm sản phẩm theo tên
-        public List<Product> SearchProducts(string keyword)
+        public async Task<List<Product>> SearchProductsAsync(string keyword)
         {
             List<Product> products = new List<Product>();
 
@@ -121,7 +120,7 @@ namespace Pet_Shop_Project.Services
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
+                    await conn.OpenAsync();
                     string query = "SELECT ProductId, Name, Description, UnitPrice, UnitInStock, Discount, Picture, Category " +
                                  "FROM dbo.PRODUCTS " +
                                  "WHERE Name LIKE @keyword AND UnitInStock > 0";
@@ -130,9 +129,9 @@ namespace Pet_Shop_Project.Services
                     {
                         cmd.Parameters.AddWithValue("@keyword", "%" + keyword + "%");
 
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
                         {
-                            while (reader.Read())
+                            while (await reader.ReadAsync())
                             {
                                 Product product = new Product
                                 {
