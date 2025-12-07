@@ -12,6 +12,7 @@ namespace Pet_Shop_Project.Views
     public partial class HomePage : Page
     {
         private ProductService productService;
+        private ReviewService reviewService;
         private List<Product> allProducts;
         private string currentCategory = "Tất cả";
 
@@ -19,6 +20,7 @@ namespace Pet_Shop_Project.Views
         {
             InitializeComponent();
             productService = new ProductService();
+            reviewService = new ReviewService();
             Loaded += HomePage_Loaded;
 
             // Đăng ký event cho SearchBox
@@ -197,8 +199,8 @@ namespace Pet_Shop_Project.Views
                     break;
 
                 case "Đánh giá cao nhất":
-                    // Giữ nguyên thứ tự (hoặc implement rating sort khi có field rating)
-                    sortedProducts = products;
+                    // Sắp xếp theo rating từ database
+                    sortedProducts = SortByRating(products);
                     break;
 
                 default: // Tất cả
@@ -207,6 +209,32 @@ namespace Pet_Shop_Project.Views
             }
 
             DisplayProducts(sortedProducts);
+        }
+
+        // Sắp xếp sản phẩm theo rating từ database
+        private List<Product> SortByRating(List<Product> products)
+        {
+            try
+            {
+                // Tạo dictionary để lưu rating của từng sản phẩm
+                var productRatings = new Dictionary<string, double>();
+
+                foreach (var product in products)
+                {
+                    double avgRating = reviewService.GetAverageRating(product.ProductId);
+                    productRatings[product.ProductId] = avgRating;
+                }
+
+                // Sắp xếp theo rating giảm dần
+                return products.OrderByDescending(p => productRatings.ContainsKey(p.ProductId)
+                    ? productRatings[p.ProductId]
+                    : 0).ToList();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Lỗi sắp xếp theo rating: {ex.Message}");
+                return products;
+            }
         }
 
         // Xử lý tìm kiếm

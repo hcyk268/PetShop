@@ -25,11 +25,9 @@ namespace Pet_Shop_Project.Services
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = @"SELECT r.ReviewId, r.ProductId, r.UserId, r.Rating, r.Comment, r.ReviewDate, u.FullName
-                                   FROM dbo.REVIEWS r
-                                   INNER JOIN dbo.USERS u ON r.UserId = u.UserId
-                                   WHERE r.ProductId = @ProductId
-                                   ORDER BY r.ReviewDate DESC";
+                    string query = @"SELECT ReviewId, ProductId, UserId, Rating, Comment, ReviewDate
+                                   FROM dbo.REVIEWS
+                                   WHERE ProductId = @ProductId";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {

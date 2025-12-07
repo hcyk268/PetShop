@@ -1,15 +1,15 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using Pet_Shop_Project.Models;
+using Pet_Shop_Project.Services;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Pet_Shop_Project.Models;
-using Pet_Shop_Project.Services;
-using MaterialDesignThemes.Wpf;
-
 using NavService = Pet_Shop_Project.Services.NavigationService;
 
 namespace Pet_Shop_Project.Views
@@ -20,6 +20,7 @@ namespace Pet_Shop_Project.Views
         private Product _product;
         private int _quantity = 1;
         private ReviewService _reviewService;
+        private List<Review> _allReviews;
 
         private void ImageBorder_Loaded(object sender, RoutedEventArgs e)
         {
@@ -125,14 +126,14 @@ namespace Pet_Shop_Project.Views
                 }
                 else
                 {
-                    RatingText.Text = "0.0";
+                    RatingText.Text = "0";
                 }
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Lỗi load rating: {ex.Message}");
                 GenerateStars(0);
-                RatingText.Text = "0.0";
+                RatingText.Text = "0";
             }
         }
 
@@ -173,38 +174,79 @@ namespace Pet_Shop_Project.Views
         {
             try
             {
-                var reviews = _reviewService.GetReviewsByProductId(_product.ProductId);
-
-                // Xóa các review placeholder
-                ReviewsPanel.Children.Clear();
-
-                if (reviews.Count == 0)
-                {
-                    // Hiển thị thông báo không có review
-                    TextBlock noReviewText = new TextBlock
-                    {
-                        Text = "Chưa có đánh giá nào cho sản phẩm này",
-                        FontSize = 15,
-                        Foreground = new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66)),
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        Margin = new Thickness(0, 20, 0, 20)
-                    };
-                    ReviewsPanel.Children.Add(noReviewText);
-                    return;
-                }
-
-                // Tạo review items từ database
-                foreach (var review in reviews)
-                {
-                    string userFullName = _reviewService.GetUserFullName(review.UserId);
-                    var reviewItem = CreateReviewItem(userFullName, review.Rating, review.Comment, review.ReviewDate);
-                    ReviewsPanel.Children.Add(reviewItem);
-                }
+                _allReviews = _reviewService.GetReviewsByProductId(_product.ProductId);
+                ApplyReviewFilter();
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Lỗi load reviews: {ex.Message}");
             }
+        }
+
+        private void ApplyReviewFilter()
+        {
+            // Xóa các review hiện tại
+            ReviewsPanel.Children.Clear();
+
+            if (_allReviews == null || _allReviews.Count == 0)
+            {
+                // Hiển thị thông báo không có review
+                TextBlock noReviewText = new TextBlock
+                {
+                    Text = "Chưa có đánh giá nào cho sản phẩm này",
+                    FontSize = 15,
+                    Foreground = new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66)),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Margin = new Thickness(0, 20, 0, 20)
+                };
+                ReviewsPanel.Children.Add(noReviewText);
+                return;
+            }
+
+            // Áp dụng filter
+            List<Review> filteredReviews = new List<Review>(_allReviews);
+
+            if (ReviewFilterComboBox.SelectedItem != null)
+            {
+                var selectedFilter = (ReviewFilterComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
+
+                switch (selectedFilter)
+                {
+                    case "Mới nhất":
+                        filteredReviews = _allReviews.OrderByDescending(r => r.ReviewDate).ToList();
+                        break;
+
+                    case "Cũ nhất":
+                        filteredReviews = _allReviews.OrderBy(r => r.ReviewDate).ToList();
+                        break;
+
+                    case "Đánh giá cao nhất":
+                        filteredReviews = _allReviews.OrderByDescending(r => r.Rating).ThenByDescending(r => r.ReviewDate).ToList();
+                        break;
+
+                    case "Đánh giá thấp nhất":
+                        filteredReviews = _allReviews.OrderBy(r => r.Rating).ThenByDescending(r => r.ReviewDate).ToList();
+                        break;
+
+                    default:
+                        filteredReviews = _allReviews.OrderByDescending(r => r.ReviewDate).ToList();
+                        break;
+                }
+            }
+
+            // Tạo review items
+            foreach (var review in filteredReviews)
+            {
+                string userFullName = _reviewService.GetUserFullName(review.UserId);
+                var reviewItem = CreateReviewItem(userFullName, review.Rating, review.Comment, review.ReviewDate);
+                ReviewsPanel.Children.Add(reviewItem);
+            }
+        }
+
+        private void ReviewFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_allReviews == null) return;
+            ApplyReviewFilter();
         }
 
         private Border CreateReviewItem(string userName, int rating, string comment, DateTime reviewDate)
@@ -266,7 +308,7 @@ namespace Pet_Shop_Project.Views
             // Rating
             TextBlock ratingText = new TextBlock
             {
-                Text = $"{rating} ★",
+                Text = $"{rating}★",
                 FontSize = 16,
                 FontWeight = FontWeights.Bold,
                 Foreground = new SolidColorBrush(Color.FromRgb(0xFF, 0xA5, 0x00)),
@@ -283,7 +325,7 @@ namespace Pet_Shop_Project.Views
 
             PackIcon clockIcon = new PackIcon
             {
-                Kind = PackIconKind.ClockOutline,
+                Kind = PackIconKind.Clock,
                 Width = 14,
                 Height = 14,
                 Foreground = new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66)),
