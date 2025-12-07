@@ -5,6 +5,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Pet_Shop_Project.Views"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+
       mc:Ignorable="d" 
       d:DesignHeight="650" d:DesignWidth="940"
       Title="Thanh toán">
@@ -317,8 +319,8 @@
                                        Foreground="#333333"
                                        Margin="0,0,0,10"/>
                             <TextBox x:Name="SellerNoteTextBox"
-                                     Style="{StaticResource PlaceholderTextBoxStyle}"
-                                     Tag="Để lại lưu ý (không bắt buộc)"
+                                     md:HintAssist.Hint="Lưu ý đến người bán"
+                                     md:HintAssist.Foreground="#999999"
                                      AcceptsReturn="True"
                                      TextWrapping="Wrap"
                                      MaxLength="500"

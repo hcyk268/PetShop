@@ -48,18 +48,18 @@ namespace Pet_Shop_Project.Views
             Loaded += Payment_Loaded;
         }
 
-        private bool HasSufficientStock()
+        private async Task<bool> HasSufficientStockAsync()
         {
             const string sql = "SELECT UnitInStock FROM PRODUCTS WHERE ProductId=@ProductId";
             using (var conn = new SqlConnection(_conn))
             {
-                conn.Open();
+                await conn.OpenAsync();
                 foreach (var od in orderDetails)
                 {
                     using (var cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@ProductId", od.ProductId);
-                        var stock = (int?)cmd.ExecuteScalar() ?? 0;
+                        var stock = (int?)await cmd.ExecuteScalarAsync() ?? 0;
                         if (od.Quantity > stock)
                         {
                             MessageBox.Show($"Sản phẩm '{od.Product?.Name}' chỉ còn {stock} trong kho.",
@@ -72,7 +72,7 @@ namespace Pet_Shop_Project.Views
             return true;
         }
 
-        private bool SaveOrderToDatabase(Order order)
+        private async Task<bool> SaveOrderToDatabaseAsync(Order order)
         {
             const string insertOrder = @"INSERT INTO ORDERS (UserId, OrderDate, TotalAmount, ApprovalStatus,
                                         PaymentStatus, ShippingStatus, Address, Note)
@@ -89,7 +89,7 @@ namespace Pet_Shop_Project.Views
 
             using (var conn = new SqlConnection(_conn))
             {
-                conn.Open();
+                await conn.OpenAsync();
                 using (var tx = conn.BeginTransaction())
                 {
                     try
@@ -149,7 +149,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
-        private void ClearPurchasedItemsFromDb(IEnumerable<OrderDetail> details)
+        private async Task<bool> ClearPurchasedItemsFromDbAsync(IEnumerable<OrderDetail> details)
         {
             const string sql = @"DELETE ci FROM CART_ITEMS ci
                                 JOIN CART c ON c.CartId = ci.CartId
@@ -157,19 +157,19 @@ namespace Pet_Shop_Project.Views
 
             using (var conn = new SqlConnection(_conn))
             {
-                conn.Open();
+                await conn.OpenAsync();
                 foreach (var d in details)
                 {
                     using (var cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@UserId", currentUser.UserId);
                         cmd.Parameters.AddWithValue("@ProductId", d.ProductId);
-                        cmd.ExecuteNonQuery();
+                        await cmd.ExecuteNonQueryAsync();
                     }
                 }
             }
+            return true;
         }
-
 
         #region Load Data
 
@@ -292,15 +292,15 @@ namespace Pet_Shop_Project.Views
         }
 
         // Đặt hàng
-        private void PlaceOrder_Click(object sender, RoutedEventArgs e)
+        private async void PlaceOrder_Click(object sender, RoutedEventArgs e)
         {
             if (currentUser == null || orderDetails == null || !orderDetails.Any())
             {
                 MessageBox.Show("Thiếu thông tin đơn hàng hoặc người dùng.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            if (!HasSufficientStock()) return;
-
+            if (!await HasSufficientStockAsync()) return;
+            
             const string paymentMethod = "COD";
             const string paymentMethodDisplay = "Thanh toán khi nhận hàng (COD)";
 
@@ -334,10 +334,10 @@ namespace Pet_Shop_Project.Views
 
                 // TODO: Lưu đơn hàng vào database
                 // bool success = SaveOrderToDatabase(newOrder);
-                bool success = true; // Giả lập thành công
+                var success = true; // Giả lập thành công
                 try
                 {
-                    success = SaveOrderToDatabase(newOrder);
+                    success = await SaveOrderToDatabaseAsync(newOrder);
                 }
                 catch (Exception ex)
                 {
@@ -355,7 +355,7 @@ namespace Pet_Shop_Project.Views
                         $"Cảm ơn bạn đã mua hàng. Chúng tôi sẽ liên hệ với bạn sớm nhất.",
                         "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    ClearPurchasedItemsFromDb(orderDetails); // xóa khỏi CART_ITEMS của user
+                    await ClearPurchasedItemsFromDbAsync(orderDetails);                    
                     CartService.RemoveByProductIds(orderDetails.Select(d => d.ProductId));
                 }
                 else

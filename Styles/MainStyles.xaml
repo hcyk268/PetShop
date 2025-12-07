@@ -1,6 +1,20 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <!-- Converter for stock status color -->
+    <Style x:Key="StockNumberStyle" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsNegative}" Value="True">
+                <Setter Property="Foreground" Value="#C62828"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsNegative}" Value="False">
+                <Setter Property="Foreground" Value="#333"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <!--PlaceHolderTextBoxStyle-->
     <Style x:Key="PlaceholderTextBoxStyle" TargetType="TextBox">
         <Setter Property="Template">
