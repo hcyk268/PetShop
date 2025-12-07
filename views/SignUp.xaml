@@ -1,111 +1,242 @@
 ﻿<Page x:Class="Pet_Shop_Project.Views.SignUp"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      mc:Ignorable="d"
+      Height="600"
+      Width="550"
+      Background="#F5F5F5">
+    <Grid>
+        <!-- Background Decoration -->
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#F5F5F5" Offset="0"/>
+                <GradientStop Color="#E8F4F8" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="30" MaxWidth="400">
-            <!-- Logo -->
-            <Image Source="/Images/peach.png"
-                   Width="60"
-                   Height="60"
-                   HorizontalAlignment="Center"
-                   Margin="0,0,0,10"/>
+        <!-- Signup Card with ScrollViewer -->
+        <Border Width="550"
+                MaxHeight="600"
+                Background="White"
+                CornerRadius="20"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="30"
+                                  ShadowDepth="0"
+                                  Opacity="0.15"
+                                  Color="Black"/>
+            </Border.Effect>
 
-            <!-- Title -->
-            <TextBlock Text="Create your account" 
-                       FontSize="24" 
-                       FontWeight="Bold" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,15,0,25"
-                       Foreground="{DynamicResource MaterialDesignBody}"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled"
+                          Padding="50,30">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-            <!-- Full Name -->
-            <TextBox x:Name="FullNameTextBox"
-                     materialDesign:HintAssist.Hint="👤 Full Name"
-                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                     Margin="0,0,0,15"
-                     FontSize="14"/>
+                    <!-- Logo and Title -->
+                    <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,25">
+                        <Border Width="70" Height="70" Background="Transparent" CornerRadius="35" Margin="0,10,0,5">
+                            <Image Source="/Images/peach.png" Stretch="Uniform"/>
+                        </Border>
+                        <TextBlock FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,5">
+                            <TextBlock.Foreground>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="#F78272" Offset="0"/>
+                                    <GradientStop Color="#FFCC96" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBlock.Foreground>
+                            <Run Text="FETCH"/>
+                        </TextBlock>
+                        <TextBlock Text="Tạo tài khoản mới" FontSize="17" Foreground="#666" HorizontalAlignment="Center"/>
+                    </StackPanel>
 
-            <!-- Username -->
-            <TextBox x:Name="UsernameTextBox"
-                     materialDesign:HintAssist.Hint="✨ Username"
-                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                     Margin="0,0,0,15"
-                     FontSize="14"/>
+                    <!-- Error/Success Message -->
+                    <Border Grid.Row="1" x:Name="MessageBorder" BorderThickness="1" CornerRadius="8" Padding="12,10" Margin="0,0,0,15" Visibility="Collapsed">
+                        <TextBlock x:Name="MessageText" FontSize="13" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                    </Border>
 
-            <!-- Email -->
-            <TextBox x:Name="EmailTextBox"
-                     materialDesign:HintAssist.Hint="📧 Email"
-                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                     Margin="0,0,0,15"
-                     FontSize="14"/>
+                    <!-- Full Name -->
+                    <StackPanel Grid.Row="2" Margin="0,0,0,15">
+                        <TextBlock Text="Họ và tên" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6"/>
+                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42">
+                            <Grid Margin="12,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <materialDesign:PackIcon Grid.Column="0" Kind="AccountCircle" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBox Grid.Column="1" x:Name="FullNameTextBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" Foreground="#333" materialDesign:HintAssist.Hint="Nhập họ và tên" materialDesign:HintAssist.Foreground="#999"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
 
-            <!-- Phone Number -->
-            <TextBox x:Name="PhoneTextBox"
-                     materialDesign:HintAssist.Hint="📱 Phone Number"
-                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                     Margin="0,0,0,15"
-                     FontSize="14"/>
+                    <!-- Username -->
+                    <StackPanel Grid.Row="3" Margin="0,0,0,15">
+                        <TextBlock Text="Tên đăng nhập" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6"/>
+                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42">
+                            <Grid Margin="12,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <materialDesign:PackIcon Grid.Column="0" Kind="Account" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBox Grid.Column="1" x:Name="UsernameTextBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" Foreground="#333" materialDesign:HintAssist.Hint="Nhập tên đăng nhập" materialDesign:HintAssist.Foreground="#999"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
 
-            <!-- Password -->
-            <PasswordBox x:Name="PasswordBox"
-                         materialDesign:HintAssist.Hint="🔒 Password"
-                         Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
-                         Margin="0,0,0,15"
-                         FontSize="14"/>
+                    <!-- Email -->
+                    <StackPanel Grid.Row="4" Margin="0,0,0,15">
+                        <TextBlock Text="Email" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6"/>
+                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42">
+                            <Grid Margin="12,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <materialDesign:PackIcon Grid.Column="0" Kind="Email" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBox Grid.Column="1" x:Name="EmailTextBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" Foreground="#333" materialDesign:HintAssist.Hint="Nhập email" materialDesign:HintAssist.Foreground="#999"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
 
-            <!-- Confirm Password -->
-            <PasswordBox x:Name="ConfirmPasswordBox"
-                         materialDesign:HintAssist.Hint="🔒 Confirm Password"
-                         Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
-                         Margin="0,0,0,10"
-                         FontSize="14"
-                         KeyDown="ConfirmPasswordBox_KeyDown"/>
+                    <!-- Phone -->
+                    <StackPanel Grid.Row="5" Margin="0,0,0,15">
+                        <TextBlock Text="Số điện thoại" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6"/>
+                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42">
+                            <Grid Margin="12,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <materialDesign:PackIcon Grid.Column="0" Kind="Phone" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBox Grid.Column="1" x:Name="PhoneTextBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" Foreground="#333" materialDesign:HintAssist.Hint="Nhập số điện thoại" materialDesign:HintAssist.Foreground="#999"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
 
-            <!-- Terms and Conditions -->
-            <CheckBox x:Name="AgreeTermsCheckBox"
-                      Margin="0,10,0,20"
-                      FontSize="13">
-                <TextBlock TextWrapping="Wrap">
-                    <Run Text="I agree to the "/>
-                    <Hyperlink Click="Terms_Click">Terms and Conditions</Hyperlink>
-                </TextBlock>
-            </CheckBox>
+                    <!-- Address (NEW) -->
+                    <StackPanel Grid.Row="6" Margin="0,0,0,15">
+                        <TextBlock Text="Địa chỉ" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6"/>
+                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42">
+                            <Grid Margin="12,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <materialDesign:PackIcon Grid.Column="0" Kind="MapMarker" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBox Grid.Column="1" x:Name="AddressTextBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" Foreground="#333" materialDesign:HintAssist.Hint="Nhập địa chỉ" materialDesign:HintAssist.Foreground="#999"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
 
-            <!-- Error Message -->
-            <TextBlock x:Name="ErrorMessageTextBlock"
-                       Foreground="Red"
-                       FontSize="12"
-                       Margin="0,0,0,10"
-                       TextWrapping="Wrap"
-                       HorizontalAlignment="Center"
-                       Visibility="Collapsed"/>
+                    <!-- Password -->
+                    <StackPanel Grid.Row="7" Margin="0,0,0,15">
+                        <TextBlock Text="Mật khẩu" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6"/>
+                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42">
+                            <Grid Margin="12,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <materialDesign:PackIcon Grid.Column="0" Kind="Lock" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <PasswordBox Grid.Column="1" x:Name="PasswordBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" materialDesign:HintAssist.Hint="Nhập mật khẩu" materialDesign:HintAssist.Foreground="#999"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
 
-            <!-- Sign Up Button -->
-            <Button x:Name="SignUpButton"
-                    Content="SIGN UP"
-                    Height="45"
-                    FontSize="14"
-                    Style="{StaticResource GradientButtonStyle}"
-                    materialDesign:ButtonAssist.CornerRadius="5"
-                    Click="SignUp_Click"
-                    Margin="0,0,0,15"/>
+                    <!-- Confirm Password -->
+                    <StackPanel Grid.Row="8" Margin="0,0,0,15">
+                        <TextBlock Text="Xác nhận mật khẩu" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6"/>
+                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42">
+                            <Grid Margin="12,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <materialDesign:PackIcon Grid.Column="0" Kind="LockCheck" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <PasswordBox Grid.Column="1" x:Name="ConfirmPasswordBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" KeyDown="ConfirmPasswordBox_KeyDown" materialDesign:HintAssist.Hint="Nhập lại mật khẩu" materialDesign:HintAssist.Foreground="#999"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
 
-            <!-- Already have account -->
-            <StackPanel Orientation="Horizontal" 
-                        HorizontalAlignment="Center"
-                        Margin="0,10,0,0">
-                <TextBlock Text="Already have an account? " 
-                           FontSize="14"
-                           VerticalAlignment="Center"/>
-                <Button Content="Sign in"
-                        Style="{StaticResource MaterialDesignFlatButton}"
-                        Click="SignIn_Click"
-                        FontStyle="Italic"
-                        FontSize="14"
-                        Padding="5,0"/>
-            </StackPanel>
-        </StackPanel>
-    </ScrollViewer>
+                    <!-- Terms Checkbox -->
+                    <CheckBox Grid.Row="9" x:Name="TermsCheckBox" Margin="5,0,0,20" FontSize="13" Foreground="#666">
+                        <TextBlock TextWrapping="Wrap">
+                            <Run Text="Tôi đồng ý với "/>
+                            <Hyperlink TextDecorations="None" Foreground="#F78272">
+                                <Run Text="Điều khoản dịch vụ"/>
+                            </Hyperlink>
+                            <Run Text=" và "/>
+                            <Hyperlink TextDecorations="None" Foreground="#F78272">
+                                <Run Text="Chính sách bảo mật"/>
+                            </Hyperlink>
+                        </TextBlock>
+                    </CheckBox>
+
+                    <!-- Signup Button -->
+                    <Button Grid.Row="10" x:Name="SignUpButton" Height="48" FontSize="15" FontWeight="Bold" Content="TẠO TÀI KHOẢN" Click="SignUpButton_Click" Cursor="Hand" Margin="5,0,0,18">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="#F78272" Offset="0"/>
+                                            <GradientStop Color="#FFCC96" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="12" Padding="{TemplateBinding Padding}">
+                                                <Border.Effect>
+                                                    <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.3" Color="#F78272"/>
+                                                </Border.Effect>
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Opacity" Value="0.9"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <!-- Login Link -->
+                    <StackPanel Grid.Row="11" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+                        <TextBlock Text="Đã có tài khoản? " FontSize="13" Foreground="#666" VerticalAlignment="Center"/>
+                        <TextBlock VerticalAlignment="Center">
+                            <Hyperlink Click="SignInLink_Click" TextDecorations="None">
+                                <TextBlock Text="Đăng nhập" FontSize="13" FontWeight="SemiBold" Foreground="#F78272"/>
+                            </Hyperlink>
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+            </ScrollViewer>
+        </Border>
+    </Grid>
 </Page>

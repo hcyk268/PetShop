@@ -2,20 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Pet_Shop_Project.Views
@@ -33,8 +28,9 @@ namespace Pet_Shop_Project.Views
             InitializeComponent();
             _allOrders = allOrders;
             OrderSuccesses = new ObservableCollection<Order>();
+            AttachExistingOrders();
             FilterOrders();
-            _allOrders.CollectionChanged += (s, e) => FilterOrders();
+            _allOrders.CollectionChanged += AllOrders_CollectionChanged;
             DataContext = this;
         }
 
@@ -76,27 +72,27 @@ namespace Pet_Shop_Project.Views
             };
         }
 
-        private void reorderbtn_Click(object sender, RoutedEventArgs e)
+        private async void reorderbtn_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
-            Order oldOrder = btn.Tag as Order;
+            var oldOrder = btn?.Tag as Order;
 
-            if (oldOrder.Details == null || oldOrder.Details.Count == 0)
+            if (oldOrder?.Details == null || oldOrder.Details.Count == 0)
             {
                 MessageBox.Show("Đơn hàng không có sẵn để đặt.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            var confirm = MessageBox.Show("Bạn muốn đặt lại đơn hàng này?", "Xác Nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            var confirm = MessageBox.Show("Bạn muốn đặt lại đơn hàng này?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (confirm != MessageBoxResult.Yes) return;
 
             var newOrder = BuildReorder(oldOrder);
-            if (!checkStock(newOrder.Details)) return;
+            if (!await CheckStock(newOrder.Details)) return;
 
-            if (SaveReorderToDatabase(newOrder))
+            if (await SaveReorderToDatabase(newOrder))
             {
                 _allOrders.Add(newOrder);
-                MessageBox.Show($"Đặt lại đơn hàng thành công!", "Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Đặt lại đơn hàng thành công!", "Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -128,19 +124,18 @@ namespace Pet_Shop_Project.Views
                 Details = details
             };
 
-            order.TotalAmount = details.Sum(d => d.Product != null
-                ? d.Quantity * d.Product.UnitPrice : 0);
+            order.TotalAmount = details.Sum(d => d?.Product != null ? d.SubTotal : 0m);
 
             return order;
         }
 
-        private bool checkStock(IEnumerable<OrderDetail> details)
+        private async Task<bool> CheckStock(IEnumerable<OrderDetail> details)
         {
             const string sql = "SELECT UnitInStock FROM PRODUCTS WHERE ProductId=@ProductId";
 
             using (var conn = new SqlConnection(_connectionDB))
             {
-                conn.Open();
+                await conn.OpenAsync();
                 foreach (var detail in details)
                 {
                     if (detail == null || string.IsNullOrWhiteSpace(detail.ProductId)) continue;
@@ -148,7 +143,8 @@ namespace Pet_Shop_Project.Views
                     using (var cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@ProductId", detail.ProductId);
-                        var stock = (int?)cmd.ExecuteScalar() ?? 0;
+                        var stockObj = await cmd.ExecuteScalarAsync();
+                        var stock = (stockObj as int?) ?? (stockObj != null ? Convert.ToInt32(stockObj) : 0);
                         if (detail.Quantity > stock)
                         {
                             var productName = detail.Product?.Name ?? detail.ProductId;
@@ -167,7 +163,7 @@ namespace Pet_Shop_Project.Views
             return true;
         }
 
-        private bool SaveReorderToDatabase(Order order)
+        private async Task<bool> SaveReorderToDatabase(Order order)
         {
             const string insertOrder = @"INSERT INTO ORDERS (UserId, OrderDate, TotalAmount, ApprovalStatus,
                                         PaymentStatus, ShippingStatus, Address, Note)
@@ -182,7 +178,7 @@ namespace Pet_Shop_Project.Views
 
             using (var conn = new SqlConnection(_connectionDB))
             {
-                conn.Open();
+                await conn.OpenAsync();
                 using (var tx = conn.BeginTransaction())
                 {
                     try
@@ -198,7 +194,8 @@ namespace Pet_Shop_Project.Views
                             cmd.Parameters.AddWithValue("@Address", (object)order.Address ?? DBNull.Value);
                             cmd.Parameters.AddWithValue("@Note", (object)order.Note ?? DBNull.Value);
 
-                            order.OrderId = cmd.ExecuteScalar()?.ToString();
+                            var insertedId = await cmd.ExecuteScalarAsync();
+                            order.OrderId = insertedId?.ToString();
                         }
 
                         foreach (var detail in order.Details)
@@ -210,14 +207,14 @@ namespace Pet_Shop_Project.Views
                                 cmd.Parameters.AddWithValue("@OrderId", order.OrderId);
                                 cmd.Parameters.AddWithValue("@ProductId", detail.ProductId);
                                 cmd.Parameters.AddWithValue("@Quantity", detail.Quantity);
-                                cmd.ExecuteNonQuery();
+                                await cmd.ExecuteNonQueryAsync();
                             }
 
                             using (var cmd = new SqlCommand(updateStock, conn, tx))
                             {
                                 cmd.Parameters.AddWithValue("@ProductId", detail.ProductId);
                                 cmd.Parameters.AddWithValue("@Quantity", detail.Quantity);
-                                cmd.ExecuteNonQuery();
+                                await cmd.ExecuteNonQueryAsync();
                             }
 
                             if (detail.Product != null)
@@ -239,5 +236,46 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        private void AttachExistingOrders()
+        {
+            foreach (var order in _allOrders)
+                AttachOrder(order);
+        }
+
+        private void AllOrders_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.OldItems != null)
+                foreach (Order ord in e.OldItems)
+                    DetachOrder(ord);
+
+            if (e.NewItems != null)
+                foreach (Order ord in e.NewItems)
+                    AttachOrder(ord);
+
+            FilterOrders();
+        }
+
+        private void AttachOrder(Order order)
+        {
+            if (order == null) return;
+            order.PropertyChanged -= Order_PropertyChanged;
+            order.PropertyChanged += Order_PropertyChanged;
+        }
+
+        private void DetachOrder(Order order)
+        {
+            if (order == null) return;
+            order.PropertyChanged -= Order_PropertyChanged;
+        }
+
+        private void Order_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Order.ApprovalStatus) ||
+                e.PropertyName == nameof(Order.ShippingStatus) ||
+                e.PropertyName == nameof(Order.PaymentStatus))
+            {
+                FilterOrders();
+            }
+        }
     }
 }

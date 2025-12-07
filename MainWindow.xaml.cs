@@ -20,12 +20,13 @@ namespace Pet_Shop_Project
     public partial class MainWindow : Window
     {
         public string userid { get; set; }
-        public MainWindow() //cần truyền userId vào để truy vấn chính xác
+        public MainWindow(string userId) //cần truyền userId vào để truy vấn chính xác
         {
             InitializeComponent();
-            this.userid = "USR002";
+            this.userid = userId;
             Services.NavigationService.Instance.Initialize(MainScreen);
             Services.NavigationService.Instance.setUserId(userid);
+            MainScreen.Navigate(new AccountPage(userId));
         }
     }
 }

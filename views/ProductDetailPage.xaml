@@ -44,7 +44,6 @@
                             </Border>
 
                             <ControlTemplate.Triggers>
-
                                 <!-- Hover: nền xám nhạt -->
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter TargetName="border" Property="Background" Value="#FFECECEC"/>
@@ -62,7 +61,6 @@
                                     </Setter>
                                     <Setter TargetName="icon" Property="Foreground" Value="White"/>
                                 </Trigger>
-
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Button.Template>
@@ -106,19 +104,46 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Product Image: 230x230 - Border radius 20 -->
-                        <Border Grid.Column="0"
-                               Width="230"
-                               Height="230"
-                               CornerRadius="20"
-                               Background="#F5F5F5"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
-                               ClipToBounds="True"
-                               Loaded="ImageBorder_Loaded">
-                            <Image x:Name="ProductImage"
-                                  Stretch="UniformToFill"/>
-                        </Border>
+                        <!-- Product Image Container with Discount Badge -->
+                        <Grid Grid.Column="0"
+                              Width="230"
+                              Height="230"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center">
+                            <!-- Product Image: 230x230 - Border radius 20 -->
+                            <Border CornerRadius="20"
+                                   Background="#F5F5F5"
+                                   ClipToBounds="True"
+                                   Loaded="ImageBorder_Loaded">
+                                <Image x:Name="ProductImage"
+                                      Stretch="UniformToFill"/>
+                            </Border>
+
+                            <!-- DISCOUNT BADGE - Nằm TRONG hình ảnh -->
+                            <Grid x:Name="DiscountBadge"
+                                  Width="40"
+                                  Height="16"
+                                  HorizontalAlignment="Right"
+                                  VerticalAlignment="Top"
+                                  Margin="0,8,8,0"
+                                  Visibility="Collapsed">
+
+                                <!-- Arrow shape path -->
+                                <Path Fill="#FF8284"
+                                      Data="M 8,0 L 40,0 L 40,16 L 8,16 L 0,8 Z"
+                                      Stretch="Fill"/>
+
+                                <!-- Text overlay -->
+                                <TextBlock x:Name="DiscountText"
+                                           Text="-15%"
+                                           FontSize="12"
+                                           FontWeight="Bold"
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Margin="4,0,0,0"/>
+                            </Grid>
+                        </Grid>
 
                         <!-- Product Details -->
                         <StackPanel Grid.Column="1"
@@ -135,7 +160,7 @@
 
                             <!-- Description: 600x100 with ellipsis -->
                             <Border Width="600"
-                                   Height="100"
+                                   Height="70"
                                    HorizontalAlignment="Left"
                                    Margin="0,0,0,10">
                                 <TextBlock x:Name="ProductDescription"
@@ -146,37 +171,50 @@
                                           TextTrimming="CharacterEllipsis"/>
                             </Border>
 
-                            <!-- Price and Rating -->
-                            <StackPanel Orientation="Horizontal"
-                                       Margin="0,0,0,10">
-                                <!-- Price with Gradient -->
+                            <!-- Price Section -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <!-- Discounted Price (or Regular Price) -->
                                 <TextBlock x:Name="ProductPrice"
                                           FontSize="20"
                                           FontWeight="Bold"
-                                          Margin="0,0,15,0"
-                                          VerticalAlignment="Center">
-                                    <TextBlock.Foreground>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                            <GradientStop Color="#FFAD56" Offset="0"/>
-                                            <GradientStop Color="#FFC281" Offset="1"/>
-                                        </LinearGradientBrush>
-                                    </TextBlock.Foreground>
+                                          Margin="0,0,8,0"
+                                          VerticalAlignment="Center"
+                                          Foreground="#FF6B6B">
                                     <Run Text="50.000đ"/>
                                 </TextBlock>
 
-                                <!-- Rating -->
-                                <StackPanel Orientation="Horizontal"
-                                           VerticalAlignment="Center">
-                                    <StackPanel x:Name="StarPanel" 
-                                               Orientation="Horizontal"
-                                               Margin="0,0,5,0"/>
-                                    <TextBlock x:Name="RatingText"
-                                              Text="5/5"
-                                              FontSize="15"
-                                              Foreground="#FFA500"
-                                              FontWeight="SemiBold"
-                                              VerticalAlignment="Center"/>
-                                </StackPanel>
+                                <!-- Original Price (strikethrough) -->
+                                <TextBlock x:Name="OriginalPrice"
+                                          Text="90.000đ"
+                                          FontSize="13"
+                                          FontWeight="Light"
+                                          Foreground="#767676"
+                                          VerticalAlignment="Center"
+                                          Visibility="Collapsed">
+                                    <TextBlock.TextDecorations>
+                                        <TextDecoration Location="Strikethrough">
+                                            <TextDecoration.Pen>
+                                                <Pen Brush="#767676" Thickness="1"/>
+                                            </TextDecoration.Pen>
+                                        </TextDecoration>
+                                    </TextBlock.TextDecorations>
+                                </TextBlock>
+                            </StackPanel>
+
+                            <!-- Rating - Hàng riêng, căn giữa -->
+                            <StackPanel Orientation="Horizontal"
+                                       HorizontalAlignment="Left"
+                                       Margin="0,0,0,10">
+                                <StackPanel x:Name="StarPanel" 
+                                           Orientation="Horizontal"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,5,0"/>
+                                <TextBlock x:Name="RatingText"
+                                          Text="5/5"
+                                          FontSize="12"
+                                          Foreground="#FFA500"
+                                          FontWeight="SemiBold"
+                                          VerticalAlignment="Center"/>
                             </StackPanel>
 
                             <!-- Stock -->
@@ -319,102 +357,10 @@
                                   Foreground="#FFAD57"
                                   Margin="0,0,0,20"/>
 
-                        <!-- Review Item 1 -->
-                        <Border Background="#FFF1E2"
-                               CornerRadius="20"
-                               Padding="20"
-                               Margin="0,0,0,15">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Avatar -->
-                                <Border Grid.Column="0"
-                                       Width="60"
-                                       Height="60"
-                                       CornerRadius="30"
-                                       Background="#E0E0E0"
-                                       Margin="0,0,20,0">
-                                    <TextBlock Text="👤"
-                                             FontSize="28"
-                                             HorizontalAlignment="Center"
-                                             VerticalAlignment="Center"/>
-                                </Border>
-
-                                <!-- Review Content -->
-                                <StackPanel Grid.Column="1">
-                                    <StackPanel Orientation="Horizontal"
-                                               Margin="0,0,0,8">
-                                        <TextBlock Text="Tên người dùng"
-                                                  FontSize="18"
-                                                  FontWeight="Bold"
-                                                  Foreground="#333333"
-                                                  Margin="0,0,15,0"/>
-
-                                        <TextBlock Text="5/5"
-                                                  FontSize="16"
-                                                  FontWeight="Bold"
-                                                  Foreground="#FFA500"
-                                                  VerticalAlignment="Center"/>
-                                    </StackPanel>
-
-                                    <TextBlock Text="Comment này chỉ mang tính chất minh họa"
-                                              FontSize="15"
-                                              Foreground="#666666"
-                                              TextWrapping="Wrap"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-
-                        <!-- Review Item 2 -->
-                        <Border Background="#FFF1E2"
-                               CornerRadius="20"
-                               Padding="20">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Avatar -->
-                                <Border Grid.Column="0"
-                                       Width="60"
-                                       Height="60"
-                                       CornerRadius="30"
-                                       Background="#E0E0E0"
-                                       Margin="0,0,20,0">
-                                    <TextBlock Text="👤"
-                                             FontSize="28"
-                                             HorizontalAlignment="Center"
-                                             VerticalAlignment="Center"/>
-                                </Border>
-
-                                <!-- Review Content -->
-                                <StackPanel Grid.Column="1">
-                                    <StackPanel Orientation="Horizontal"
-                                               Margin="0,0,0,8">
-                                        <TextBlock Text="Tên người dùng"
-                                                  FontSize="18"
-                                                  FontWeight="Bold"
-                                                  Foreground="#333333"
-                                                  Margin="0,0,15,0"/>
-
-                                        <TextBlock Text="5/5"
-                                                  FontSize="16"
-                                                  FontWeight="Bold"
-                                                  Foreground="#FFA500"
-                                                  VerticalAlignment="Center"/>
-                                    </StackPanel>
-
-                                    <TextBlock Text="Comment này chỉ mang tính chất minh họa"
-                                              FontSize="15"
-                                              Foreground="#666666"
-                                              TextWrapping="Wrap"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
+                        <!-- Reviews Container - sẽ được load động từ code-behind -->
+                        <StackPanel x:Name="ReviewsPanel">
+                            <!-- Reviews sẽ được thêm vào đây từ code-behind -->
+                        </StackPanel>
                     </StackPanel>
                 </Border>
             </StackPanel>
