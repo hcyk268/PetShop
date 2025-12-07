@@ -75,5 +75,13 @@ namespace Pet_Shop_Project.Services
                 mainFrame.Navigate(new CartPage(userid));
             }
         }
+
+        public void NavigateToAccount()
+        {
+            if (mainFrame != null)
+            {
+                mainFrame.Navigate(new AccountPage(userid));
+            }
+        }
     }
 }

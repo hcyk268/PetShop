@@ -2,7 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Data.SqlClient;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -32,12 +32,14 @@ namespace Pet_Shop_Project.Views
 
             _userid = userid;
 
-            AllOrders = _orderService.GetOrdersByUser(userid); //Truyen UserId vao
+            AllOrders = new ObservableCollection<Order>();
+            MainScreenOQP.Visibility = Visibility.Collapsed;
+            loadingIndicatorOQP.Visibility = Visibility.Visible;
 
             setForeColorDefault();
             odppendingbutton.Foreground = clickedtext;
 
-            MainScreenOQP.Navigate(new OQPPendingApproval(AllOrders));
+            Loaded += OrderQueuePage_Loaded;
         }
 
         public ObservableCollection<Order> AllOrders
@@ -71,6 +73,27 @@ namespace Pet_Shop_Project.Views
         {
             odppendingbutton.Foreground = odpshippingbutton.Foreground = odpsuccessbutton.Foreground = odpcanceledbutton.Foreground = defaulttext;
         }
+
+        private async void OrderQueuePage_Loaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OrderQueuePage_Loaded;
+            await LoadOrders();
+        }
+
+        private async Task LoadOrders()
+        {
+            try
+            {
+                AllOrders = await _orderService.GetOrdersByUser(_userid);
+                MainScreenOQP.Navigate(new OQPPendingApproval(AllOrders));
+            }
+            finally
+            {
+                loadingIndicatorOQP.Visibility = Visibility.Collapsed;
+                MainScreenOQP.Visibility = Visibility.Visible;
+            }
+        }
+
         private void odppendingbutton_Click(object sender, RoutedEventArgs e)
         {
             setForeColorDefault();

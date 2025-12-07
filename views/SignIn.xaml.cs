@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Pet_Shop_Project.Services;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +14,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Pet_Shop_Project.Models;
+using System.Threading;      // ✅ Để dùng User class
+
+
 
 namespace Pet_Shop_Project.Views
 {
@@ -20,44 +26,129 @@ namespace Pet_Shop_Project.Views
     /// </summary>
     public partial class SignIn : Page
     {
+        private UserService userService;
         public SignIn()
         {
             InitializeComponent();
+            userService = new UserService();
         }
 
-        // Phương thức xử lý sự kiện Click cho nút ĐĂNG NHẬP
-        private void Login_Click(object sender, RoutedEventArgs e)
+        //xử lý nút đăng nhập
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            // Lấy thông tin từ các trường nhập liệu
-            string username = UsernameTextBox.Text;
+            PerformLogin(); //tí nữa viết hàm đăng nhập - so sánh
+        }
+
+
+        //cho phép enter để đăng nhập
+        private void PasswordBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                PerformLogin();
+            }
+        }
+
+        private void UsernameTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                PasswordBox.Focus();
+            }
+        }
+
+        //thực hiện đăng nhập
+        private async void PerformLogin()
+        {
+            //dữ liệu từ form
+            string username = UsernameTextBox.Text.Trim();
             string password = PasswordBox.Password;
 
-            // TODO: Thay thế bằng logic kiểm tra đăng nhập thực tế của bạn
-            if (username == "admin" && password == "123")
+            if (string.IsNullOrWhiteSpace(username))
             {
-                // Đăng nhập thành công
-                MessageBox.Show("Succeed! LEGGOOOO!", "Notification", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                // Mở cửa sổ chính và đóng cửa sổ đăng nhập
-                MainWindow mainWindow = new MainWindow();
-                mainWindow.Show();
-
-                // Đóng LoginWindow (lấy Window chứa Page này)
-                Window.GetWindow(this)?.Close();
+                ShowError("Vui lòng nhập tên đăng nhập");
+                return;
             }
-            else
+
+            if (string.IsNullOrWhiteSpace(password))
             {
-                // Đăng nhập thất bại
-                MessageBox.Show("Oops! Username and Password doesn't match!", "Notification", MessageBoxButton.OK, MessageBoxImage.Error);
-
-                // Xóa mật khẩu để người dùng nhập lại
-                PasswordBox.Clear();
+                ShowError("Vui lòng nhập mật khẩu");
+                return;
             }
+            try
+            {
+                User user = userService.AuthenticateUser(username, password);
+                if (user != null)
+                {
+                    MessageBox.Show($"Đăng nhập thành công!\nXin chào {user.FullName}", "Thành công",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    var currWindow = Window.GetWindow(this);
+
+                    if (user.Role == "User")
+                    {
+                        MainWindow mainWindow = new MainWindow(user.UserId);
+                        mainWindow.Show();
+
+                    }
+                    else
+                    {
+                        //Mở AdminWindow cập nhật sau
+                    }
+
+
+                    await Task.Delay(150);
+                    
+                    currWindow.Close();
+                }
+                else
+                {
+                    //sai thông tin đăng nhập
+                    ShowError("Tên đăng nhập hoặc mật khẩu không đúng");
+                    PasswordBox.Clear();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Lỗi đăng nhập: {ex.Message}");
+            }
+
+        }
+        private void ShowError(string message)
+        {
+            var textBlock = ErrorMessage.Child as TextBlock;
+            if (textBlock != null)
+            {
+                textBlock.Text = message;
+            }
+            ErrorMessage.Visibility = Visibility.Visible;
         }
 
+        //nút quên mật khẩu
+        private void ForgotPasswordLink_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Vui lòng liên hệ quản trị viên để lấy lại mật khẩu",
+                "Quên mật khẩu",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+
+        // Chuyển sang trang đăng ký
         private void SignUp_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new SignUp());
+            this.NavigationService.Navigate(new SignUp());
         }
+        private void UsernameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // Nếu có thông báo lỗi đang hiện, ẩn đi khi người dùng bắt đầu gõ lại
+            if (ErrorMessage.Visibility == Visibility.Visible)
+            {
+                ErrorMessage.Visibility = Visibility.Collapsed;
+            }
+        }
+
+
+
     }
 }

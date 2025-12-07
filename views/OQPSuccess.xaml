@@ -5,8 +5,9 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Pet_Shop_Project.Views"
       xmlns:services="clr-namespace:Pet_Shop_Project.Services"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
-      d:DesignHeight="487" d:DesignWidth="920"
+      d:DesignHeight="487" d:DesignWidth="940"
       Title="OQPSuccess"
       Background="White">
 
@@ -14,63 +15,126 @@
         <services:ConvertLanguage x:Key="LangConverter"/>
     </Page.Resources>
 
-    <Grid Margin="5">
+    <Grid Margin='5'>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height='Auto'/>
+            <RowDefinition Height='*'/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="30,10,0,0">
-            <TextBlock Text="Tổng Số Đơn Hàng Đã Giao Thành Công: " FontWeight="Bold" FontSize="15"/>
-            <TextBlock Text="{Binding TotalOrderSuccess}" FontSize="15"/>
+        <StackPanel Grid.Row='0' Orientation='Horizontal' HorizontalAlignment='Stretch' Margin='30,10,0,0'>
+            <TextBlock Text='Tổng Số Đơn Hàng Đang Nhận: ' FontWeight='Bold' FontSize='15'/>
+            <TextBlock Text='{Binding TotalOrderSuccess}' FontSize='15'/>
         </StackPanel>
 
-        <ScrollViewer Grid.Row="1"
-          VerticalScrollBarVisibility="Auto" 
-          Margin="20"
-          Background="Transparent">
+        <ScrollViewer Grid.Row='1'
+              VerticalScrollBarVisibility='Auto' 
+              Margin='20'
+              Background='Transparent'>
             <ScrollViewer.Resources>
-                <Style TargetType="ScrollBar">
-                    <Setter Property="Width" Value="6"/>
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="BorderThickness" Value="0"/>
+                <Style TargetType='ScrollBar'>
+                    <Setter Property='Width' Value='6'/>
+                    <Setter Property='Background' Value='Transparent'/>
+                    <Setter Property='BorderThickness' Value='0'/>
                 </Style>
             </ScrollViewer.Resources>
-            <ItemsControl ItemsSource="{Binding OrderSuccesses}">
+            <ItemsControl ItemsSource='{Binding OrderSuccesses}'>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Style="{StaticResource TemplateODQ}">
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0 0 0 8">
-                                    <TextBlock Text="Mã đơn hàng: " FontWeight="Bold" Foreground="Blue"/>
-                                    <TextBlock Text="{Binding OrderId}" Margin="4,0"/>
-                                    <TextBlock Text="    Ngày đặt: " FontWeight="Bold" Margin="10,0,0,0"/>
-                                    <TextBlock Text="{Binding OrderDate, StringFormat='{}{0:dd/MM/yyyy HH:mm}'}" Margin="4,0"/>
-                                    <TextBlock Text="    Tổng tiền: " FontWeight="Bold" />
-                                    <TextBlock Text="{Binding TotalAmount, StringFormat='{}{0:N0} ₫'}" Margin="4,0" Foreground="Red"/>
-                                    <TextBlock Text="    Thanh toán: " FontWeight="Bold"/>
-                                    <TextBlock Text="{Binding PaymentStatus, Converter={StaticResource LangConverter}}" Margin="4,0"/>
-                                    <TextBlock Text="    Vận chuyển: " FontWeight="Bold" Margin="10,0,0,0"/>
-                                    <TextBlock Text="{Binding ShippingStatus, Converter={StaticResource LangConverter}}" Margin="4,0"/>
-                                </StackPanel>
+                        <Border Style='{StaticResource TemplateODQ}'
+                            materialDesign:ShadowAssist.ShadowDepth='Depth1'>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height='Auto'/>
+                                    <RowDefinition Height='Auto'/>
+                                    <RowDefinition Height='*'/>
+                                    <RowDefinition Height='Auto'/>
+                                </Grid.RowDefinitions>
+
+                                <Grid Grid.Row='0' Margin='0,0,0,10'>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width='*'/>
+                                        <ColumnDefinition Width='Auto'/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column='0'>
+                                        <WrapPanel Margin='0,0,0,6'>
+                                            <Border Background='#E8F2FF' CornerRadius='8' Padding='10,6' Margin='0,0,8,8'>
+                                                <StackPanel Orientation='Horizontal' VerticalAlignment='Center'>
+                                                    <materialDesign:PackIcon Kind='ClipboardTextClockOutline' Width='18' Height='18' Foreground='#3B67C8'/>
+                                                    <TextBlock Text='{Binding OrderId}' Margin='8,0,0,0' FontWeight='Bold' Foreground='#1D3557'/>
+                                                </StackPanel>
+                                            </Border>
+
+                                            <Border Background='#FFF3E0' CornerRadius='8' Padding='10,6' Margin='0,0,8,8'>
+                                                <StackPanel Orientation='Horizontal' VerticalAlignment='Center'>
+                                                    <materialDesign:PackIcon Kind='CalendarClock' Width='18' Height='18' Foreground='#FF8A00'/>
+                                                    <TextBlock Text='{Binding OrderDate, StringFormat="{}{0:dd/MM/yyyy HH:mm}"}' Margin='8,0,0,0' Foreground='#924A00'/>
+                                                </StackPanel>
+                                            </Border>
+
+                                            <Border Background='#F3E8FF' CornerRadius='8' Padding='10,6' Margin='0,0,8,8'>
+                                                <StackPanel Orientation='Horizontal' VerticalAlignment='Center'>
+                                                    <materialDesign:PackIcon Kind='CreditCardOutline' Width='18' Height='18' Foreground='#8E24AA'/>
+                                                    <TextBlock Text='{Binding PaymentStatus, Converter={StaticResource LangConverter}}' Margin='8,0,0,0' Foreground='#6A1B9A'/>
+                                                </StackPanel>
+                                            </Border>
+                                        </WrapPanel>
+
+                                        <WrapPanel Margin='0,4,0,0'>
+                                            <Border Background='#FFF0F0' BorderBrush='#FFE0E0' BorderThickness='1' CornerRadius='8' Padding='10,6' Margin='0,0,8,0'>
+                                                <StackPanel Orientation='Horizontal' VerticalAlignment='Center'>
+                                                    <materialDesign:PackIcon Kind='ClockAlertOutline' Width='18' Height='18' Foreground='#FF6B6B'/>
+                                                    <TextBlock Text='{Binding ApprovalStatus, Converter={StaticResource LangConverter}}' Margin='8,0,0,0' FontWeight='SemiBold' Foreground='#D84315'/>
+                                                </StackPanel>
+                                            </Border>
+                                            <Border Background='#FFF7FF' BorderBrush='#F1D5FF' BorderThickness='1' CornerRadius='8' Padding='10,6'>
+                                                <StackPanel Orientation='Horizontal' VerticalAlignment='Center'>
+                                                    <materialDesign:PackIcon Kind='TruckFastOutline' Width='18' Height='18' Foreground='#512DA8'/>
+                                                    <TextBlock Text='{Binding ShippingStatus, Converter={StaticResource LangConverter}}' Margin='8,0,0,0' Foreground='#512DA8'/>
+                                                </StackPanel>
+                                            </Border>
+                                            <Border Background="#E8FFF1" BorderBrush="#C8E6C9" BorderThickness="1" CornerRadius="8" Padding="10,6" Margin="8,0,8,0">
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <materialDesign:PackIcon Kind="MapMarkerOutline" Width="18" Height="18" Foreground="#1B5E20"/>
+                                                    <TextBlock Text="{Binding Address}" Margin="8,0,0,0" Foreground="#1B5E20" TextTrimming="CharacterEllipsis" MaxWidth="420"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </WrapPanel>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column='1' HorizontalAlignment='Right' VerticalAlignment='Top'>
+                                        <TextBlock Text='Tổng tiền' Foreground='#6A6A6A' FontWeight='SemiBold' HorizontalAlignment='Right'/>
+                                        <TextBlock Text='{Binding TotalAmount, StringFormat="{}{0:N0} ₫"}' Foreground='#E53935' FontSize='22' FontWeight='ExtraBold' HorizontalAlignment='Right'/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Border Grid.Row='1' Background='#FFF8F5' BorderBrush='#FFE1D5' BorderThickness='1' CornerRadius='8' Padding='10' Margin='0,0,0,10'>
+                                    <StackPanel Orientation='Horizontal'>
+                                        <materialDesign:PackIcon Kind='CommentTextMultipleOutline' Width='18' Height='18' Foreground='#D06B00' VerticalAlignment='Center'/>
+                                        <TextBlock Text='Ghi chú:' Margin='8,0,6,0' FontWeight='SemiBold' Foreground='#D06B00' VerticalAlignment='Center'/>
+                                        <TextBlock Text='{Binding Note}' TextWrapping='Wrap' Foreground='#444' VerticalAlignment='Center'/>
+                                    </StackPanel>
+                                </Border>
 
                                 <!-- Danh sách sản phẩm -->
-                                <ItemsControl ItemsSource="{Binding Details}">
+                                <ItemsControl Grid.Row='2' ItemsSource='{Binding Details}' Margin='0,0,0,10'>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderBrush="#FFC476" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0 0 0 5">
+                                            <Border BorderBrush='#FFE2B6' BorderThickness='1' CornerRadius='6' Padding='10' Margin='0,0,0,6' Background='#FFFDF8'>
                                                 <DockPanel>
-                                                    <Image Source="{Binding Product.Picture}" Width="60" Height="60" Stretch="UniformToFill" Margin="0 0 10 0"/>
+                                                    <Border Width="60" Height="60" CornerRadius="10" BorderBrush="Transparent" BorderThickness="1" Margin="0 0 10 0" Background="White" Loaded="ImageBorder_Loaded">
+                                                        <Image Source='{Binding Product.Picture}' Stretch='UniformToFill'/>
+                                                    </Border>
                                                     <StackPanel>
-                                                        <TextBlock Text="{Binding Product.Name}" FontWeight="Bold"/>
-                                                        <TextBlock Text="{Binding Product.Description}" FontStyle="Italic" Foreground="Gray" TextWrapping="Wrap" MaxWidth="600"/>
-                                                        <TextBlock>
-                                                        <Run Text="Số lượng: "/>
-                                                        <Run Text="{Binding Quantity}"/>
-                                                        <Run Text=" | Giá: "/>
-                                                        <Run Text="{Binding Product.UnitPrice, StringFormat='{}{0:N0} ₫'}"/>
-                                                        <Run Text=" | Giảm: "/>
-                                                        <Run Text="{Binding Product.Discount, StringFormat='{}{0:P0}'}"/>
+                                                        <TextBlock Text='{Binding Product.Name}' FontWeight='SemiBold'/>
+                                                        <TextBlock Text='{Binding Product.Description}' FontStyle='Italic' Foreground='Gray' TextWrapping='Wrap' MaxWidth='600'/>
+                                                        <TextBlock Margin='0,4,0,0'>
+                                                        <Run Text='Số lượng: '/>
+                                                        <Run Text='{Binding Quantity}'/>
+                                                        <Run Text=' | Giá: '/>
+                                                        <Run Text='{Binding Product.UnitPrice, StringFormat="{}{0:N0} ₫"}'/>
+                                                        <Run Text=' | Giảm: '/>
+                                                        <Run Text='{Binding Product.Discount, StringFormat={}{0:P0}}'/>
                                                         </TextBlock>
                                                     </StackPanel>
                                                 </DockPanel>
@@ -78,7 +142,16 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-                            </StackPanel>
+
+                                <StackPanel Grid.Row='3' Orientation='Horizontal' HorizontalAlignment='Right'>
+                                    <Button Style="{StaticResource MaterialDesignOutlinedButton}" Padding="12 8" Tag="{Binding}" Click="reorderbtn_Click">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <materialDesign:PackIcon Kind="Replay" Width="20" Height="20" Margin="0 0 6 0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Đặt lại" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

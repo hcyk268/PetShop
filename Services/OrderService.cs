@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Pet_Shop_Project.Services
@@ -12,7 +13,7 @@ namespace Pet_Shop_Project.Services
     {
         private readonly string _connectionDB = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
 
-        public ObservableCollection<Order> GetOrdersByUser(string userId = null)
+        public async Task<ObservableCollection<Order>> GetOrdersByUser(string userId = null)
         {
             var orders = new ObservableCollection<Order>();
             var orderLookup = new Dictionary<string, Order>();
@@ -21,7 +22,7 @@ namespace Pet_Shop_Project.Services
             {
                 using (var conn = new SqlConnection(_connectionDB))
                 {
-                    conn.Open();
+                    await conn.OpenAsync();
 
                     var sql = @"
                             SELECT *
@@ -34,9 +35,9 @@ namespace Pet_Shop_Project.Services
                     {
                         if (userId != null) cmd.Parameters.AddWithValue("@userId", userId);
 
-                        using (var reader = cmd.ExecuteReader())
+                        using (var reader = await cmd.ExecuteReaderAsync())
                         {
-                            while (reader.Read())
+                            while (await reader.ReadAsync())
                             {
                                 var orderId = reader["OrderId"].ToString();
 

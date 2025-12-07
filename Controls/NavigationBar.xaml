@@ -1,21 +1,21 @@
 ﻿<UserControl x:Class="Pet_Shop_Project.Controls.NavigationBar"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d" 
-             Width="60"
-             VerticalAlignment="Stretch">
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+            mc:Ignorable="d" 
+            Width="60" 
+            VerticalAlignment="Stretch">
 
-    <Border Background="#FFCC96"
-            BorderBrush="{DynamicResource MaterialDesignDivider}"
+    <Border Background="#FFCC96" 
+            BorderBrush="{DynamicResource MaterialDesignDivider}" 
             BorderThickness="0,0,1,0">
         <Border.Effect>
             <DropShadowEffect ShadowDepth="0" 
-                            BlurRadius="8" 
-                            Opacity="0.1" 
-                            Color="Black"/>
+                              BlurRadius="8" 
+                              Opacity="0.1" 
+                              Color="Black"/>
         </Border.Effect>
 
         <Grid>
@@ -28,41 +28,41 @@
             <!-- Top Navigation Buttons -->
             <StackPanel Grid.Row="0">
                 <!-- Home Button -->
-                <Button x:Name="HomeButton"
+                <Button x:Name="HomeButton" 
                         Style="{StaticResource NavButtonStyle}" 
-                        Click="HomeButton_Click"
-                        ToolTip="Trang chủ"
+                        Click="HomeButton_Click" 
+                        ToolTip="Trang chủ" 
                         Tag="Home">
                     <StackPanel>
                         <materialDesign:PackIcon Kind="Home" 
-                                                Width="30" 
-                                                Height="30"/>
+                                                 Width="30" 
+                                                 Height="30"/>
                     </StackPanel>
                 </Button>
 
                 <!-- Shopping Cart Button -->
-                <Button x:Name="CartButton"
+                <Button x:Name="CartButton" 
                         Style="{StaticResource NavButtonStyle}" 
-                        ToolTip="Giỏ hàng"
-                        Click="CartButton_Click"
+                        ToolTip="Giỏ hàng" 
+                        Click="CartButton_Click" 
                         Tag="Cart">
                     <StackPanel>
                         <materialDesign:PackIcon Kind="Cart" 
-                                                Width="30" 
-                                                Height="30"/>
+                                                 Width="30" 
+                                                 Height="30"/>
                     </StackPanel>
                 </Button>
 
                 <!-- Accessories Button -->
-                <Button x:Name="AccessoriesButton"
+                <Button x:Name="OrderButton" 
                         Style="{StaticResource NavButtonStyle}" 
-                        ToolTip="Đơn Hàng"
-                        Click="OrderButton_Click"
+                        ToolTip="Đơn Hàng" 
+                        Click="OrderButton_Click" 
                         Tag="Accessories">
                     <StackPanel>
                         <materialDesign:PackIcon Kind="ReceiptTextClock" 
-                                                Width="30" 
-                                                Height="30"/>
+                                                 Width="30" 
+                                                 Height="30"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -73,14 +73,14 @@
             <!-- Bottom Account Button -->
             <StackPanel Grid.Row="2">
                 <!-- Account Button -->
-                <Button x:Name="AccountButton"
+                <Button x:Name="AccountButton" 
                         Style="{StaticResource NavButtonStyle}" 
-                        ToolTip="Tài khoản"
-                        Tag="Account">
+                        ToolTip="Tài khoản" 
+                        Tag="Account" Click="AccountButton_Click">
                     <StackPanel>
                         <materialDesign:PackIcon Kind="Account" 
-                                                Width="30" 
-                                                Height="30"/>
+                                                 Width="30" 
+                                                 Height="30"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
