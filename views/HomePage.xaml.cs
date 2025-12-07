@@ -4,6 +4,7 @@ using Pet_Shop_Project.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -27,17 +28,17 @@ namespace Pet_Shop_Project.Views
             SearchBox.TextChanged += SearchBox_TextChanged;
         }
 
-        private void HomePage_Loaded(object sender, RoutedEventArgs e)
+        private async void HomePage_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadAllProducts();
+            await LoadAllProductsAsync();
         }
 
         // Load tất cả sản phẩm - dùng khi reset hoặc khởi động
-        public void LoadAllProducts()
+        public async Task LoadAllProductsAsync()
         {
             try
             {
-                allProducts = productService.GetAllProducts();
+                allProducts = await productService.GetAllProductsAsync();
                 currentCategory = "Tất cả";
                 DisplayProducts(allProducts);
 
@@ -90,30 +91,30 @@ namespace Pet_Shop_Project.Views
         }
 
         // Click button Thức ăn
-        private void FoodButton_Click(object sender, RoutedEventArgs e)
+        private async void FoodButton_Click(object sender, RoutedEventArgs e)
         {
-            FilterByCategory("Thức ăn");
+            await FilterByCategoryAsync("Thức ăn");
             SetActiveButton(FoodButton);
         }
 
         // Click button Đồ chơi
-        private void ToyButton_Click(object sender, RoutedEventArgs e)
+        private async void ToyButton_Click(object sender, RoutedEventArgs e)
         {
-            FilterByCategory("Đồ chơi");
+            await FilterByCategoryAsync("Đồ chơi");
             SetActiveButton(ToyButton);
         }
 
         // Click button Dụng cụ
-        private void ToolButton_Click(object sender, RoutedEventArgs e)
+        private async void ToolButton_Click(object sender, RoutedEventArgs e)
         {
-            FilterByCategory("Dụng cụ");
+            await FilterByCategoryAsync("Dụng cụ");
             SetActiveButton(ToolButton);
         }
 
         // Click button Thiết bị
-        private void DeviceButton_Click(object sender, RoutedEventArgs e)
+        private async void DeviceButton_Click(object sender, RoutedEventArgs e)
         {
-            FilterByCategory("Thiết bị");
+            await FilterByCategoryAsync("Thiết bị");
             SetActiveButton(DeviceButton);
         }
 
@@ -143,14 +144,14 @@ namespace Pet_Shop_Project.Views
         }
 
         // Lọc sản phẩm theo category
-        private void FilterByCategory(string category)
+        private async Task FilterByCategoryAsync(string category)
         {
             try
             {
                 currentCategory = category;
 
                 // Lấy sản phẩm từ database theo category
-                var filteredProducts = productService.GetProductsByCategory(category);
+                var filteredProducts = await productService.GetProductsByCategoryAsync(category);
 
                 // Cập nhật allProducts để filter và search hoạt động đúng
                 allProducts = filteredProducts;
@@ -159,7 +160,7 @@ namespace Pet_Shop_Project.Views
                 SearchBox.Text = string.Empty;
 
                 // Apply filter hiện tại
-                ApplyCurrentFilter(filteredProducts);
+                await ApplyCurrentFilterAsync(filteredProducts);
             }
             catch (Exception ex)
             {
@@ -169,15 +170,15 @@ namespace Pet_Shop_Project.Views
         }
 
         // Xử lý thay đổi filter ComboBox
-        private void FilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void FilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (allProducts == null || allProducts.Count == 0) return;
 
-            ApplyCurrentFilter(allProducts);
+            await ApplyCurrentFilterAsync(allProducts);
         }
 
         // Apply filter sorting
-        private void ApplyCurrentFilter(List<Product> products)
+        private async Task ApplyCurrentFilterAsync(List<Product> products)
         {
             if (FilterComboBox.SelectedItem == null || products == null)
             {
@@ -200,7 +201,7 @@ namespace Pet_Shop_Project.Views
 
                 case "Đánh giá cao nhất":
                     // Sắp xếp theo rating từ database
-                    sortedProducts = SortByRating(products);
+                    sortedProducts = await SortByRatingAsync(products);
                     break;
 
                 default: // Tất cả
@@ -212,7 +213,7 @@ namespace Pet_Shop_Project.Views
         }
 
         // Sắp xếp sản phẩm theo rating từ database
-        private List<Product> SortByRating(List<Product> products)
+        private async Task<List<Product>> SortByRatingAsync(List<Product> products)
         {
             try
             {
@@ -221,7 +222,7 @@ namespace Pet_Shop_Project.Views
 
                 foreach (var product in products)
                 {
-                    double avgRating = reviewService.GetAverageRating(product.ProductId);
+                    double avgRating = await reviewService.GetAverageRatingAsync(product.ProductId);
                     productRatings[product.ProductId] = avgRating;
                 }
 
@@ -238,7 +239,7 @@ namespace Pet_Shop_Project.Views
         }
 
         // Xử lý tìm kiếm
-        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        private async void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             var searchText = SearchBox.Text.Trim();
 
@@ -247,13 +248,13 @@ namespace Pet_Shop_Project.Views
                 // Nếu xóa hết text, hiển thị lại products theo category hiện tại
                 if (currentCategory == "Tất cả")
                 {
-                    allProducts = productService.GetAllProducts();
+                    allProducts = await productService.GetAllProductsAsync();
                 }
                 else
                 {
-                    allProducts = productService.GetProductsByCategory(currentCategory);
+                    allProducts = await productService.GetProductsByCategoryAsync(currentCategory);
                 }
-                ApplyCurrentFilter(allProducts);
+                await ApplyCurrentFilterAsync(allProducts);
                 return;
             }
 
@@ -261,7 +262,7 @@ namespace Pet_Shop_Project.Views
             var searchResults = allProducts.Where(p =>
                 p.Name.ToLower().Contains(searchText.ToLower())).ToList();
 
-            ApplyCurrentFilter(searchResults);
+            await ApplyCurrentFilterAsync(searchResults);
         }
     }
 }

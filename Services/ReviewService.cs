@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using Pet_Shop_Project.Models;
 
 namespace Pet_Shop_Project.Services
@@ -16,7 +17,7 @@ namespace Pet_Shop_Project.Services
         }
 
         // Lấy tất cả reviews của một sản phẩm
-        public List<Review> GetReviewsByProductId(string productId)
+        public async Task<List<Review>> GetReviewsByProductIdAsync(string productId)
         {
             List<Review> reviews = new List<Review>();
 
@@ -24,7 +25,7 @@ namespace Pet_Shop_Project.Services
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
+                    await conn.OpenAsync();
                     string query = @"SELECT ReviewId, ProductId, UserId, Rating, Comment, ReviewDate
                                    FROM dbo.REVIEWS
                                    WHERE ProductId = @ProductId";
@@ -33,9 +34,9 @@ namespace Pet_Shop_Project.Services
                     {
                         cmd.Parameters.AddWithValue("@ProductId", productId);
 
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
                         {
-                            while (reader.Read())
+                            while (await reader.ReadAsync())
                             {
                                 Review review = new Review
                                 {
@@ -62,7 +63,7 @@ namespace Pet_Shop_Project.Services
         }
 
         // Tính rating trung bình của một sản phẩm
-        public double GetAverageRating(string productId)
+        public async Task<double> GetAverageRatingAsync(string productId)
         {
             double averageRating = 0;
 
@@ -70,13 +71,13 @@ namespace Pet_Shop_Project.Services
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
+                    await conn.OpenAsync();
                     string query = "SELECT AVG(CAST(Rating AS FLOAT)) FROM dbo.REVIEWS WHERE ProductId = @ProductId";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@ProductId", productId);
-                        var result = cmd.ExecuteScalar();
+                        var result = await cmd.ExecuteScalarAsync();
 
                         if (result != DBNull.Value && result != null)
                         {
@@ -94,7 +95,7 @@ namespace Pet_Shop_Project.Services
         }
 
         // Đếm số lượng reviews của một sản phẩm
-        public int GetReviewCount(string productId)
+        public async Task<int> GetReviewCountAsync(string productId)
         {
             int count = 0;
 
@@ -102,13 +103,13 @@ namespace Pet_Shop_Project.Services
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
+                    await conn.OpenAsync();
                     string query = "SELECT COUNT(*) FROM dbo.REVIEWS WHERE ProductId = @ProductId";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@ProductId", productId);
-                        count = Convert.ToInt32(cmd.ExecuteScalar());
+                        count = Convert.ToInt32(await cmd.ExecuteScalarAsync());
                     }
                 }
             }
@@ -121,7 +122,7 @@ namespace Pet_Shop_Project.Services
         }
 
         // Lấy thông tin user từ review
-        public string GetUserFullName(string userId)
+        public async Task<string> GetUserFullNameAsync(string userId)
         {
             string fullName = "Người dùng";
 
@@ -129,13 +130,13 @@ namespace Pet_Shop_Project.Services
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
+                    await conn.OpenAsync();
                     string query = "SELECT FullName FROM dbo.USERS WHERE UserId = @UserId";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@UserId", userId);
-                        var result = cmd.ExecuteScalar();
+                        var result = await cmd.ExecuteScalarAsync();
 
                         if (result != null)
                         {
@@ -153,13 +154,13 @@ namespace Pet_Shop_Project.Services
         }
 
         // Thêm review mới
-        public bool AddReview(string productId, string userId, int rating, string comment)
+        public async Task<bool> AddReviewAsync(string productId, string userId, int rating, string comment)
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
+                    await conn.OpenAsync();
                     string query = @"INSERT INTO dbo.REVIEWS (ProductId, UserId, Rating, Comment, ReviewDate)
                                    VALUES (@ProductId, @UserId, @Rating, @Comment, @ReviewDate)";
 
@@ -171,7 +172,7 @@ namespace Pet_Shop_Project.Services
                         cmd.Parameters.AddWithValue("@Comment", comment);
                         cmd.Parameters.AddWithValue("@ReviewDate", DateTime.Now);
 
-                        cmd.ExecuteNonQuery();
+                        await cmd.ExecuteNonQueryAsync();
                         return true;
                     }
                 }
