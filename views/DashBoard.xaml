@@ -1,0 +1,136 @@
+﻿<Page x:Class="Pet_Shop_Project.Views.DashBoard"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="clr-namespace:Pet_Shop_Project.Views"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+      mc:Ignorable="d"
+      Background="#F5F5F5">
+
+    <Grid Margin="25">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="1.2*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ======================= LEFT SIDE ========================= -->
+        <StackPanel Grid.Column="0" Margin="10 0 40 0">
+
+            <!-- Greeting -->
+            <TextBlock Text="{Binding UserGreeting}"
+                       FontSize="34"
+                       FontWeight="Bold"
+                       Margin="0 0 0 20"
+                       Foreground="#333">
+                <TextBlock.Effect>
+                    <DropShadowEffect BlurRadius="8" ShadowDepth="1" Color="#FFE0B2"/>
+                </TextBlock.Effect>
+            </TextBlock>
+
+            <!-- Stats Row -->
+            <UniformGrid Rows="1" Columns="4" Margin="0 0 0 20">
+                <!-- Card Template -->
+                <Border CornerRadius="15" Background="White" Margin="10" Padding="20"
+                        BorderBrush="#FFA500" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Khách hàng" FontSize="16" Margin="0 0 0 5"/>
+                        <TextBlock Text="{Binding TotalUsers}" FontSize="28" FontWeight="Bold"/>
+                    </StackPanel>
+                </Border>
+
+                <Border CornerRadius="15" Background="White" Margin="10" Padding="20"
+                        BorderBrush="#FFA500" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Sản phẩm" FontSize="16" Margin="0 0 0 5"/>
+                        <TextBlock Text="{Binding TotalProducts}" FontSize="28" FontWeight="Bold"/>
+                    </StackPanel>
+                </Border>
+
+                <Border CornerRadius="15" Background="White" Margin="10" Padding="20"
+                        BorderBrush="#FFA500" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Đơn thành công" FontSize="16" Margin="0 0 0 5"/>
+                        <TextBlock Text="{Binding TotalOrders}" FontSize="28" FontWeight="Bold"/>
+                    </StackPanel>
+                </Border>
+
+                <Border CornerRadius="15" Background="White" Margin="10" Padding="20"
+                        BorderBrush="#FFA500" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Doanh thu (VND)" FontSize="16"/>
+                        <TextBlock Text="{Binding TotalRevenue}" FontSize="28" FontWeight="Bold"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <!-- Chart -->
+            <Border Background="#F8FFFE" CornerRadius="15"
+                    Padding="20" Margin="0 0 0 25"
+                    BorderBrush="#FFA500" BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="Doanh thu trong tuần"
+                               FontSize="20" FontWeight="SemiBold" Margin="0 0 0 10"/>
+
+                    <!-- Placeholder chart -->
+                    <Rectangle Height="180" Fill="#FFE0B2" RadiusX="10" RadiusY="10"/>
+                    <TextBlock Text="(Biểu đồ sẽ được gắn sau)"
+                               FontSize="12" HorizontalAlignment="Center" Foreground="#777"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Best / Worst Sellers -->
+            <Grid Margin="0 0 0 20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Best Seller -->
+                <Border CornerRadius="15" Background="White" Padding="20" Margin="10"
+                        BorderBrush="#FFA500" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Best Sellers" FontSize="20" FontWeight="Bold"/>
+                        <ItemsControl ItemsSource="{Binding BestSellers}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Worst Seller -->
+                <Border Grid.Column="1" CornerRadius="15" Background="White" Padding="20" Margin="10"
+                        BorderBrush="#FFA500" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Worst Sellers" FontSize="20" FontWeight="Bold"/>
+                        <ItemsControl ItemsSource="{Binding WorstSellers}"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+
+        <!-- ======================= RIGHT SIDE ========================= -->
+        <StackPanel Grid.Column="1" Margin="10">
+
+            <!-- Admin Info -->
+            <StackPanel Orientation="Horizontal" Margin="0 0 0 20">
+                <Ellipse Width="55" Height="55" Fill="#FFD6C2" Stroke="#FFA500" StrokeThickness="1"/>
+                <StackPanel Margin="10 0">
+                    <TextBlock Text="Admin" FontSize="20" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding UserName}" FontSize="14" Foreground="#666"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Cute banner -->
+            <Border CornerRadius="20" Height="180" Background="#FFCC96"
+                    Margin="0 0 0 20">
+                <TextBlock Text="⚙️ Setting Area" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           FontSize="22" FontWeight="Bold"/>
+            </Border>
+
+            <!-- Calendar -->
+            <Border CornerRadius="15" Padding="10" BorderBrush="#FFA500" BorderThickness="1">
+                <Calendar/>
+            </Border>
+
+        </StackPanel>
+
+    </Grid>
+</Page>
