@@ -109,6 +109,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AdminWindow.xaml.cs">
+      <DependentUpon>AdminWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AdminNavigationBar.xaml.cs">
+      <DependentUpon>AdminNavigationBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\NavigationBar.xaml.cs">
       <DependentUpon>NavigationBar.xaml</DependentUpon>
     </Compile>
@@ -177,6 +183,14 @@
     <Compile Include="Views\AdminOrder.xaml.cs">
       <DependentUpon>AdminOrder.xaml</DependentUpon>
     </Compile>
+    <Page Include="AdminWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\AdminNavigationBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <!-- XAML pages -->
     <Page Include="Controls\NavigationBar.xaml">
       <SubType>Designer</SubType>
