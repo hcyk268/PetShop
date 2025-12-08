@@ -1,6 +1,7 @@
 ﻿using Pet_Shop_Project.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
@@ -259,6 +260,51 @@ namespace Pet_Shop_Project.Services
                 System.Diagnostics.Debug.WriteLine($"UpdateUser error: {ex.Message}");
                 return false;
             }
+        }
+
+        public async Task<ObservableCollection<User>> GetAllUsers()
+        {
+            ObservableCollection<User> allUsers = new ObservableCollection<User>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    await conn.OpenAsync();
+
+                    var query = " SELECT * FROM USERS";
+
+                    using (var cmd = new SqlCommand(query, conn))
+                    {
+                        using (var reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                User user = new User
+                                {
+                                    UserId = reader["UserId"].ToString(),
+                                    FullName = reader["FullName"].ToString(),
+                                    Email = reader["Email"].ToString(),
+                                    Password = reader["Password"].ToString(),
+                                    Phone = reader["Phone"].ToString(),
+                                    Address = reader["Address"].ToString(),
+                                    Role = reader["Role"].ToString(),
+                                    Username = reader["Username"].ToString(),
+                                    CreatedDate = (DateTime)reader["CreatedDate"]
+                                };
+                                allUsers.Add(user);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                return null;
+            }
+
+            return allUsers;
         }
     }
 }

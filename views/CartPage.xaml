@@ -9,7 +9,7 @@
       d:DesignHeight="650" d:DesignWidth="940"
       Title="Giỏ hàng">
 
-    <Grid Background="White">
+    <Grid Background="White" Margin="20,0,20,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
