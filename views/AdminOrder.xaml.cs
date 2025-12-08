@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -78,6 +77,11 @@ namespace Pet_Shop_Project.Views
                 loadingIndicatorAdmin.Visibility = Visibility.Collapsed;
                 AdminOrderScreen.Visibility = Visibility.Visible;
             }
+        }
+
+        private void CreateOrderButton_Click(object sender, RoutedEventArgs e)
+        {
+            //chuyen tab
         }
 
         private void pendingbtn_Click(object sender, RoutedEventArgs e)
