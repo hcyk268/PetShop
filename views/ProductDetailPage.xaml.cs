@@ -1,15 +1,16 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using Pet_Shop_Project.Models;
+using Pet_Shop_Project.Services;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Pet_Shop_Project.Models;
-using Pet_Shop_Project.Services;
-using MaterialDesignThemes.Wpf;
-
 using NavService = Pet_Shop_Project.Services.NavigationService;
 
 namespace Pet_Shop_Project.Views
@@ -20,6 +21,7 @@ namespace Pet_Shop_Project.Views
         private Product _product;
         private int _quantity = 1;
         private ReviewService _reviewService;
+        private List<Review> _allReviews;
 
         private void ImageBorder_Loaded(object sender, RoutedEventArgs e)
         {
@@ -42,8 +44,13 @@ namespace Pet_Shop_Project.Views
         public ProductDetailPage(Product product) : this()
         {
             _product = product;
+            _ = InitializePageAsync();
+        }
+
+        private async Task InitializePageAsync()
+        {
             LoadProductDetails();
-            LoadReviews();
+            await LoadReviewsAsync();
         }
 
         private void LoadProductDetails()
@@ -105,17 +112,17 @@ namespace Pet_Shop_Project.Views
             StockText.Text = _product.UnitInStock.ToString();
 
             // Load rating thực tế
-            LoadRating();
+            _ = LoadRatingAsync();
 
             QuantityText.Text = _quantity.ToString();
         }
 
-        private void LoadRating()
+        private async Task LoadRatingAsync()
         {
             try
             {
-                double avgRating = _reviewService.GetAverageRating(_product.ProductId);
-                int reviewCount = _reviewService.GetReviewCount(_product.ProductId);
+                double avgRating = await _reviewService.GetAverageRatingAsync(_product.ProductId);
+                int reviewCount = await _reviewService.GetReviewCountAsync(_product.ProductId);
 
                 GenerateStars(avgRating);
 
@@ -125,14 +132,14 @@ namespace Pet_Shop_Project.Views
                 }
                 else
                 {
-                    RatingText.Text = "0.0";
+                    RatingText.Text = "0";
                 }
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Lỗi load rating: {ex.Message}");
                 GenerateStars(0);
-                RatingText.Text = "0.0";
+                RatingText.Text = "0";
             }
         }
 
@@ -169,42 +176,83 @@ namespace Pet_Shop_Project.Views
             }
         }
 
-        private void LoadReviews()
+        private async Task LoadReviewsAsync()
         {
             try
             {
-                var reviews = _reviewService.GetReviewsByProductId(_product.ProductId);
-
-                // Xóa các review placeholder
-                ReviewsPanel.Children.Clear();
-
-                if (reviews.Count == 0)
-                {
-                    // Hiển thị thông báo không có review
-                    TextBlock noReviewText = new TextBlock
-                    {
-                        Text = "Chưa có đánh giá nào cho sản phẩm này",
-                        FontSize = 15,
-                        Foreground = new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66)),
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        Margin = new Thickness(0, 20, 0, 20)
-                    };
-                    ReviewsPanel.Children.Add(noReviewText);
-                    return;
-                }
-
-                // Tạo review items từ database
-                foreach (var review in reviews)
-                {
-                    string userFullName = _reviewService.GetUserFullName(review.UserId);
-                    var reviewItem = CreateReviewItem(userFullName, review.Rating, review.Comment, review.ReviewDate);
-                    ReviewsPanel.Children.Add(reviewItem);
-                }
+                _allReviews = await _reviewService.GetReviewsByProductIdAsync(_product.ProductId);
+                await ApplyReviewFilterAsync();
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Lỗi load reviews: {ex.Message}");
             }
+        }
+
+        private async Task ApplyReviewFilterAsync()
+        {
+            // Xóa các review hiện tại
+            ReviewsPanel.Children.Clear();
+
+            if (_allReviews == null || _allReviews.Count == 0)
+            {
+                // Hiển thị thông báo không có review
+                TextBlock noReviewText = new TextBlock
+                {
+                    Text = "Chưa có đánh giá nào cho sản phẩm này",
+                    FontSize = 15,
+                    Foreground = new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66)),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Margin = new Thickness(0, 20, 0, 20)
+                };
+                ReviewsPanel.Children.Add(noReviewText);
+                return;
+            }
+
+            // Áp dụng filter
+            List<Review> filteredReviews = new List<Review>(_allReviews);
+
+            if (ReviewFilterComboBox.SelectedItem != null)
+            {
+                var selectedFilter = (ReviewFilterComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
+
+                switch (selectedFilter)
+                {
+                    case "Mới nhất":
+                        filteredReviews = _allReviews.OrderByDescending(r => r.ReviewDate).ToList();
+                        break;
+
+                    case "Cũ nhất":
+                        filteredReviews = _allReviews.OrderBy(r => r.ReviewDate).ToList();
+                        break;
+
+                    case "Đánh giá cao nhất":
+                        filteredReviews = _allReviews.OrderByDescending(r => r.Rating).ThenByDescending(r => r.ReviewDate).ToList();
+                        break;
+
+                    case "Đánh giá thấp nhất":
+                        filteredReviews = _allReviews.OrderBy(r => r.Rating).ThenByDescending(r => r.ReviewDate).ToList();
+                        break;
+
+                    default:
+                        filteredReviews = _allReviews.OrderByDescending(r => r.ReviewDate).ToList();
+                        break;
+                }
+            }
+
+            // Tạo review items
+            foreach (var review in filteredReviews)
+            {
+                string userFullName = await _reviewService.GetUserFullNameAsync(review.UserId);
+                var reviewItem = CreateReviewItem(userFullName, review.Rating, review.Comment, review.ReviewDate);
+                ReviewsPanel.Children.Add(reviewItem);
+            }
+        }
+
+        private async void ReviewFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_allReviews == null) return;
+            await ApplyReviewFilterAsync();
         }
 
         private Border CreateReviewItem(string userName, int rating, string comment, DateTime reviewDate)
@@ -266,7 +314,7 @@ namespace Pet_Shop_Project.Views
             // Rating
             TextBlock ratingText = new TextBlock
             {
-                Text = $"{rating} ★",
+                Text = $"{rating}★",
                 FontSize = 16,
                 FontWeight = FontWeights.Bold,
                 Foreground = new SolidColorBrush(Color.FromRgb(0xFF, 0xA5, 0x00)),
@@ -283,7 +331,7 @@ namespace Pet_Shop_Project.Views
 
             PackIcon clockIcon = new PackIcon
             {
-                Kind = PackIconKind.ClockOutline,
+                Kind = PackIconKind.Clock,
                 Width = 14,
                 Height = 14,
                 Foreground = new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66)),
@@ -334,7 +382,7 @@ namespace Pet_Shop_Project.Views
             NavService.Instance.GoBack();
         }
 
-        private void AddToCartButton_Click(object sender, RoutedEventArgs e)
+        private async void AddToCartButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -361,7 +409,7 @@ namespace Pet_Shop_Project.Views
                 }
 
                 // Thêm vào database
-                AddToCartInDatabase(userId, _product.ProductId, _quantity);
+                await AddToCartInDatabaseAsync(userId, _product.ProductId, _quantity);
 
                 // Thêm vào CartService (in-memory)
                 CartService.AddToCart(_product, _quantity);
@@ -385,14 +433,14 @@ namespace Pet_Shop_Project.Views
         }
 
         /// Thêm sản phẩm vào giỏ hàng trong database
-        private void AddToCartInDatabase(string userId, string productId, int quantity)
+        private async Task AddToCartInDatabaseAsync(string userId, string productId, int quantity)
         {
             using (var conn = new SqlConnection(_connectionDB))
             {
-                conn.Open();
+                await conn.OpenAsync();
 
                 // Bước 1: Lấy hoặc tạo CartId cho user
-                string cartId = GetOrCreateCart(conn, userId);
+                string cartId = await GetOrCreateCartAsync(conn, userId);
 
                 // Bước 2: Kiểm tra sản phẩm đã có trong giỏ chưa
                 string checkSql = @"
@@ -405,22 +453,42 @@ namespace Pet_Shop_Project.Views
                     checkCmd.Parameters.AddWithValue("@CartId", cartId);
                     checkCmd.Parameters.AddWithValue("@ProductId", productId);
 
-                    using (var reader = checkCmd.ExecuteReader())
+                    using (var reader = await checkCmd.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             // Sản phẩm đã tồn tại -> Cập nhật số lượng
                             string cartItemId = reader["CartItemId"].ToString();
                             int currentQty = (int)reader["Quantity"];
-                            reader.Close();
-
-                            UpdateCartItemQuantity(conn, cartItemId, currentQty + quantity);
+                            // Reader sẽ tự động đóng khi ra khỏi using block
                         }
                         else
                         {
-                            // Sản phẩm chưa có -> Thêm mới
-                            reader.Close();
-                            InsertNewCartItem(conn, cartId, productId, quantity);
+                            // Sản phẩm chưa có -> Thêm mới - sẽ thêm sau khi reader đóng
+                        }
+                    }
+
+                    // Kiểm tra lại để thực hiện update hoặc insert sau khi reader đã đóng
+                    using (var checkCmd2 = new SqlCommand(checkSql, conn))
+                    {
+                        checkCmd2.Parameters.AddWithValue("@CartId", cartId);
+                        checkCmd2.Parameters.AddWithValue("@ProductId", productId);
+
+                        using (var reader2 = await checkCmd2.ExecuteReaderAsync())
+                        {
+                            if (await reader2.ReadAsync())
+                            {
+                                string cartItemId = reader2["CartItemId"].ToString();
+                                int currentQty = (int)reader2["Quantity"];
+                                reader2.Close();
+
+                                await UpdateCartItemQuantityAsync(conn, cartItemId, currentQty + quantity);
+                            }
+                            else
+                            {
+                                reader2.Close();
+                                await InsertNewCartItemAsync(conn, cartId, productId, quantity);
+                            }
                         }
                     }
                 }
@@ -428,7 +496,7 @@ namespace Pet_Shop_Project.Views
         }
 
         /// Lấy CartId của user, nếu chưa có thì tạo mới
-        private string GetOrCreateCart(SqlConnection conn, string userId)
+        private async Task<string> GetOrCreateCartAsync(SqlConnection conn, string userId)
         {
             // Kiểm tra cart đã tồn tại chưa
             string checkCartSql = "SELECT CartId FROM CART WHERE UserId = @UserId";
@@ -436,7 +504,7 @@ namespace Pet_Shop_Project.Views
             using (var cmd = new SqlCommand(checkCartSql, conn))
             {
                 cmd.Parameters.AddWithValue("@UserId", userId);
-                var result = cmd.ExecuteScalar();
+                var result = await cmd.ExecuteScalarAsync();
 
                 if (result != null)
                 {
@@ -452,14 +520,14 @@ namespace Pet_Shop_Project.Views
             {
                 cmd.Parameters.AddWithValue("@CartId", newCartId);
                 cmd.Parameters.AddWithValue("@UserId", userId);
-                cmd.ExecuteNonQuery();
+                await cmd.ExecuteNonQueryAsync();
             }
 
             return newCartId;
         }
 
         /// Cập nhật số lượng của CartItem
-        private void UpdateCartItemQuantity(SqlConnection conn, string cartItemId, int newQuantity)
+        private async Task UpdateCartItemQuantityAsync(SqlConnection conn, string cartItemId, int newQuantity)
         {
             string updateSql = "UPDATE CART_ITEMS SET Quantity = @Quantity WHERE CartItemId = @CartItemId";
 
@@ -467,12 +535,12 @@ namespace Pet_Shop_Project.Views
             {
                 cmd.Parameters.AddWithValue("@Quantity", newQuantity);
                 cmd.Parameters.AddWithValue("@CartItemId", cartItemId);
-                cmd.ExecuteNonQuery();
+                await cmd.ExecuteNonQueryAsync();
             }
         }
 
         /// Thêm CartItem mới vào database
-        private void InsertNewCartItem(SqlConnection conn, string cartId, string productId, int quantity)
+        private async Task InsertNewCartItemAsync(SqlConnection conn, string cartId, string productId, int quantity)
         {
             string insertSql = @"
                 INSERT INTO CART_ITEMS (CartId, ProductId, Quantity) 
@@ -483,7 +551,7 @@ namespace Pet_Shop_Project.Views
                 cmd.Parameters.AddWithValue("@CartId", cartId);
                 cmd.Parameters.AddWithValue("@ProductId", productId);
                 cmd.Parameters.AddWithValue("@Quantity", quantity);
-                cmd.ExecuteNonQuery();
+                await cmd.ExecuteNonQueryAsync();
             }
         }
 
