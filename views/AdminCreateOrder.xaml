@@ -1,0 +1,536 @@
+﻿<Page x:Class="Pet_Shop_Project.Views.AdminCreateOrder"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:Pet_Shop_Project.Views"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      mc:Ignorable="d"
+      d:DesignHeight="650" d:DesignWidth="940"
+      Background="#FFF7F5"
+      Title="AdminCreateOrder">
+
+    <Grid Margin="16,12,16,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0"
+                    Padding="18"
+                    Background="White"
+                    CornerRadius="12"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                <StackPanel Orientation="Horizontal" Margin="2,0,0,0">
+                    <Border Width="44" Height="44" CornerRadius="10"
+                            Background="#FFF2D6"
+                            VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="CartPlus"
+                                                 Width="26" Height="26"
+                                                 Foreground="#FF6B6B"
+                                                 VerticalAlignment="Center"
+                                                 HorizontalAlignment="Center"/>
+                    </Border>
+                    <StackPanel Margin="12,2,0,0">
+                        <TextBlock Text="Tạo Đơn Hàng Mới"
+                                   FontSize="26"
+                                   FontWeight="SemiBold"
+                                   Foreground="#222"/>
+                        <TextBlock Text="Tạo đơn hàng cho khách hàng với đầy đủ thông tin"
+                                   FontSize="14"
+                                   Foreground="#6A6A6A"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Main Content - 3 Columns -->
+            <Grid Grid.Row="1" Margin="0,16,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="260"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="290"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Column 1: Customer Information -->
+                <Border Grid.Column="0"
+                        Background="White"
+                        CornerRadius="12"
+                        Padding="16"
+                        Margin="0,0,8,0"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Section Title -->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
+                            <materialDesign:PackIcon Kind="AccountOutline" Width="22" Height="22" Foreground="#FF6B6B" VerticalAlignment="Center"/>
+                            <TextBlock Text="Thông Tin Khách Hàng" FontSize="16" FontWeight="SemiBold" Foreground="#222" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Customer Search -->
+                        <Border Grid.Row="1" Background="#F8F8F8" CornerRadius="8" Padding="10,8" Margin="0,0,0,12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <materialDesign:PackIcon Kind="Magnify" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBox x:Name="CustomerSearchBox"
+                                         Grid.Column="1"
+                                         BorderThickness="0"
+                                         Background="Transparent"
+                                         FontSize="13"
+                                         VerticalAlignment="Center"
+                                         materialDesign:HintAssist.Hint="Tìm theo SĐT, Email, Tên..."
+                                         TextChanged="CustomerSearch_TextChanged"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Customer Search Results -->
+                        <Border Grid.Row="2" 
+                                x:Name="CustomerSearchResults"
+                                Background="#FAFAFA" 
+                                CornerRadius="8" 
+                                BorderBrush="#E0E0E0" 
+                                BorderThickness="1" 
+                                MaxHeight="150"
+                                Margin="0,0,0,12"
+                                Visibility="Collapsed">
+                            <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                                <ItemsControl x:Name="CustomerListControl">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="White" 
+                                                    CornerRadius="6" 
+                                                    Padding="10,8" 
+                                                    Margin="4" 
+                                                    Cursor="Hand"
+                                                    BorderBrush="#F0F0F0"
+                                                    BorderThickness="1"
+                                                    MouseLeftButtonDown="SelectCustomer_Click"
+                                                    Tag="{Binding}">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Background" Value="#FFF8F5"/>
+                                                                <Setter Property="BorderBrush" Value="#ffa2a2"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding FullName}" FontWeight="SemiBold" FontSize="13" Foreground="#222"/>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                        <materialDesign:PackIcon Kind="Phone" Width="12" Height="12" Foreground="#888" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="{Binding Phone}" FontSize="11" Foreground="#666" Margin="4,0,12,0"/>
+                                                        <materialDesign:PackIcon Kind="Email" Width="12" Height="12" Foreground="#888" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="{Binding Email}" FontSize="11" Foreground="#666" Margin="4,0,0,0"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Border>
+
+                        <!-- Selected Customer Info -->
+                        <Border Grid.Row="3" 
+                                x:Name="SelectedCustomerPanel"
+                                Background="#FFFDF8" 
+                                CornerRadius="8" 
+                                BorderBrush="#FFE2B6" 
+                                BorderThickness="1" 
+                                Padding="12" 
+                                Margin="0,0,0,12"
+                                Visibility="Collapsed">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <Border Width="36" Height="36" CornerRadius="18" Background="#ffc476" VerticalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="Account" Width="20" Height="20" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Margin="10,0,0,0">
+                                        <TextBlock x:Name="SelectedCustomerName" Text="Nguyễn Văn A" FontWeight="SemiBold" FontSize="14" Foreground="#222"/>
+                                        <TextBlock x:Name="SelectedCustomerId" Text="ID: USER001" FontSize="11" Foreground="#888"/>
+                                    </StackPanel>
+                                    <Button Style="{StaticResource MaterialDesignIconButton}"
+                                            Width="28" Height="28"
+                                            Margin="0,0,0,0"
+                                            HorizontalAlignment="Right"
+                                            Click="ClearSelectedCustomer_Click"
+                                            ToolTip="Xóa lựa chọn">
+                                        <materialDesign:PackIcon Kind="Close" Width="16" Height="16" Foreground="#888"/>
+                                    </Button>
+                                </StackPanel>
+
+                                <WrapPanel Margin="0,4,0,0">
+                                    <Border Background="#E8F2FF" CornerRadius="6" Padding="8,4" Margin="0,0,6,6">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Phone" Width="14" Height="14" Foreground="#3B67C8" VerticalAlignment="Center"/>
+                                            <TextBlock x:Name="SelectedCustomerPhone" Text="0123456789" FontSize="11" Foreground="#1D3557" Margin="4,0,0,0"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Background="#F3E8FF" CornerRadius="6" Padding="8,4" Margin="0,0,0,6">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Email" Width="14" Height="14" Foreground="#8E24AA" VerticalAlignment="Center"/>
+                                            <TextBlock x:Name="SelectedCustomerEmail" Text="email@example.com" FontSize="11" Foreground="#6A1B9A" Margin="4,0,0,0"/>
+                                        </StackPanel>
+                                    </Border>
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Shipping Address -->
+                        <StackPanel Grid.Row="4">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <materialDesign:PackIcon Kind="MapMarkerOutline" Width="18" Height="18" Foreground="#FF6B6B" VerticalAlignment="Center"/>
+                                <TextBlock Text="Địa Chỉ Giao Hàng" FontSize="14" FontWeight="SemiBold" Foreground="#222" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <CheckBox x:Name="UseDefaultAddress"
+                                      Content="Sử dụng địa chỉ mặc định"
+                                      FontSize="12"
+                                      Foreground="#666"
+                                      IsChecked="True"
+                                      Checked="UseDefaultAddress_CheckChanged"
+                                      Unchecked="UseDefaultAddress_CheckChanged"
+                                      Margin="0,0,0,8"/>
+
+                            <TextBox x:Name="ShippingAddressBox"
+                                     Style="{StaticResource PlaceholderTextBoxStyle}"
+                                     Tag="Nhập địa chỉ giao hàng..."
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     Height="60"
+                                     Padding="10"
+                                     BorderBrush="#DDDDDD"
+                                     BorderThickness="1"
+                                     IsEnabled="False"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Column 2: Product Selection -->
+                <Border Grid.Column="1"
+                        Background="White"
+                        CornerRadius="12"
+                        Padding="16"
+                        Margin="8,0,8,0"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Section Title -->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
+                            <materialDesign:PackIcon Kind="PackageVariant" Width="22" Height="22" Foreground="#FF6B6B" VerticalAlignment="Center"/>
+                            <TextBlock Text="Chọn Sản Phẩm" FontSize="16" FontWeight="SemiBold" Foreground="#222" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Product Search -->
+                        <Border Grid.Row="1" Background="#F8F8F8" CornerRadius="8" Padding="10,8" Margin="0,0,0,12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <materialDesign:PackIcon Kind="Magnify" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBox x:Name="ProductSearchBox"
+                                         Grid.Column="1"
+                                         BorderThickness="0"
+                                         Background="Transparent"
+                                         FontSize="13"
+                                         VerticalAlignment="Center"
+                                         materialDesign:HintAssist.Hint="Tìm kiếm sản phẩm theo tên..."
+                                         TextChanged="ProductSearch_TextChanged"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Filter & Sort -->
+                        <Grid Grid.Row="2" Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ComboBox x:Name="PriceFilterCombo"
+                                      Grid.Column="0"
+                                      Margin="0,0,6,0"
+                                      FontSize="12"
+                                      materialDesign:HintAssist.Hint="Lọc theo giá"
+                                      SelectionChanged="PriceFilter_SelectionChanged">
+                                <ComboBoxItem Content="Tất cả giá" IsSelected="True"/>
+                                <ComboBoxItem Content="Dưới 100.000₫"/>
+                                <ComboBoxItem Content="100.000₫ - 500.000₫"/>
+                                <ComboBoxItem Content="500.000₫ - 1.000.000₫"/>
+                                <ComboBoxItem Content="Trên 1.000.000₫"/>
+                            </ComboBox>
+
+                            <ComboBox x:Name="PriceSortCombo"
+                                      Grid.Column="1"
+                                      Margin="6,0,0,0"
+                                      FontSize="12"
+                                      materialDesign:HintAssist.Hint="Sắp xếp"
+                                      SelectionChanged="PriceSort_SelectionChanged">
+                                <ComboBoxItem Content="Mặc định" IsSelected="True"/>
+                                <ComboBoxItem Content="Giá: Thấp → Cao"/>
+                                <ComboBoxItem Content="Giá: Cao → Thấp"/>
+                            </ComboBox>
+                        </Grid>
+
+                        <!-- Product List -->
+                        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Hidden">
+                            <ItemsControl x:Name="ProductListControl">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#FAFAFA" 
+                                                CornerRadius="8" 
+                                                Padding="12" 
+                                                Margin="0,0,0,10"
+                                                BorderBrush="#E8E8E8"
+                                                BorderThickness="1">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="30"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- Product Image -->
+                                                <Border Grid.Column="0" 
+                                                        Width="30" Height="30" 
+                                                        CornerRadius="6" 
+                                                        Background="#F0F0F0"
+                                                        Loaded="ImageBorder_Loaded">
+                                                    <Image Source="{Binding Picture}" Stretch="UniformToFill"/>
+                                                </Border>
+
+                                                <!-- Product Info -->
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                                                    <TextBlock Text="{Binding Name}" 
+                                                               FontWeight="SemiBold" 
+                                                               FontSize="13" 
+                                                               Foreground="#222"
+                                                               TextTrimming="CharacterEllipsis"/>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                        <TextBlock Text="{Binding UnitPrice, StringFormat='{}{0:N0}₫'}" 
+                                                                   FontSize="13" 
+                                                                   FontWeight="Medium"
+                                                                   Foreground="#FF6B6B"/>
+                                                        <TextBlock Text=" | " Foreground="#CCC"/>
+                                                        <TextBlock Text="{Binding UnitInStock, StringFormat='Kho: {0}'}" 
+                                                                   FontSize="11" 
+                                                                   Foreground="#888"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+
+                                                <!-- Add to Order Controls -->
+                                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Button Style="{StaticResource GradientButtonStyle}"
+                                                            Padding="10,6"
+                                                            Margin="0,0,0,0"
+                                                            Tag="{Binding}"
+                                                            Click="AddToOrder_Click">
+                                                    <materialDesign:PackIcon Kind="Plus" Width="20" Height="20"/>
+                                                </Button>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+
+                <!-- Column 3: Order Details & Status -->
+                <Border Grid.Column="2"
+                        Background="White"
+                        CornerRadius="12"
+                        Padding="16"
+                        Margin="8,0,0,0"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Section Title -->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
+                            <materialDesign:PackIcon Kind="ClipboardListOutline" Width="22" Height="22" Foreground="#FF6B6B" VerticalAlignment="Center"/>
+                            <TextBlock Text="Chi Tiết Đơn Hàng" FontSize="16" FontWeight="SemiBold" Foreground="#222" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Order Items List -->
+                        <Border Grid.Row="1" 
+                                Background="#FAFAFA" 
+                                CornerRadius="8" 
+                                BorderBrush="#E8E8E8" 
+                                BorderThickness="1"
+                                Margin="0,0,0,12">
+                            <ScrollViewer VerticalScrollBarVisibility="Hidden" Padding="8">
+                                <ItemsControl x:Name="OrderItemsControl">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="White" 
+                                                    CornerRadius="6" 
+                                                    Padding="10" 
+                                                    Margin="0,0,0,8"
+                                                    BorderBrush="#F0F0F0"
+                                                    BorderThickness="1">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="30"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <!-- Product Image -->
+                                                    <Border Grid.Column="0" Width="26" Height="26" CornerRadius="4" Background="#F5F5F5" Loaded="ImageBorder_Loaded">
+                                                        <Image Source="{Binding Product.Picture}" Stretch="UniformToFill"/>
+                                                    </Border>
+
+                                                    <!-- Product Info -->
+                                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0">
+                                                        <TextBlock Text="{Binding Product.Name}" 
+                                                                   FontWeight="Medium" 
+                                                                   FontSize="12" 
+                                                                   Foreground="#222"
+                                                                   TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock FontSize="11" Foreground="#888" Margin="0,2,0,0">
+                                                            <Run Text="x"/>
+                                                            <Run Text="{Binding Quantity}"/>
+                                                        </TextBlock>
+                                                    </StackPanel>
+
+                                                    <!-- Item Total -->
+                                                    <TextBlock Grid.Column="2" 
+                                                               Text="{Binding TotalPrice, StringFormat='{}{0:N0}₫'}"
+                                                               FontWeight="SemiBold"
+                                                               FontSize="12"
+                                                               Foreground="#FF6B6B"
+                                                               VerticalAlignment="Center"
+                                                               Margin="0,0,8,0"/>
+
+                                                    <!-- Remove Button -->
+                                                    <Button Grid.Column="3"
+                                                            Style="{StaticResource MaterialDesignIconButton}"
+                                                            Width="26" Height="26"
+                                                            Tag="{Binding}"
+                                                            Click="RemoveFromOrder_Click"
+                                                            ToolTip="Xóa">
+                                                        <materialDesign:PackIcon Kind="Close" Width="14" Height="14" Foreground="#E53935"/>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Border>
+
+                        <!-- Order Total -->
+                        <Border Grid.Row="2" Background="#FFF8F5" CornerRadius="8" Padding="12" Margin="0,0,0,12" BorderBrush="#FFE2B6" BorderThickness="1">
+                            <Grid>
+                                <TextBlock Text="Tổng tiền" FontSize="14" FontWeight="Medium" Foreground="#666" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="TotalAmountText"
+                                           Text="0₫"
+                                           FontSize="22"
+                                           FontWeight="Bold"
+                                           Foreground="#FF6B6B"
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Notes & Status -->
+                        <StackPanel Grid.Row="3" Margin="0,0,0,12">
+                            <!-- Note -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <materialDesign:PackIcon Kind="NoteTextOutline" Width="18" Height="18" Foreground="#FF6B6B" VerticalAlignment="Center"/>
+                                <TextBlock Text="Ghi Chú, Trạng Thái" FontSize="14" FontWeight="SemiBold" Foreground="#222" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <TextBox x:Name="OrderNoteBox"
+                                     Style="{StaticResource PlaceholderTextBoxStyle}"
+                                     Tag="Ghi chú cho đơn hàng..."
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     Height="50"
+                                     Padding="10"
+                                     BorderBrush="#DDDDDD"
+                                     BorderThickness="1"
+                                     Margin="0,0,0,12"/>
+
+                            <!-- Status Dropdowns -->
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Approval Status -->
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Trạng thái duyệt:" FontSize="12" Foreground="#666" VerticalAlignment="Center" Margin="0,0,8,8"/>
+                                <ComboBox x:Name="ApprovalStatusCombo" Grid.Row="0" Grid.Column="1" FontSize="12" Margin="0,0,0,8">
+                                    <ComboBoxItem Content="Chờ xét duyệt" Tag="Waiting"/>
+                                    <ComboBoxItem Content="Chấp nhận" Tag="Approved" IsSelected="True"/>
+                                    <ComboBoxItem Content="Từ chối" Tag="Rejected"/>
+                                </ComboBox>
+
+                                <!-- Payment Status -->
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Thanh toán:" FontSize="12" Foreground="#666" VerticalAlignment="Center" Margin="0,0,8,8"/>
+                                <ComboBox x:Name="PaymentStatusCombo" Grid.Row="1" Grid.Column="1" FontSize="12" Margin="0,0,0,8">
+                                    <ComboBoxItem Content="Chưa thanh toán" Tag="Pending" IsSelected="True"/>
+                                    <ComboBoxItem Content="Đã thanh toán" Tag="Paid"/>
+                                </ComboBox>
+
+                                <!-- Shipping Status -->
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Vận chuyển:" FontSize="12" Foreground="#666" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <ComboBox x:Name="ShippingStatusCombo" Grid.Row="2" Grid.Column="1" FontSize="12">
+                                    <ComboBoxItem Content="Chưa giao" Tag="Pending" IsSelected="True"/>
+                                    <ComboBoxItem Content="Đang giao" Tag="Shipped"/>
+                                    <ComboBoxItem Content="Đã giao" Tag="Delivered"/>
+                                </ComboBox>
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- Create Order Button -->
+                        <Button Grid.Row="4"
+                                x:Name="CreateOrderButton"
+                                Style="{StaticResource GradientButtonStyle}"
+                                Height="48"
+                                FontSize="15"
+                                Click="CreateOrder_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="CartCheck" Width="22" Height="22" VerticalAlignment="Center"/>
+                                <TextBlock Text="TẠO ĐƠN HÀNG" FontWeight="Bold" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Border>
+            </Grid>
+    </Grid>
+</Page>
