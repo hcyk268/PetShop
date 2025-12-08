@@ -35,18 +35,18 @@ namespace Pet_Shop_Project.Views
         {
             InitializeComponent();
             _userId = userid;
-            Loaded += Cart_Loaded; // async void event, OK
+            Loaded += Cart_LoadedAsync; // async void event, OK
         }
 
         #region Load Data
         // Load thông tin người dùng hiện tại
-        private void Cart_Loaded(object sender, RoutedEventArgs e)
+       async void Cart_LoadedAsync(object sender, RoutedEventArgs e)
         {
-            LoadCurrentUser();   // sync
-            LoadCartFromDb();    // dùng bản sync bạn đã viết
+            await LoadCurrentUserAsync();   // sync
+            await LoadCartFromDbAsync();    // dùng bản sync bạn đã viết
         }
 
-        private void LoadCurrentUser()
+        private async Task LoadCurrentUserAsync()
         {
             const string sql = @"SELECT UserId, FullName, Phone, Address, Email, Role
                                 FROM USERS WHERE UserId = @UserId";
@@ -55,13 +55,13 @@ namespace Pet_Shop_Project.Views
             {
                 using (var conn = new SqlConnection(_conn))
                 {
-                    conn.Open();
+                    await conn.OpenAsync();
                     using (var cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@UserId", _userId);
-                        using (var reader = cmd.ExecuteReader())
+                        using (var reader = await  cmd.ExecuteReaderAsync())
                         {
-                            if (reader.Read())
+                            if (await reader.ReadAsync())
                             {
                                 currentUser = new User
                                 {
@@ -99,7 +99,7 @@ namespace Pet_Shop_Project.Views
         } */
 
         // Load dữ liệu vào giỏ hàng
-        private void LoadCartFromDb()
+        private async Task LoadCartFromDbAsync()
         {
             try
             {
@@ -116,14 +116,14 @@ namespace Pet_Shop_Project.Views
 
                 using (var conn = new SqlConnection(_conn))
                 {
-                    conn.Open();
+                    await conn.OpenAsync();
                     using (var cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@UserId", _userId);
-                        using (var reader = cmd.ExecuteReader())
+                        using (var reader = await cmd.ExecuteReaderAsync())
                         {
                             
-                            while (reader.Read())
+                            while (await reader.ReadAsync())
                             {
                                 
                                 var product = new Product
