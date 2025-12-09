@@ -12,7 +12,7 @@
       Title="Thanh toán">
 
     <Grid Background="#F8F8F8">
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ScrollViewer VerticalScrollBarVisibility="Hidden">
             <Grid Margin="40,30,40,30" MaxWidth="900">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>

@@ -56,7 +56,7 @@
 
         <!-- Cart Items ScrollViewer -->
         <ScrollViewer Grid.Row="1" 
-                      VerticalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Hidden"
                       Padding="30,0,30,120">
             <ItemsControl x:Name="CartItemsControl">
                 <ItemsControl.ItemTemplate>

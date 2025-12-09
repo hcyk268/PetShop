@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using MaterialDesignThemes.Wpf;
+using Microsoft.Win32;
 using Pet_Shop_Project.Models;
 using System;
 using System.Collections.Generic;
@@ -131,9 +132,6 @@ namespace Pet_Shop_Project.Views
             TxtProductCode.Text = _originalItem.ProductCode;
             TxtProductName.Text = _originalItem.ProductName;
             TxtStockQuantity.Text = _originalItem.StockQuantity.ToString();
-            TxtOrderedQuantity.Text = _originalItem.OrderedQuantity.ToString();
-            TxtMinStockLevel.Text = _originalItem.MinStockLevel.ToString();
-            TxtMaxStockLevel.Text = _originalItem.MaxStockLevel.ToString();
 
             var product = _originalItem.Product ?? await LoadProductDetailsAsync(_originalItem.ProductId);
             if (product != null)
@@ -141,6 +139,7 @@ namespace Pet_Shop_Project.Views
                 _loadedProduct = product;
                 TxtDescription.Text = product.Description;
                 TxtUnitPrice.Text = product.UnitPrice.ToString();
+                TxtDiscount.Text = product.Discount.ToString();
                 TxtPicture.Text = product.Picture;
                 LoadImagePreview(product.Picture);
                 await LoadCategoriesAsycn(product.Category);
@@ -169,6 +168,7 @@ namespace Pet_Shop_Project.Views
                     TxtDescription.Text = fullProduct.Description;
                     TxtUnitPrice.Text = fullProduct.UnitPrice.ToString();
                     TxtStockQuantity.Text = fullProduct.UnitInStock.ToString();
+                    TxtDiscount.Text = fullProduct.Discount.ToString();
                     TxtPicture.Text = fullProduct.Picture;
                     await LoadCategoriesAsycn(fullProduct.Category);
                     LoadImagePreview(fullProduct.Picture);
@@ -218,20 +218,29 @@ namespace Pet_Shop_Project.Views
 
         private async void BtnCreateNewProduct_Click(object sender, RoutedEventArgs e)
         {
-            var productDialog = new AdminProductEditDialog(null);
-            if (productDialog.ShowDialog() == true)
+            var page = new AdminProductEditDialog(null);
+            var win = new Window
+            {
+                Owner = this,
+                Content = page,
+                Width = 500,
+                Height = 550,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                ResizeMode = ResizeMode.NoResize,
+                Title = "Tạo sản phẩm mới"
+            };
+
+            if (win.ShowDialog() == true)
             {
                 MessageBox.Show("Sản phẩm mới đã được tạo thành công!\nVui lòng chọn sản phẩm từ danh sách để thêm vào kho.",
                     "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                // Reload products list
                 await LoadProductsAsync();
 
-                // Auto-select the newly created product
-                if (productDialog.Product != null)
+                if (page.Product != null)
                 {
                     var newProduct = ProductComboBox.Items.Cast<Product>()
-                        .FirstOrDefault(p => p.ProductId == productDialog.Product.ProductId);
+                        .FirstOrDefault(p => p.ProductId == page.Product.ProductId);
                     if (newProduct != null)
                     {
                         ProductComboBox.SelectedItem = newProduct;
@@ -248,6 +257,7 @@ namespace Pet_Shop_Project.Views
             try
             {
                 var category = CmbCategory.SelectedItem as string ?? CmbCategory.Text;
+                double.TryParse(TxtDiscount.Text, out var discount);
                 var product = new Product
                 {
                     ProductId = TxtProductCode.Text.Trim(),
@@ -256,8 +266,8 @@ namespace Pet_Shop_Project.Views
                     UnitPrice = decimal.Parse(TxtUnitPrice.Text),
                     UnitInStock = int.Parse(TxtStockQuantity.Text),
                     Picture = TxtPicture.Text.Trim(),
-                    Category = category,
-                    Discount = _loadedProduct?.Discount ?? 0
+                    Category = CmbCategory.SelectedItem as string ?? CmbCategory.Text,
+                    Discount = discount
                 };
 
                 InventoryItem = new InventoryItem
@@ -270,9 +280,6 @@ namespace Pet_Shop_Project.Views
                     SellingPrice = product.UnitPrice,
                     CostPrice = product.UnitPrice * (decimal)(1 - product.Discount),
                     StockQuantity = product.UnitInStock,
-                    OrderedQuantity = int.Parse(TxtOrderedQuantity.Text),
-                    MinStockLevel = int.Parse(TxtMinStockLevel.Text),
-                    MaxStockLevel = int.Parse(TxtMaxStockLevel.Text),
                     LastUpdated = DateTime.Now,
                     Product = product
                 };
@@ -346,6 +353,7 @@ namespace Pet_Shop_Project.Views
             const string sql = @"UPDATE PRODUCTS 
                                 SET Name = @Name,
                                     Description = @Description,
+                                    Discount = @Discount,
                                     UnitPrice = @UnitPrice,
                                     UnitInStock = @StockQuantity,
                                     Picture = @Picture,
@@ -377,6 +385,7 @@ namespace Pet_Shop_Project.Views
                         cmd.Parameters.AddWithValue("@Description", item.Product?.Description ?? "");
                         cmd.Parameters.AddWithValue("@UnitPrice", item.SellingPrice);
                         cmd.Parameters.AddWithValue("@StockQuantity", item.StockQuantity);
+                        cmd.Parameters.AddWithValue("@Discount", item.Product?.Discount ?? 0d);
                         cmd.Parameters.AddWithValue("@Picture", item.Product?.Picture ?? "");
                         cmd.Parameters.AddWithValue("@Category", item.Category ?? "");
 
@@ -405,6 +414,7 @@ namespace Pet_Shop_Project.Views
                                 SET Description = @Description,
                                     UnitPrice = @UnitPrice,
                                     UnitInStock = @StockQuantity,
+                                    Discount = @Discount,
                                     Picture = @Picture,
                                     Category = @Category
                                 WHERE ProductId = @ProductId";
@@ -418,6 +428,7 @@ namespace Pet_Shop_Project.Views
                     {
                         cmd.Parameters.AddWithValue("@ProductId", item.ProductId);
                         cmd.Parameters.AddWithValue("@Description", item.Product?.Description ?? "");
+                        cmd.Parameters.AddWithValue("@Discount", item.Product?.Discount ?? 0d);
                         cmd.Parameters.AddWithValue("@UnitPrice", item.SellingPrice);
                         cmd.Parameters.AddWithValue("@StockQuantity", item.StockQuantity);
                         cmd.Parameters.AddWithValue("@Picture", item.Product?.Picture ?? "");
@@ -452,42 +463,6 @@ namespace Pet_Shop_Project.Views
                 TxtStockQuantity.Focus();
                 return false;
             }
-
-            if (string.IsNullOrWhiteSpace(TxtOrderedQuantity.Text) ||
-                !int.TryParse(TxtOrderedQuantity.Text, out int orderedQty) || orderedQty < 0)
-            {
-                MessageBox.Show("Số lượng đặt hàng không hợp lệ", "Thông báo",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                TxtOrderedQuantity.Focus();
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(TxtMinStockLevel.Text) ||
-                !int.TryParse(TxtMinStockLevel.Text, out int minLevel) || minLevel < 0)
-            {
-                MessageBox.Show("Định mức tồn tối thiểu không hợp lệ", "Thông báo",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                TxtMinStockLevel.Focus();
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(TxtMaxStockLevel.Text) ||
-                !int.TryParse(TxtMaxStockLevel.Text, out int maxLevel) || maxLevel < 0)
-            {
-                MessageBox.Show("Định mức tồn tối đa không hợp lệ", "Thông báo",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                TxtMaxStockLevel.Focus();
-                return false;
-            }
-
-            if (minLevel > maxLevel)
-            {
-                MessageBox.Show("Định mức tối thiểu không được lớn hơn định mức tối đa", "Thông báo",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                TxtMinStockLevel.Focus();
-                return false;
-            }
-
             return true;
         }
 
