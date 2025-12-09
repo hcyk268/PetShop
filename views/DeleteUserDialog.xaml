@@ -1,0 +1,136 @@
+﻿<Window x:Class="Pet_Shop_Project.Views.DeleteUserDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Xác nhận xóa" 
+        Height="300" Width="450"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize">
+
+    <Grid>
+
+
+        <Border Background="White"
+                CornerRadius="15"
+                MaxWidth="450"
+                MaxHeight="300"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Padding="25"
+                Effect="{DynamicResource MaterialDesignShadowDepth3}">
+
+            <StackPanel VerticalAlignment="Center" Height="237">
+
+                <!-- Icon -->
+                <Border Background="#FFF3E0"
+                        CornerRadius="50"
+                        Width="30" Height="30"
+                        HorizontalAlignment="Center"
+                        Margin="0,0,0,5">
+                    <materialDesign:PackIcon Kind="AlertCircle"
+                                             Width="20" Height="20"
+                                             Foreground="#FF9800"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"/>
+                </Border>
+
+                <!-- Title -->
+                <TextBlock Text="XÁC NHẬN XÓA NGƯỜI DÙNG"
+                           FontSize="13"
+                           FontWeight="Bold"
+                           Foreground="#333"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,10"/>
+
+                <!-- Question -->
+                <TextBlock Text="Bạn có chắc chắn muốn xóa người dùng này không?"
+                           FontSize="14"
+                           Foreground="#666"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,15"/>
+
+                <!-- User info -->
+                <Border Background="#FFF3E0"
+                        CornerRadius="8"
+                        Padding="12"
+                        Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock>
+                            <Run Text="Tên: " FontWeight="SemiBold" Foreground="#333"/>
+                            <Run x:Name="UserNameRun" Foreground="#666"/>
+                        </TextBlock>
+                        <TextBlock Margin="0,4,0,0">
+                            <Run Text="Email: " FontWeight="SemiBold" Foreground="#333"/>
+                            <Run x:Name="UserEmailRun" Foreground="#666"/>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <!-- Warning -->
+                <TextBlock Text="⚠️ Hành động này không thể hoàn tác!"
+                           FontSize="13"
+                           Foreground="#F44336"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,11"/>
+
+                <!-- Buttons -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="154*"/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="17*"/>
+                        <ColumnDefinition Width="138*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0"
+                            Content="Hủy"
+                            Height="35"
+                            Background="#E0E0E0"
+                            Foreground="#666"
+                            FontSize="14"
+                            FontWeight="SemiBold"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            Click="CancelButton_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                                        CornerRadius="20">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <Button Grid.Column="1"
+                            Content="Xóa"
+                            Height="35"
+                            Background="#FF6B6B"
+                            Foreground="White"
+                            FontSize="14"
+                            FontWeight="SemiBold"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            Click="DeleteButton_Click" Grid.ColumnSpan="3" Margin="15,0,0,0">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                                        CornerRadius="20">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

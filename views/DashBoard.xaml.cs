@@ -20,7 +20,7 @@ namespace Pet_Shop_Project.Views
         {
         }
 
-        
+
 
         // Constructor chính - nhận userId từ trang Login
         public DashBoard(string userId)
@@ -64,65 +64,65 @@ namespace Pet_Shop_Project.Views
     }
 }
 
-    public class DashboardViewModel
+public class DashboardViewModel
+{
+    public string UserGreeting { get; set; }
+    public string UserName { get; set; }
+    public int TotalUsers { get; set; }
+    public int TotalProducts { get; set; }
+    public int TotalOrders { get; set; }
+    public string TotalRevenue { get; set; }
+    public List<string> BestSellers { get; set; }
+    public List<string> WorstSellers { get; set; }
+
+    // Properties cho biểu đồ
+    public SeriesCollection WeeklyRevenueSeries { get; set; }
+    public List<string> WeekLabels { get; set; }
+    public Func<double, string> YFormatter { get; set; }
+    public double YAxisStep { get; set; }
+
+    private DashboardService dashboardService;
+
+    public DashboardViewModel(string name)
     {
-        public string UserGreeting { get; set; }
-        public string UserName { get; set; }
-        public int TotalUsers { get; set; }
-        public int TotalProducts { get; set; }
-        public int TotalOrders { get; set; }
-        public string TotalRevenue { get; set; }
-        public List<string> BestSellers { get; set; }
-        public List<string> WorstSellers { get; set; }
+        UserName = name;
+        UserGreeting = $"Chào mừng trở lại, {name}!";
+        dashboardService = new DashboardService();
 
-        // Properties cho biểu đồ
-        public SeriesCollection WeeklyRevenueSeries { get; set; }
-        public List<string> WeekLabels { get; set; }
-        public Func<double, string> YFormatter { get; set; }
-        public double YAxisStep { get; set; }
+        LoadDashboardData();
+        LoadWeeklyChart();
+    }
 
-        private DashboardService dashboardService;
+    private void LoadDashboardData()
+    {
+        TotalUsers = dashboardService.GetTotalUsers();
+        TotalProducts = dashboardService.GetTotalProducts();
+        TotalOrders = dashboardService.GetTotalOrders();
+        TotalRevenue = dashboardService.GetTotalRevenue().ToString("N0") + " VND";
+        BestSellers = dashboardService.GetBestSellers();
+        WorstSellers = dashboardService.GetWorstSellers();
+    }
 
-        public DashboardViewModel(string name)
-        {
-            UserName = name;
-            UserGreeting = $"Chào mừng trở lại, {name}!";
-            dashboardService = new DashboardService();
+    private void LoadWeeklyChart()
+    {
+        // Lấy dữ liệu từ database
+        var weeklyData = dashboardService.GetWeeklyRevenue();
 
-            LoadDashboardData();
-            LoadWeeklyChart();
-        }
+        // Sắp xếp theo thứ tự ngày
+        var sortedData = weeklyData.OrderBy(x => x.Key).ToList();
 
-        private void LoadDashboardData()
-        {
-            TotalUsers = dashboardService.GetTotalUsers();
-            TotalProducts = dashboardService.GetTotalProducts();
-            TotalOrders = dashboardService.GetTotalOrders();
-            TotalRevenue = dashboardService.GetTotalRevenue().ToString("N0") + " VND";
-            BestSellers = dashboardService.GetBestSellers();
-            WorstSellers = dashboardService.GetWorstSellers();
-        }
+        // Chuẩn bị labels (T2, T3, T4...)
+        WeekLabels = sortedData.Select(x => x.Key).ToList();
 
-        private void LoadWeeklyChart()
-        {
-            // Lấy dữ liệu từ database
-            var weeklyData = dashboardService.GetWeeklyRevenue();
+        // Chuẩn bị values (doanh thu từng ngày)
+        var values = sortedData.Select(x => (double)x.Value).ToList();
 
-            // Sắp xếp theo thứ tự ngày
-            var sortedData = weeklyData.OrderBy(x => x.Key).ToList();
+        // Tính step cho trục Y (để dễ đọc)
+        double maxValue = values.Count > 0 ? values.Max() : 0;
+        YAxisStep = maxValue > 0 ? Math.Ceiling(maxValue / 5 / 100000) * 100000 : 100000;
 
-            // Chuẩn bị labels (T2, T3, T4...)
-            WeekLabels = sortedData.Select(x => x.Key).ToList();
-
-            // Chuẩn bị values (doanh thu từng ngày)
-            var values = sortedData.Select(x => (double)x.Value).ToList();
-
-            // Tính step cho trục Y (để dễ đọc)
-            double maxValue = values.Count > 0 ? values.Max() : 0;
-            YAxisStep = maxValue > 0 ? Math.Ceiling(maxValue / 5 / 100000) * 100000 : 100000;
-
-            // Tạo series cho biểu đồ với màu sắc rõ ràng
-            WeeklyRevenueSeries = new SeriesCollection
+        // Tạo series cho biểu đồ với màu sắc rõ ràng
+        WeeklyRevenueSeries = new SeriesCollection
             {
                 new LineSeries
                 {
@@ -139,14 +139,14 @@ namespace Pet_Shop_Project.Views
                 }
             };
 
-            // Formatter cho trục Y (hiển thị số tiền)
-            YFormatter = value => {
-                if (value >= 1000000)
-                    return (value / 1000000).ToString("N1") + "M";  // 1.5M, 2.0M
-                else if (value >= 1000)
-                    return (value / 1000).ToString("N0") + "k";     // 100k, 500k
-                else
-                    return value.ToString("N0");
-            };
-        }
+        // Formatter cho trục Y (hiển thị số tiền)
+        YFormatter = value => {
+            if (value >= 1000000)
+                return (value / 1000000).ToString("N1") + "M";  // 1.5M, 2.0M
+            else if (value >= 1000)
+                return (value / 1000).ToString("N0") + "k";     // 100k, 500k
+            else
+                return value.ToString("N0");
+        };
     }
+}

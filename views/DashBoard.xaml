@@ -1,5 +1,5 @@
 ﻿<Page x:Class="Pet_Shop_Project.Views.DashBoard"
-       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:local="clr-namespace:Pet_Shop_Project.Views"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,9 +9,9 @@
       d:DesignHeight="650" d:DesignWidth="940"
       mc:Ignorable="d"
       Background="#F5F5F5">
-    
+
     <Grid Margin="25">
-        <Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="1.2*"/>
         </Grid.ColumnDefinitions>
@@ -177,9 +177,16 @@
                 </Border.Background>
             </Border>
 
-            <!-- Calendar -->
-            <Border CornerRadius="15" Padding="10" BorderBrush="#FF6B6B" BorderThickness="1" Height="346">
-                <Calendar Margin="0,-1,0,-1" Width="213"/>
+            <!-- Calendar - Auto Size với Viewbox -->
+            <Border CornerRadius="0" 
+                    Padding="5" 
+                    BorderBrush="#FF6B6B" 
+                    BorderThickness="1" 
+                    Background="#F8FFFE" Height="329">
+                <Viewbox Stretch="Uniform" Margin="0,-4,0,0" Width="228">
+                    <Calendar HorizontalAlignment="Center" 
+                             VerticalAlignment="Center" Height="385" Width="268" />
+                </Viewbox>
             </Border>
 
         </StackPanel>
