@@ -94,7 +94,7 @@ namespace Pet_Shop_Project.Views
             FilteredUsers = new ObservableCollection<User>(AllUsers);
             CustomerListControl.ItemsSource = FilteredUsers;
 
-            var products = _productService.GetAllProducts();
+            var products = await _productService.GetAllProductsAsync();
             AllProducts = products != null
                 ? new ObservableCollection<Product>(products)
                 : new ObservableCollection<Product>();
