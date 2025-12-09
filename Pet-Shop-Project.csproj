@@ -115,25 +115,10 @@
     <Compile Include="Controls\ProductCard.xaml.cs">
       <DependentUpon>ProductCard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\InventoryItem.cs" />
-    <Compile Include="Services\InventoryService.cs" />
-    <Compile Include="Services\ReviewService.cs" />
     <Compile Include="Services\SessionManager.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Views\AccountPage.xaml.cs">
       <DependentUpon>AccountPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\AdminCreateOrder.xaml.cs">
-      <DependentUpon>AdminCreateOrder.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\AdminInventoryEditDialog.xaml.cs">
-      <DependentUpon>AdminInventoryEditDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\AdminInventoryPage.xaml.cs">
-      <DependentUpon>AdminInventoryPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\AdminProductEditDialog.xaml.cs">
-      <DependentUpon>AdminProductEditDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AOPending.xaml.cs">
       <DependentUpon>AOPending.xaml</DependentUpon>
@@ -154,15 +139,6 @@
     <Compile Include="Services\ProductService.cs" />
     <Compile Include="Views\CartPage.xaml.cs">
       <DependentUpon>CartPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ChangeAddressDialog.xaml.cs">
-      <DependentUpon>ChangeAddressDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ChangePasswordDialog.xaml.cs">
-      <DependentUpon>ChangePasswordDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ChangePhoneDialog.xaml.cs">
-      <DependentUpon>ChangePhoneDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
@@ -237,22 +213,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\AdminCreateOrder.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\AdminInventoryEditDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\AdminInventoryPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\AdminProductEditDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\CartPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -274,18 +234,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AdminOrder.xaml" />
-    <Page Include="Views\ChangeAddressDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\ChangePasswordDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\ChangePhoneDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\HomePage.xaml" />
     <Page Include="Views\OQPCanceled.xaml" />
     <Page Include="Views\OQPPendingApproval.xaml" />
