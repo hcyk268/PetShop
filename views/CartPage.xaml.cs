@@ -6,44 +6,35 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NavService = Pet_Shop_Project.Services.NavigationService;
 
 namespace Pet_Shop_Project.Views
 {
-    /// <summary>
-    /// Interaction logic for Cart.xaml
-    /// </summary>
     public partial class CartPage : Page
     {
         private readonly string _conn = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
         private readonly string _userId;
-        private ObservableCollection<CartItem> cartItems;
+        private ObservableCollection<CartItemViewModel> cartItems;
         private bool isAllSelected = false;
-        private User currentUser; // Thông tin người dùng hiện tại
+        private User currentUser;
+
         public CartPage(string userid)
         {
             InitializeComponent();
             _userId = userid;
-            Loaded += Cart_LoadedAsync; // async void event, OK
+            Loaded += Cart_LoadedAsync;
         }
 
         #region Load Data
-        // Load thông tin người dùng hiện tại
-       async void Cart_LoadedAsync(object sender, RoutedEventArgs e)
+        async void Cart_LoadedAsync(object sender, RoutedEventArgs e)
         {
-            await LoadCurrentUserAsync();   // sync
-            await LoadCartFromDbAsync();    // dùng bản sync bạn đã viết
+            await LoadCurrentUserAsync();
+            await LoadCartFromDbAsync();
         }
 
         private async Task LoadCurrentUserAsync()
@@ -59,7 +50,7 @@ namespace Pet_Shop_Project.Views
                     using (var cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@UserId", _userId);
-                        using (var reader = await  cmd.ExecuteReaderAsync())
+                        using (var reader = await cmd.ExecuteReaderAsync())
                         {
                             if (await reader.ReadAsync())
                             {
@@ -82,23 +73,7 @@ namespace Pet_Shop_Project.Views
                 MessageBox.Show("Lỗi tải thông tin người dùng: " + ex.Message);
             }
         }
-        /*
-        private void InitializeCart()
-        {
-            // Sử dụng CartService để quản lý giỏ hàng chung
-            cartItems = CartService.CartItems;
 
-            // Subscribe to property changes
-            foreach (var item in cartItems)
-            {
-                item.PropertyChanged += CartItem_PropertyChanged;
-            }
-
-            CartItemsControl.ItemsSource = cartItems;
-            UpdateSummary();
-        } */
-
-        // Load dữ liệu vào giỏ hàng
         private async Task LoadCartFromDbAsync()
         {
             try
@@ -110,9 +85,9 @@ namespace Pet_Shop_Project.Views
                         p.ProductId AS PId, p.Name, p.Description, p.UnitPrice, p.UnitInStock,
                         p.Discount, p.Picture
                     FROM CART_ITEMS ci
-                    JOIN CART c     ON c.CartId = ci.CartId   -- dùng bảng có UserId
+                    JOIN CART c ON c.CartId = ci.CartId
                     JOIN PRODUCTS p ON p.ProductId = ci.ProductId
-                    WHERE c.UserId = @UserId";                
+                    WHERE c.UserId = @UserId";
 
                 using (var conn = new SqlConnection(_conn))
                 {
@@ -122,10 +97,8 @@ namespace Pet_Shop_Project.Views
                         cmd.Parameters.AddWithValue("@UserId", _userId);
                         using (var reader = await cmd.ExecuteReaderAsync())
                         {
-                            
                             while (await reader.ReadAsync())
                             {
-                                
                                 var product = new Product
                                 {
                                     ProductId = reader["PId"].ToString(),
@@ -136,6 +109,7 @@ namespace Pet_Shop_Project.Views
                                     Discount = (double)reader["Discount"],
                                     Picture = reader["Picture"].ToString()
                                 };
+
                                 var item = new CartItem
                                 {
                                     CartItemId = reader["CartItemId"].ToString(),
@@ -144,15 +118,24 @@ namespace Pet_Shop_Project.Views
                                     Product = product,
                                     IsSelected = false
                                 };
+
                                 CartService.AddToCart(item);
                                 item.PropertyChanged += CartItem_PropertyChanged;
                             }
-                            
                         }
                     }
                 }
 
-                cartItems = CartService.CartItems;
+                // Convert to ViewModel
+                cartItems = new ObservableCollection<CartItemViewModel>(
+                    CartService.CartItems.Select(ci => new CartItemViewModel(ci))
+                );
+
+                foreach (var vm in cartItems)
+                {
+                    vm.PropertyChanged += CartItem_PropertyChanged;
+                }
+
                 CartItemsControl.ItemsSource = cartItems;
                 UpdateSummary();
             }
@@ -161,11 +144,89 @@ namespace Pet_Shop_Project.Views
                 MessageBox.Show("Lỗi tải giỏ hàng: " + ex.Message);
             }
         }
+        #endregion
 
+        #region Database Operations
+        // Cập nhật số lượng trong database
+        private async Task UpdateQuantityInDatabaseAsync(string cartItemId, int newQuantity)
+        {
+            try
+            {
+                const string sql = @"UPDATE CART_ITEMS 
+                                    SET Quantity = @Quantity 
+                                    WHERE CartItemId = @CartItemId";
+
+                using (var conn = new SqlConnection(_conn))
+                {
+                    await conn.OpenAsync();
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Quantity", newQuantity);
+                        cmd.Parameters.AddWithValue("@CartItemId", cartItemId);
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi cập nhật số lượng: {ex.Message}", "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        // Xóa sản phẩm khỏi database
+        private async Task DeleteCartItemFromDatabaseAsync(string cartItemId)
+        {
+            try
+            {
+                const string sql = @"DELETE FROM CART_ITEMS WHERE CartItemId = @CartItemId";
+
+                using (var conn = new SqlConnection(_conn))
+                {
+                    await conn.OpenAsync();
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@CartItemId", cartItemId);
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi xóa sản phẩm: {ex.Message}", "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        // Xóa nhiều sản phẩm cùng lúc
+        private async Task DeleteMultipleCartItemsFromDatabaseAsync(List<string> cartItemIds)
+        {
+            try
+            {
+                using (var conn = new SqlConnection(_conn))
+                {
+                    await conn.OpenAsync();
+
+                    foreach (var cartItemId in cartItemIds)
+                    {
+                        const string sql = @"DELETE FROM CART_ITEMS WHERE CartItemId = @CartItemId";
+                        using (var cmd = new SqlCommand(sql, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@CartItemId", cartItemId);
+                            await cmd.ExecuteNonQueryAsync();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi xóa nhiều sản phẩm: {ex.Message}", "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
         #endregion
 
         #region Event Handlers
-
         private void CartItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsSelected" || e.PropertyName == "Quantity")
@@ -187,16 +248,10 @@ namespace Pet_Shop_Project.Views
                 TotalPriceText.Text = $"{totalPrice:N0}đ";
         }
 
-        /*
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            // Navigate back or close window
-            if(NavigationService != null && NavigationService.CanGoBack)
-            {
-                NavigationService.GoBack();
-            }
+            NavService.Instance.GoBack();
         }
-        */
 
         private void SelectAll_Click(object sender, RoutedEventArgs e)
         {
@@ -205,9 +260,20 @@ namespace Pet_Shop_Project.Views
             {
                 item.IsSelected = isAllSelected;
             }
+
+            // Update button text
+            if (SelectAllButton != null)
+            {
+                var template = SelectAllButton.Template;
+                var textBlock = template?.FindName("selectText", SelectAllButton) as TextBlock;
+                if (textBlock != null)
+                {
+                    textBlock.Text = isAllSelected ? "Bỏ chọn" : "Chọn tất cả";
+                }
+            }
         }
 
-        private void DeleteSelected_Click(object sender, RoutedEventArgs e)
+        private async void DeleteSelected_Click(object sender, RoutedEventArgs e)
         {
             var selectedItems = cartItems.Where(i => i.IsSelected).ToList();
 
@@ -226,40 +292,62 @@ namespace Pet_Shop_Project.Views
 
             if (result == MessageBoxResult.Yes)
             {
-                foreach (var item in selectedItems)
+                // Lấy danh sách CartItemId để xóa từ database
+                var cartItemIds = selectedItems.Select(vm => vm.CartItemId).ToList();
+
+                // Xóa từ database
+                await DeleteMultipleCartItemsFromDatabaseAsync(cartItemIds);
+
+                // Xóa từ UI và CartService
+                foreach (var vm in selectedItems)
                 {
-                    item.PropertyChanged -= CartItem_PropertyChanged;
-                    CartService.RemoveFromCart(item);
+                    vm.PropertyChanged -= CartItem_PropertyChanged;
+                    CartService.RemoveFromCart(vm.OriginalCartItem);
+                    cartItems.Remove(vm);
                 }
+
                 isAllSelected = false;
                 UpdateSummary();
+
+                MessageBox.Show("Đã xóa sản phẩm thành công!", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
-        private void DecreaseQty_Click(object sender, RoutedEventArgs e)
+        private async void DecreaseQty_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            var item = button?.Tag as CartItem;
+            var item = button?.Tag as CartItemViewModel;
+
             if (item != null && item.Quantity > 1)
             {
+                int oldQuantity = item.Quantity;
                 item.Quantity--;
+
+                // Cập nhật database
+                await UpdateQuantityInDatabaseAsync(item.CartItemId, item.Quantity);
             }
         }
 
-        private void IncreaseQty_Click(object sender, RoutedEventArgs e)
+        private async void IncreaseQty_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            var item = button?.Tag as CartItem;
+            var item = button?.Tag as CartItemViewModel;
+
             if (item != null)
             {
-                // Kiểm tra tồn kho
                 if (item.Product != null && item.Quantity >= item.Product.UnitInStock)
                 {
                     MessageBox.Show($"Số lượng tối đa: {item.Product.UnitInStock}",
                         "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
+
+                int oldQuantity = item.Quantity;
                 item.Quantity++;
+
+                // Cập nhật database
+                await UpdateQuantityInDatabaseAsync(item.CartItemId, item.Quantity);
             }
         }
 
@@ -274,7 +362,6 @@ namespace Pet_Shop_Project.Views
                 return;
             }
 
-            // Kiểm tra tồn kho
             foreach (var item in selectedItems)
             {
                 if (item.Product != null && item.Quantity > item.Product.UnitInStock)
@@ -288,10 +375,8 @@ namespace Pet_Shop_Project.Views
                 }
             }
 
-            // Chuyển đổi CartItem sang OrderDetail
             var orderDetails = ConvertToOrderDetails(selectedItems);
 
-            // Navigate sang trang Payment
             try
             {
                 var paymentPage = new Payment(orderDetails, currentUser);
@@ -303,11 +388,70 @@ namespace Pet_Shop_Project.Views
                     "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private void CartFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cartItems == null || CartItemsControl == null) return;
+
+            var selectedFilter = (CartFilterComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
+
+            switch (selectedFilter)
+            {
+                case "Đã chọn":
+                    CartItemsControl.ItemsSource = new ObservableCollection<CartItemViewModel>(
+                        cartItems.Where(i => i.IsSelected));
+                    break;
+
+                case "Chưa chọn":
+                    CartItemsControl.ItemsSource = new ObservableCollection<CartItemViewModel>(
+                        cartItems.Where(i => !i.IsSelected));
+                    break;
+
+                default: // "Tất cả"
+                    CartItemsControl.ItemsSource = cartItems;
+                    break;
+            }
+        }
+
+        private void ImageBorder_Loaded(object sender, RoutedEventArgs e)
+        {
+            var border = sender as Border;
+            if (border != null)
+            {
+                border.Clip = new RectangleGeometry
+                {
+                    Rect = new Rect(0, 0, border.ActualWidth, border.ActualHeight),
+                    RadiusX = border.CornerRadius.TopLeft,
+                    RadiusY = border.CornerRadius.TopLeft
+                };
+            }
+        }
+
+        // Click vào background của cart item để toggle selection
+        private void CartItem_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var border = sender as Border;
+            var item = border?.Tag as CartItemViewModel;
+            if (item != null)
+            {
+                item.IsSelected = !item.IsSelected;
+            }
+        }
+
+        // Prevent event bubbling for checkbox
+        private void CheckBox_PreventBubble(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        // Prevent event bubbling for buttons
+        private void Button_PreventBubble(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+        }
         #endregion
 
         #region Helper Methods
-
-        // Chuyển đổi CartItem sang OrderDetail
         private List<OrderDetail> ConvertToOrderDetails(List<CartItem> cartItems)
         {
             var orderDetails = new List<OrderDetail>();
@@ -327,7 +471,115 @@ namespace Pet_Shop_Project.Views
 
             return orderDetails;
         }
-
         #endregion
+    }
+
+    // ViewModel để hiển thị CartItem với các properties bổ sung cho UI
+    public class CartItemViewModel : INotifyPropertyChanged
+    {
+        private CartItem _originalCartItem;
+
+        public CartItemViewModel(CartItem cartItem)
+        {
+            _originalCartItem = cartItem;
+        }
+
+        public CartItem OriginalCartItem => _originalCartItem;
+
+        public string CartItemId => _originalCartItem.CartItemId;
+        public string ProductId => _originalCartItem.ProductId;
+        public Product Product => _originalCartItem.Product;
+
+        public bool IsSelected
+        {
+            get => _originalCartItem.IsSelected;
+            set
+            {
+                if (_originalCartItem.IsSelected != value)
+                {
+                    _originalCartItem.IsSelected = value;
+                    OnPropertyChanged(nameof(IsSelected));
+                }
+            }
+        }
+
+        public int Quantity
+        {
+            get => _originalCartItem.Quantity;
+            set
+            {
+                if (_originalCartItem.Quantity != value)
+                {
+                    _originalCartItem.Quantity = value;
+                    OnPropertyChanged(nameof(Quantity));
+                    OnPropertyChanged(nameof(SubTotal));
+                    OnPropertyChanged(nameof(DisplayPrice));
+                }
+            }
+        }
+
+        public string Name => _originalCartItem.Name;
+        public string Image => _originalCartItem.Image;
+        public string Variant => _originalCartItem.Variant;
+        public decimal SubTotal => _originalCartItem.SubTotal;
+
+        // Discount properties
+        public bool HasDiscount => Product != null && Product.Discount > 0;
+
+        public Visibility DiscountVisibility => HasDiscount ? Visibility.Visible : Visibility.Collapsed;
+
+        public string DiscountText => HasDiscount ? $"-{(Product.Discount * 100):0}%" : "";
+
+        public Visibility VariantVisibility => string.IsNullOrEmpty(Variant) ? Visibility.Collapsed : Visibility.Visible;
+
+        // Price display
+        public string DisplayPrice
+        {
+            get
+            {
+                if (Product == null) return "0đ";
+                decimal pricePerUnit = HasDiscount ? Product.FinalPrice : Product.UnitPrice;
+                return $"{(pricePerUnit * Quantity):N0}đ";
+            }
+        }
+
+        public string OriginalPrice
+        {
+            get
+            {
+                if (!HasDiscount || Product == null) return "";
+                return $"{(Product.UnitPrice * Quantity):N0}đ";
+            }
+        }
+
+        public Visibility OriginalPriceVisibility => HasDiscount ? Visibility.Visible : Visibility.Collapsed;
+
+        public Brush PriceForeground
+        {
+            get
+            {
+                if (HasDiscount)
+                {
+                    return new LinearGradientBrush
+                    {
+                        StartPoint = new Point(0, 0),
+                        EndPoint = new Point(1, 0),
+                        GradientStops = new GradientStopCollection
+                        {
+                            new GradientStop(Color.FromRgb(0xFF, 0xC4, 0x76), 0),
+                            new GradientStop(Color.FromRgb(0xFF, 0xA2, 0xA2), 1)
+                        }
+                    };
+                }
+                return new SolidColorBrush(Color.FromRgb(0xFF, 0x6B, 0x6B));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

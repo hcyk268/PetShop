@@ -6,132 +6,246 @@
       xmlns:local="clr-namespace:Pet_Shop_Project.Views"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-
       mc:Ignorable="d" 
       d:DesignHeight="650" d:DesignWidth="940"
       Title="Thanh toán">
 
-    <Grid Background="#F8F8F8">
-        <ScrollViewer VerticalScrollBarVisibility="Hidden">
-            <Grid Margin="40,30,40,30" MaxWidth="900">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-                <!-- Header with Back Button -->
-                <Grid Grid.Row="0" Margin="-10,0,0,25">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Height="69">
-                        <Button Style="{StaticResource RoundButtonStyle}" 
-                            ToolTip="Trở về"
-                            Click="BackButton_Click" 
-                            Height="50" 
-                            Width="50"
-                            Margin="10,0,0,0">
-                            <materialDesign:PackIcon x:Name="BackButton" 
-                             Kind="ArrowLeft" 
-                             Width="30" 
-                             Height="30"/>
-                        </Button>
-                    </StackPanel>
+        <!-- Header - Background F5F5F5 (Same as CartPage) -->
+        <Grid Grid.Row="0" Background="#F5F5F5" Height="60">
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        Margin="30,0,0,0">
 
-                    <TextBlock Text="Thanh toán" 
-                               FontSize="40" 
-                               FontWeight="SemiBold"
-                               Foreground="#333333"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
-                </Grid>
+                <!-- Back Button -->
+                <Button x:Name="BackButton"
+                        Width="35" Height="35"
+                        BorderThickness="0"
+                        Background="White"
+                        Cursor="Hand"
+                        Click="BackButton_Click"
+                        Margin="0,0,15,0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Width="35" Height="35"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="18">
+                                <materialDesign:PackIcon x:Name="icon"
+                                                         Kind="ArrowLeft"
+                                                         Width="22" Height="22"
+                                                         Foreground="#FFAD57"
+                                                         HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center"/>
+                            </Border>
 
-                <!-- Main Content -->
-                <StackPanel Grid.Row="1">
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#FFECECEC"/>
+                                </Trigger>
+
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <GradientStop Color="#FFAD56" Offset="0"/>
+                                                <GradientStop Color="#FFC281" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter TargetName="icon" Property="Foreground" Value="White"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <!-- Title -->
+                <TextBlock Text="Thanh toán"
+                           FontSize="28"
+                           FontWeight="Bold"
+                           Foreground="#FFAD57"
+                           VerticalAlignment="Center"
+                           Margin="5,0,0,0"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Main Content - Background F8FFFE (Same as CartPage) -->
+        <Grid Grid.Row="1" Background="#F8FFFE">
+            <ScrollViewer VerticalScrollBarVisibility="Hidden" Padding="30,20,30,20">
+                <StackPanel MaxWidth="880">
 
                     <!-- Delivery Address Section -->
                     <Border Background="White"
                             BorderBrush="#E0E0E0"
-                            BorderThickness="1"
+                            BorderThickness="2"
                             CornerRadius="12"
                             Padding="20"
-                            Margin="0,0,0,15">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
+                            Margin="0,15,0,15">
+                        <Border.Effect>
+                            <DropShadowEffect ShadowDepth="2" BlurRadius="10" Opacity="0.15" Color="Black"/>
+                        </Border.Effect>
 
+                        <StackPanel>
                             <!-- Header -->
-                            <Grid Grid.Row="0" Margin="0,0,0,12">
-                                <StackPanel Orientation="Horizontal">
-                                    <Viewbox Width="20" Height="20" Margin="0,0,8,0">
-                                        <Canvas Width="24" Height="24">
-                                            <materialDesign:PackIcon x:Name="LocationIcon" 
-                                                                     Kind="MapMarker" 
-                                                                     Width="30" 
-                                                                     Height="30"
-                                                                     Foreground="{StaticResource QP.AccentBrush}" Canvas.Left="0" VerticalAlignment="Center"/>
-                                        </Canvas>
-                                    </Viewbox>
-                                    <TextBlock Text="Địa chỉ nhận hàng" 
-                                               FontSize="18" 
-                                               FontWeight="SemiBold"
-                                               Foreground="#333333"
-                                               VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Grid>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                <materialDesign:PackIcon Kind="MapMarker" 
+                                                         Width="24" Height="24"
+                                                         Foreground="#FFAD57"
+                                                         VerticalAlignment="Center"
+                                                         Margin="0,0,8,0"/>
+                                <TextBlock Text="Địa chỉ nhận hàng" 
+                                           FontSize="18" 
+                                           FontWeight="SemiBold"
+                                           Foreground="#333333"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
 
-                            <!-- Address Details -->
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
+                            <!-- Full Name -->
+                            <TextBlock Text="Họ và tên"
+                                       FontSize="14"
+                                       FontWeight="Medium"
+                                       Foreground="#333333"
+                                       Margin="0,0,0,5"/>
+                            <TextBox x:Name="CustomerNameTextBox"
+                                     md:HintAssist.Hint="Nhập họ và tên"
+                                     md:HintAssist.Foreground="#999999"
+                                     Height="40"
+                                     Padding="12,10"
+                                     BorderBrush="#DDDDDD"
+                                     BorderThickness="1"
+                                     FontSize="14"
+                                     Margin="0,0,0,15"/>
 
-                                <!-- Left Side - Name and Phone -->
-                                <StackPanel Grid.Column="0" Margin="0,0,20,0">
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                        <TextBlock x:Name="CustomerNameText"
-                                                   Text="Nguyễn Văn A" 
-                                                   FontSize="15"
-                                                   FontWeight="SemiBold"
-                                                   Foreground="#333333"
-                                                   Margin="0,0,8,0"/>
-                                        <Border Background="#ffa2a2"
-                                                CornerRadius="3"
-                                                Padding="5,2">
-                                            <TextBlock x:Name="DefaultAddressBadge"
-                                                       Text="Mặc định" 
-                                                       FontSize="10"
-                                                       FontWeight="Bold"
-                                                       Foreground="White"/>
-                                        </Border>
-                                    </StackPanel>
+                            <!-- Phone Number -->
+                            <TextBlock Text="Số điện thoại"
+                                       FontSize="14"
+                                       FontWeight="Medium"
+                                       Foreground="#333333"
+                                       Margin="0,0,0,5"/>
+                            <TextBox x:Name="CustomerPhoneTextBox"
+                                     md:HintAssist.Hint="Nhập số điện thoại"
+                                     md:HintAssist.Foreground="#999999"
+                                     Height="40"
+                                     Padding="12,10"
+                                     BorderBrush="#DDDDDD"
+                                     BorderThickness="1"
+                                     FontSize="14"
+                                     Margin="0,0,0,15"/>
 
-                                    <TextBlock x:Name="CustomerPhoneText"
-                                               Text="(+84) 0123 456 789"
-                                               FontSize="14"
-                                               Foreground="#666666"/>
-                                </StackPanel>
+                            <!-- Province/City Dropdown -->
+                            <TextBlock Text="Tỉnh/Thành phố"
+                                       FontSize="14"
+                                       FontWeight="Medium"
+                                       Foreground="#333333"
+                                       Margin="0,0,0,5"/>
+                            <ComboBox x:Name="ProvinceComboBox"
+                                      md:HintAssist.Hint="Chọn Tỉnh/Thành phố"
+                                      md:HintAssist.Foreground="#999999"
+                                      Height="40"
+                                      Padding="12,10"
+                                      BorderBrush="#DDDDDD"
+                                      BorderThickness="1"
+                                      FontSize="14"
+                                      Margin="0,0,0,15">
+                                <ComboBoxItem Content="Hà Nội"/>
+                                <ComboBoxItem Content="TP. Hồ Chí Minh"/>
+                                <ComboBoxItem Content="Đà Nẵng"/>
+                                <ComboBoxItem Content="Hải Phòng"/>
+                                <ComboBoxItem Content="Cần Thơ"/>
+                                <ComboBoxItem Content="An Giang"/>
+                                <ComboBoxItem Content="Bà Rịa - Vũng Tàu"/>
+                                <ComboBoxItem Content="Bắc Giang"/>
+                                <ComboBoxItem Content="Bắc Kạn"/>
+                                <ComboBoxItem Content="Bạc Liêu"/>
+                                <ComboBoxItem Content="Bắc Ninh"/>
+                                <ComboBoxItem Content="Bến Tre"/>
+                                <ComboBoxItem Content="Bình Định"/>
+                                <ComboBoxItem Content="Bình Dương"/>
+                                <ComboBoxItem Content="Bình Phước"/>
+                                <ComboBoxItem Content="Bình Thuận"/>
+                                <ComboBoxItem Content="Cà Mau"/>
+                                <ComboBoxItem Content="Cao Bằng"/>
+                                <ComboBoxItem Content="Đắk Lắk"/>
+                                <ComboBoxItem Content="Đắk Nông"/>
+                                <ComboBoxItem Content="Điện Biên"/>
+                                <ComboBoxItem Content="Đồng Nai"/>
+                                <ComboBoxItem Content="Đồng Tháp"/>
+                                <ComboBoxItem Content="Gia Lai"/>
+                                <ComboBoxItem Content="Hà Giang"/>
+                                <ComboBoxItem Content="Hà Nam"/>
+                                <ComboBoxItem Content="Hà Tĩnh"/>
+                                <ComboBoxItem Content="Hải Dương"/>
+                                <ComboBoxItem Content="Hậu Giang"/>
+                                <ComboBoxItem Content="Hòa Bình"/>
+                                <ComboBoxItem Content="Hưng Yên"/>
+                                <ComboBoxItem Content="Khánh Hòa"/>
+                                <ComboBoxItem Content="Kiên Giang"/>
+                                <ComboBoxItem Content="Kon Tum"/>
+                                <ComboBoxItem Content="Lai Châu"/>
+                                <ComboBoxItem Content="Lâm Đồng"/>
+                                <ComboBoxItem Content="Lạng Sơn"/>
+                                <ComboBoxItem Content="Lào Cai"/>
+                                <ComboBoxItem Content="Long An"/>
+                                <ComboBoxItem Content="Nam Định"/>
+                                <ComboBoxItem Content="Nghệ An"/>
+                                <ComboBoxItem Content="Ninh Bình"/>
+                                <ComboBoxItem Content="Ninh Thuận"/>
+                                <ComboBoxItem Content="Phú Thọ"/>
+                                <ComboBoxItem Content="Phú Yên"/>
+                                <ComboBoxItem Content="Quảng Bình"/>
+                                <ComboBoxItem Content="Quảng Nam"/>
+                                <ComboBoxItem Content="Quảng Ngãi"/>
+                                <ComboBoxItem Content="Quảng Ninh"/>
+                                <ComboBoxItem Content="Quảng Trị"/>
+                                <ComboBoxItem Content="Sóc Trăng"/>
+                                <ComboBoxItem Content="Sơn La"/>
+                                <ComboBoxItem Content="Tây Ninh"/>
+                                <ComboBoxItem Content="Thái Bình"/>
+                                <ComboBoxItem Content="Thái Nguyên"/>
+                                <ComboBoxItem Content="Thanh Hóa"/>
+                                <ComboBoxItem Content="Thừa Thiên Huế"/>
+                                <ComboBoxItem Content="Tiền Giang"/>
+                                <ComboBoxItem Content="Trà Vinh"/>
+                                <ComboBoxItem Content="Tuyên Quang"/>
+                                <ComboBoxItem Content="Vĩnh Long"/>
+                                <ComboBoxItem Content="Vĩnh Phúc"/>
+                                <ComboBoxItem Content="Yên Bái"/>
+                            </ComboBox>
 
-                                <!-- Right Side - Full Address -->
-                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <TextBlock x:Name="CustomerAddressText"
-                                               Text="123 Đường Lê Lợi, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh"
-                                               FontSize="14"
-                                               Foreground="#666666"
-                                               LineHeight="20"
-                                               TextWrapping="Wrap"/>
-                                </StackPanel>
-                            </Grid>
-                        </Grid>
+                            <!-- Detailed Address -->
+                            <TextBlock Text="Địa chỉ cụ thể"
+                                       FontSize="14"
+                                       FontWeight="Medium"
+                                       Foreground="#333333"
+                                       Margin="0,0,0,5"/>
+                            <TextBox x:Name="DetailedAddressTextBox"
+                                     md:HintAssist.Hint="Số nhà, tên đường, phường/xã, quận/huyện"
+                                     md:HintAssist.Foreground="#999999"
+                                     Height="40"
+                                     Padding="12,10"
+                                     BorderBrush="#DDDDDD"
+                                     BorderThickness="1"
+                                     FontSize="14"/>
+                        </StackPanel>
                     </Border>
 
                     <!-- Product Section -->
                     <Border Background="White"
                             BorderBrush="#E0E0E0"
-                            BorderThickness="1"
+                            BorderThickness="2"
                             CornerRadius="12"
                             Padding="20"
                             Margin="0,0,0,15">
+                        <Border.Effect>
+                            <DropShadowEffect ShadowDepth="2" BlurRadius="10" Opacity="0.15" Color="Black"/>
+                        </Border.Effect>
+
                         <StackPanel>
                             <TextBlock Text="Sản phẩm" 
                                        FontSize="18" 
@@ -159,7 +273,8 @@
                                                         Width="70" Height="70"
                                                         CornerRadius="8"
                                                         Background="#F5F5F5"
-                                                        Margin="0,0,15,0">
+                                                        Margin="0,0,15,0"
+                                                        ClipToBounds="True">
                                                     <Image Source="{Binding ImageUrl}" 
                                                            Stretch="UniformToFill"/>
                                                 </Border>
@@ -184,7 +299,7 @@
 
                                                 <!-- Price -->
                                                 <TextBlock Grid.Column="2"
-                                                           Text="{Binding Price, StringFormat=₫ {0:N0}}" 
+                                                           Text="{Binding Price, StringFormat={}{0:N0}đ}" 
                                                            FontSize="16" 
                                                            FontWeight="SemiBold"
                                                            Foreground="#ff6b6b"
@@ -205,7 +320,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock x:Name="TotalItemsText"
-                                               Text="1 sản phẩm" 
+                                               Text="0 sản phẩm" 
                                                FontSize="14"
                                                Foreground="#666666"
                                                VerticalAlignment="Center"/>
@@ -216,7 +331,7 @@
                                                    HorizontalAlignment="Right"
                                                    Margin="0,0,0,2"/>
                                         <TextBlock x:Name="SubtotalText"
-                                                   Text="₫ 2.000.000" 
+                                                   Text="0đ" 
                                                    FontSize="16" 
                                                    FontWeight="SemiBold"
                                                    Foreground="#333333"
@@ -230,18 +345,20 @@
                     <!-- Shipping Section -->
                     <Border Background="White"
                             BorderBrush="#E0E0E0"
-                            BorderThickness="1"
+                            BorderThickness="2"
                             CornerRadius="12"
                             Padding="20"
                             Margin="0,0,0,15">
+                        <Border.Effect>
+                            <DropShadowEffect ShadowDepth="2" BlurRadius="10" Opacity="0.15" Color="Black"/>
+                        </Border.Effect>
+
                         <StackPanel>
-                            <Grid Margin="0,0,0,15">
-                                <TextBlock Text="Đơn vị vận chuyển" 
-                                           FontSize="18" 
-                                           FontWeight="SemiBold"
-                                           Foreground="#333333"
-                                           VerticalAlignment="Center"/>
-                            </Grid>
+                            <TextBlock Text="Đơn vị vận chuyển" 
+                                       FontSize="18" 
+                                       FontWeight="SemiBold"
+                                       Foreground="#333333"
+                                       Margin="0,0,0,15"/>
 
                             <!-- Viettel Post (Selected) -->
                             <RadioButton x:Name="ViettelPostOption"
@@ -263,13 +380,13 @@
                                 </RadioButton.Content>
                                 <RadioButton.Tag>
                                     <StackPanel HorizontalAlignment="Right">
-                                        <TextBlock Text="₫8.000" 
+                                        <TextBlock Text="8.000đ" 
                                                    FontSize="12"
                                                    Foreground="#999999"
                                                    TextDecorations="Strikethrough"
                                                    HorizontalAlignment="Right"
                                                    Margin="0,0,0,2"/>
-                                        <TextBlock Text="₫0" 
+                                        <TextBlock Text="0đ" 
                                                    FontSize="15"
                                                    FontWeight="SemiBold"
                                                    Foreground="#4CAF50"
@@ -296,7 +413,7 @@
                                     </StackPanel>
                                 </RadioButton.Content>
                                 <RadioButton.Tag>
-                                    <TextBlock Text="₫20.000" 
+                                    <TextBlock Text="20.000đ" 
                                                FontSize="15"
                                                FontWeight="SemiBold"
                                                Foreground="#333333"/>
@@ -308,10 +425,14 @@
                     <!-- Note for Seller -->
                     <Border Background="White"
                             BorderBrush="#E0E0E0"
-                            BorderThickness="1"
+                            BorderThickness="2"
                             CornerRadius="12"
                             Padding="20"
                             Margin="0,0,0,15">
+                        <Border.Effect>
+                            <DropShadowEffect ShadowDepth="2" BlurRadius="10" Opacity="0.15" Color="Black"/>
+                        </Border.Effect>
+
                         <StackPanel>
                             <TextBlock Text="Lưu ý cho người bán" 
                                        FontSize="18" 
@@ -335,37 +456,39 @@
                     <!-- Payment Method Section -->
                     <Border Background="White"
                             BorderBrush="#E0E0E0"
-                            BorderThickness="1"
+                            BorderThickness="2"
                             CornerRadius="12"
                             Padding="20"
                             Margin="0,0,0,15">
+                        <Border.Effect>
+                            <DropShadowEffect ShadowDepth="2" BlurRadius="10" Opacity="0.15" Color="Black"/>
+                        </Border.Effect>
+
                         <StackPanel>
-                            <Grid Margin="0,0,0,15">
-                                <StackPanel>
-                                    <TextBlock Text="Phương thức thanh toán" 
-                                               FontSize="18" 
-                                               FontWeight="SemiBold"
-                                               Foreground="#333333"/>
-                                </StackPanel>
-                            </Grid>
-                            <StackPanel>
-                                <TextBlock x:Name="CODPaymentOption"
-                                        Text="Thanh toán khi nhận hàng (COD)" 
-                                            FontSize="15" 
-                                            FontWeight="Normal"
-                                            Foreground="#333333"
-                                            Margin="0,0,0,0"/>
-                            </StackPanel>
+                            <TextBlock Text="Phương thức thanh toán" 
+                                       FontSize="18" 
+                                       FontWeight="SemiBold"
+                                       Foreground="#333333"
+                                       Margin="0,0,0,10"/>
+                            <TextBlock x:Name="CODPaymentOption"
+                                       Text="Thanh toán khi nhận hàng (COD)" 
+                                       FontSize="15" 
+                                       FontWeight="Normal"
+                                       Foreground="#333333"/>
                         </StackPanel>
                     </Border>
 
                     <!-- Order Summary -->
                     <Border Background="White"
                             BorderBrush="#E0E0E0"
-                            BorderThickness="1"
+                            BorderThickness="2"
                             CornerRadius="12"
                             Padding="20"
                             Margin="0,0,0,15">
+                        <Border.Effect>
+                            <DropShadowEffect ShadowDepth="2" BlurRadius="10" Opacity="0.15" Color="Black"/>
+                        </Border.Effect>
+
                         <StackPanel>
                             <TextBlock Text="Chi tiết thanh toán" 
                                        FontSize="18" 
@@ -379,7 +502,7 @@
                                            FontSize="14"
                                            Foreground="#666666"/>
                                 <TextBlock x:Name="SummarySubtotalText"
-                                           Text="₫ 2.000.000" 
+                                           Text="0đ" 
                                            FontSize="14"
                                            Foreground="#333333"
                                            HorizontalAlignment="Right"/>
@@ -391,6 +514,7 @@
                                            FontSize="14"
                                            Foreground="#666666"/>
                                 <TextBlock x:Name="ShippingFeeText"
+                                           Text="0đ"
                                            FontSize="14"
                                            Foreground="#4CAF50"
                                            HorizontalAlignment="Right"/>
@@ -403,19 +527,16 @@
 
                             <!-- Total -->
                             <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="241*"/>
-                                    <ColumnDefinition Width="45*"/>
-                                </Grid.ColumnDefinitions>
                                 <TextBlock Text="Tổng cộng" 
                                            FontSize="16"
                                            FontWeight="SemiBold"
-                                           Foreground="#333333" Grid.ColumnSpan="2"/>
+                                           Foreground="#333333"/>
                                 <TextBlock x:Name="TotalAmountText"
+                                           Text="0đ"
                                            FontSize="20"
                                            FontWeight="Bold"
                                            Foreground="#FF6B6B"
-                                           HorizontalAlignment="Right" Grid.Column="1"/>
+                                           HorizontalAlignment="Right"/>
                             </Grid>
                         </StackPanel>
                     </Border>
@@ -426,10 +547,10 @@
                             Style="{StaticResource GradientButtonStyle}"
                             Height="50"
                             FontSize="16"
-                            Margin="0,10,0,0"
+                            Margin="0,0,0,20"
                             Click="PlaceOrder_Click"/>
                 </StackPanel>
-            </Grid>
-        </ScrollViewer>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </Page>

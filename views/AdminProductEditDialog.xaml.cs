@@ -56,7 +56,7 @@ namespace Pet_Shop_Project.Views
             TxtUnitPrice.Text = _originalProduct.UnitPrice.ToString();
             TxtDiscount.Text = _originalProduct.Discount.ToString();
             TxtUnitInStock.Text = _originalProduct.UnitInStock.ToString();
-            TxtPicture.Text = _originalProduct.Picture;
+            TxtPicture.Text = _originalProduct.Picture.ToString();
            
             // Set category
             foreach (System.Windows.Controls.ComboBoxItem item in CmbCategory.Items)
