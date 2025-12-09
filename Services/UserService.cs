@@ -224,7 +224,61 @@ namespace Pet_Shop_Project.Services
                 throw new Exception($"Không thể đăng ký tài khoản: {ex.Message}");
             }
         }
+        // Thêm method này vào cuối class UserService (trước dấu đóng ngoặc })
 
+        // Đổi mật khẩu
+        public bool ChangePassword(string userId, string oldPassword, string newPassword)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    // Kiểm tra mật khẩu cũ có đúng không
+                    string checkQuery = @"SELECT Password FROM Users WHERE UserId = @UserId";
+
+                    using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
+                    {
+                        checkCmd.Parameters.AddWithValue("@UserId", userId);
+
+                        object result = checkCmd.ExecuteScalar();
+
+                        if (result == null)
+                        {
+                            return false; // User không tồn tại
+                        }
+
+                        string storedPassword = result.ToString();
+
+                        // So sánh mật khẩu cũ
+                        if (oldPassword != storedPassword)
+                        {
+                            return false; // Mật khẩu cũ không đúng
+                        }
+                    }
+
+                    // Cập nhật mật khẩu mới
+                    string updateQuery = @"UPDATE Users 
+                                  SET Password = @NewPassword 
+                                  WHERE UserId = @UserId";
+
+                    using (SqlCommand updateCmd = new SqlCommand(updateQuery, conn))
+                    {
+                        updateCmd.Parameters.AddWithValue("@UserId", userId);
+                        updateCmd.Parameters.AddWithValue("@NewPassword", newPassword);
+
+                        int rowsAffected = updateCmd.ExecuteNonQuery();
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"ChangePassword error: {ex.Message}");
+                throw new Exception($"Lỗi khi đổi mật khẩu: {ex.Message}");
+            }
+        }
         // Cập nhật thông tin user
         public bool UpdateUser(User user)
         {

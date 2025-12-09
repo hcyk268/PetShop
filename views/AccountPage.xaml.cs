@@ -84,44 +84,59 @@ namespace Pet_Shop_Project.Views
         // Sửa số điện thoại
         private void EditPhone_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Chức năng đổi số điện thoại đang được phát triển",
-            "Thông báo",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
+            ChangePhoneDialog dialog = new ChangePhoneDialog(currentUserId, PhoneText.Text);
+            bool? result = dialog.ShowDialog();
+
+            if (result == true)
+            {
+                // Cập nhật hiển thị số điện thoại mới
+                PhoneText.Text = dialog.NewPhone;
+            }
         }
         private void EditAddress_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Chức năng đổi địa chỉ đang được phát triển",
-            "Thông báo",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
+            ChangeAddressDialog dialog = new ChangeAddressDialog(currentUserId, AddressText.Text);
+            bool? result = dialog.ShowDialog();
+
+            if (result == true)
+            {
+                // Cập nhật hiển thị địa chỉ mới
+                AddressText.Text = dialog.NewAddress;
+            }
         }
         private void ChangePassword_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Chức năng đổi mật khẩu đang được phát triển",
-                "Thông báo",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
-            // TODO: Mở dialog đổi mật khẩu
-            // Cần nhập: mật khẩu cũ, mật khẩu mới, xác nhận mật khẩu mới
+            // Mở dialog đổi mật khẩu
+            ChangePasswordDialog dialog = new ChangePasswordDialog(currentUserId);
+            bool? result = dialog.ShowDialog();
+
+            // Nếu đổi mật khẩu thành công
+            if (result == true)
+            {
+                // Password đã được đổi thành công  
+                // Có thể refresh lại thông tin nếu cần
+            }
         }
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             var result = MessageBox.Show("Bạn có chắc chắn muốn đăng xuất?",
-        "Xác nhận đăng xuất",
-        MessageBoxButton.YesNo,
-        MessageBoxImage.Question);
+                "Xác nhận đăng xuất",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
             if (result == MessageBoxResult.Yes)
             {
-                // Xóa session local
                 currentUser = null;
-                userService = null; // nếu muốn giải phóng luôn
-                // Quay về trang SignIn
-                this.NavigationService?.Navigate(new SignIn());
+             
                 MessageBox.Show("Đăng xuất thành công!",
                     "Thông báo",
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
+
+                Window1 loginWindow = new Window1();
+                loginWindow.Show();
+
+                Window.GetWindow(this)?.Close();
             }
         }
     }
