@@ -85,20 +85,21 @@ namespace Pet_Shop_Project.Views
 
                     var currWindow = Window.GetWindow(this);
 
-                    if (user.Role == "User")
+                    if (user.Role.Equals("Admin", StringComparison.Ordinal))
+                    {
+                        AdminWindow adminWindow = new AdminWindow(user.UserId);
+                        adminWindow.Show();
+                    }
+                    // 2. Sau đó mới kiểm tra Vai trò User
+                    else if (user.Role.Equals("User", StringComparison.Ordinal))
                     {
                         MainWindow mainWindow = new MainWindow(user.UserId);
                         mainWindow.Show();
-
-                    }
-                    else
-                    {
-                        //Mở AdminWindow cập nhật sau
                     }
 
 
                     await Task.Delay(150);
-                    
+
                     currWindow.Close();
                 }
                 else
