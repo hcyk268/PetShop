@@ -23,7 +23,8 @@
         <!-- Admin Content Frame -->
         <Frame Grid.Column="1" 
                x:Name="AdminScreen" 
-               NavigationUIVisibility="Hidden">
+               NavigationUIVisibility="Hidden"
+               Source="/views/AdminInventoryPage.xaml">
         </Frame>
     </Grid>
 </Window>

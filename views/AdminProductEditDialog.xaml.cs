@@ -14,19 +14,21 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MessageBox = System.Windows.MessageBox;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace Pet_Shop_Project.Views
 {
     /// <summary>
     /// Interaction logic for AdminProductEditDialog.xaml
     /// </summary>
-    public partial class AdminProductEditDialog : Window
+    public partial class AdminProductEditDialog : Page
     {
         private readonly string _conn = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
         private Product _originalProduct;
         private bool _isEditMode;
-
         public Product Product { get; private set; }
 
         public AdminProductEditDialog(Product product)
@@ -39,8 +41,6 @@ namespace Pet_Shop_Project.Views
             {
                 DialogTitle.Text = "Chỉnh sửa sản phẩm";
                 LoadProductData();
-                TxtProductId.IsReadOnly = true;
-                TxtProductId.Background = System.Windows.Media.Brushes.LightGray;
             }
             else
             {
@@ -51,15 +51,13 @@ namespace Pet_Shop_Project.Views
         private void LoadProductData()
         {
             if (_originalProduct == null) return;
-
-            TxtProductId.Text = _originalProduct.ProductId;
             TxtProductName.Text = _originalProduct.Name;
             TxtDescription.Text = _originalProduct.Description;
             TxtUnitPrice.Text = _originalProduct.UnitPrice.ToString();
             TxtDiscount.Text = _originalProduct.Discount.ToString();
             TxtUnitInStock.Text = _originalProduct.UnitInStock.ToString();
-            TxtPicture.Text = _originalProduct.Picture;
-
+            TxtPicture.Text = _originalProduct.Picture.ToString();
+           
             // Set category
             foreach (System.Windows.Controls.ComboBoxItem item in CmbCategory.Items)
             {
@@ -77,7 +75,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
-        private async void LoadCategoriesAsync ()
+        private async void LoadCategoriesAsync()
         {
             var items = new List<string>();
             const string sql = "SELECT DISTINCT Category FROM PRODUCTS WHERE Category IS NOT NULL AND Category <> '' ORDER BY Category";
@@ -94,9 +92,9 @@ namespace Pet_Shop_Project.Views
                 }
             }
             CmbCategory.ItemsSource = items;
-            CmbCategory.SelectedItem = _originalProduct.Category; // AdminProductEditDialog
-        }
 
+            CmbCategory.SelectedItem = _originalProduct.Category; // AdminProductEditDialog
+        }
 
         private void BtnSelectImage_Click(object sender, RoutedEventArgs e)
         {
@@ -130,8 +128,8 @@ namespace Pet_Shop_Project.Views
                 }
                 else
                 {
-                    // Try as URL
-                    var bitmap = new BitmapImage();
+                    // Try as URL
+                    var bitmap = new BitmapImage();
                     bitmap.BeginInit();
                     bitmap.UriSource = new Uri(imagePath, UriKind.Absolute);
                     bitmap.EndInit();
@@ -150,17 +148,15 @@ namespace Pet_Shop_Project.Views
         {
             if (!ValidateInput())
                 return;
-
+            
             try
             {
                 var selectedCategory = CmbCategory.SelectedItem as string ?? CmbCategory.Text;
-
                 if (_isEditMode)
                 {
-                    // Update existing product
-                    Product = new Product
+                   // Update existing product
+                    Product = new Product
                     {
-                        ProductId = _originalProduct.ProductId,
                         Name = TxtProductName.Text.Trim(),
                         Description = TxtDescription.Text.Trim(),
                         UnitPrice = decimal.Parse(TxtUnitPrice.Text),
@@ -169,19 +165,16 @@ namespace Pet_Shop_Project.Views
                         Picture = TxtPicture.Text.Trim(),
                         Category = selectedCategory
                     };
-
                     if (await UpdateProductAsync(Product))
                     {
-                        DialogResult = true;
-                        Close();
+                        CloseDialog(true);
                     }
                 }
                 else
                 {
-                    // Create new product
-                    Product = new Product
+                    // Create new product
+                    Product = new Product
                     {
-                        ProductId = TxtProductId.Text.Trim(),
                         Name = TxtProductName.Text.Trim(),
                         Description = TxtDescription.Text.Trim(),
                         UnitPrice = decimal.Parse(TxtUnitPrice.Text),
@@ -193,85 +186,60 @@ namespace Pet_Shop_Project.Views
 
                     if (await AddProductAsync(Product))
                     {
-                        DialogResult = true;
-                        Close();
+                        CloseDialog(true);
                     }
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private async Task<bool> AddProductAsync(Product product)
         {
-            const string sql = @"INSERT INTO PRODUCTS (ProductId, Name, Description, UnitPrice, 
-                                UnitInStock, Discount, Picture, Category)
-                                VALUES (@ProductId, @Name, @Description, @UnitPrice, 
-                                @UnitInStock, @Discount, @Picture, @Category)";
+            const string sql = @"INSERT INTO PRODUCTS (Name, Description, UnitPrice, UnitInStock, Discount, Picture, Category)
+                                 OUTPUT INSERTED.ProductId
+                                 VALUES (@Name, @Description, @UnitPrice, @UnitInStock, @Discount, @Picture, @Category)";
 
-            try
+            using (var conn = new SqlConnection(_conn))
             {
-                using (var conn = new SqlConnection(_conn))
+                await conn.OpenAsync();
+                using (var cmd = new SqlCommand(sql, conn))
                 {
-                    await conn.OpenAsync();
+                    cmd.Parameters.AddWithValue("@Name", product.Name);
+                    cmd.Parameters.AddWithValue("@Description", product.Description);
+                    cmd.Parameters.AddWithValue("@UnitPrice", product.UnitPrice);
+                    cmd.Parameters.AddWithValue("@UnitInStock", product.UnitInStock);
+                    cmd.Parameters.AddWithValue("@Discount", product.Discount);
+                    cmd.Parameters.AddWithValue("@Picture", product.Picture ?? "");
+                    cmd.Parameters.AddWithValue("@Category", product.Category ?? "");
 
-                    // Check if product ID already exists
-                    using (var checkCmd = new SqlCommand("SELECT COUNT(*) FROM PRODUCTS WHERE ProductId = @ProductId", conn))
+                    var result = await cmd.ExecuteNonQueryAsync();
+                    if (result is int newID)
                     {
-                        checkCmd.Parameters.AddWithValue("@ProductId", product.ProductId);
-                        int count = (int)checkCmd.ExecuteScalar();
-                        if (count > 0)
-                        {
-                            MessageBox.Show("Mã sản phẩm đã tồn tại!", "Lỗi",
-                                MessageBoxButton.OK, MessageBoxImage.Warning);
-                            return false;
-                        }
-                    }
-
-                    using (var cmd = new SqlCommand(sql, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@ProductId", product.ProductId);
-                        cmd.Parameters.AddWithValue("@Name", product.Name);
-                        cmd.Parameters.AddWithValue("@Description", product.Description);
-                        cmd.Parameters.AddWithValue("@UnitPrice", product.UnitPrice);
-                        cmd.Parameters.AddWithValue("@UnitInStock", product.UnitInStock);
-                        cmd.Parameters.AddWithValue("@Discount", product.Discount);
-                        cmd.Parameters.AddWithValue("@Picture", product.Picture ?? "");
-                        cmd.Parameters.AddWithValue("@Category", product.Category ?? "");
-
-                        int result = await cmd.ExecuteNonQueryAsync();
-                        if (result > 0)
-                        {
-                            MessageBox.Show("Thêm sản phẩm thành công!", "Thành công",
-                                MessageBoxButton.OK, MessageBoxImage.Information);
-                            return true;
-                        }
+                        product.ProductId = newID.ToString();
+                        MessageBox.Show("Thêm sản phẩm thành công!", "Thành công",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                        return true;
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi thêm sản phẩm: {ex.Message}", "Lỗi",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
             return false;
         }
 
         private async Task<bool> UpdateProductAsync(Product product)
         {
-            const string sql = @"UPDATE PRODUCTS 
-                                SET Name = @Name, 
-                                    Description = @Description, 
-                                    UnitPrice = @UnitPrice,
-                                    UnitInStock = @UnitInStock, 
-                                    Discount = @Discount, 
-                                    Picture = @Picture,
-                                    Category = @Category
-                                WHERE ProductId = @ProductId";
+            const string sql = @"UPDATE PRODUCTS
+                                SET Name = @Name,
+                                    Description = @Description,
+                                    UnitPrice = @UnitPrice,
+                                    UnitInStock = @UnitInStock,
+                                    Discount = @Discount,
+                                    Picture = @Picture,
+                                    Category = @Category
+                                WHERE ProductId = @ProductId";
 
             try
             {
@@ -280,7 +248,6 @@ namespace Pet_Shop_Project.Views
                     await conn.OpenAsync();
                     using (var cmd = new SqlCommand(sql, conn))
                     {
-                        cmd.Parameters.AddWithValue("@ProductId", product.ProductId);
                         cmd.Parameters.AddWithValue("@Name", product.Name);
                         cmd.Parameters.AddWithValue("@Description", product.Description);
                         cmd.Parameters.AddWithValue("@UnitPrice", product.UnitPrice);
@@ -293,7 +260,7 @@ namespace Pet_Shop_Project.Views
                         if (result > 0)
                         {
                             MessageBox.Show("Cập nhật sản phẩm thành công!", "Thành công",
-                                MessageBoxButton.OK, MessageBoxImage.Information);
+                            MessageBoxButton.OK, MessageBoxImage.Information);
                             return true;
                         }
                     }
@@ -302,26 +269,16 @@ namespace Pet_Shop_Project.Views
             catch (Exception ex)
             {
                 MessageBox.Show($"Lỗi khi cập nhật sản phẩm: {ex.Message}", "Lỗi",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
             return false;
         }
-
         private bool ValidateInput()
         {
-            if (string.IsNullOrWhiteSpace(TxtProductId.Text))
-            {
-                MessageBox.Show("Vui lòng nhập mã sản phẩm", "Thông báo",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                TxtProductId.Focus();
-                return false;
-            }
-
             if (string.IsNullOrWhiteSpace(TxtProductName.Text))
             {
                 MessageBox.Show("Vui lòng nhập tên sản phẩm", "Thông báo",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBoxButton.OK, MessageBoxImage.Warning);
                 TxtProductName.Focus();
                 return false;
             }
@@ -329,45 +286,55 @@ namespace Pet_Shop_Project.Views
             if (CmbCategory.SelectedItem == null)
             {
                 MessageBox.Show("Vui lòng chọn danh mục", "Thông báo",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBoxButton.OK, MessageBoxImage.Warning);
                 CmbCategory.Focus();
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(TxtDiscount.Text) ||
-                !double.TryParse(TxtDiscount.Text, out double discount) || discount < 0 || discount > 1)
+              !double.TryParse(TxtDiscount.Text, out double discount) || discount < 0 || discount > 1)
             {
                 MessageBox.Show("Giảm giá phải trong khoảng 0-1", "Thông báo",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBoxButton.OK, MessageBoxImage.Warning);
                 TxtDiscount.Focus();
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(TxtUnitPrice.Text) ||
-                !decimal.TryParse(TxtUnitPrice.Text, out decimal price) || price < 0)
+              !decimal.TryParse(TxtUnitPrice.Text, out decimal price) || price < 0)
             {
-                MessageBox.Show("Giá bán không hợp lệ", "Thông báo",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                TxtUnitPrice.Focus();
-                return false;
+                 MessageBox.Show("Giá bán không hợp lệ", "Thông báo",
+                 MessageBoxButton.OK, MessageBoxImage.Warning);
+                 TxtUnitPrice.Focus();
+                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(TxtUnitInStock.Text) ||
-                !int.TryParse(TxtUnitInStock.Text, out int stock) || stock < 0)
+             !int.TryParse(TxtUnitInStock.Text, out int stock) || stock < 0)
             {
                 MessageBox.Show("Số lượng tồn kho không hợp lệ", "Thông báo",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                  MessageBoxButton.OK, MessageBoxImage.Warning);
                 TxtUnitInStock.Focus();
                 return false;
             }
-
             return true;
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = false;
-            Close();
+            CloseDialog(false);
+        }
+
+        //public event EventHandler<Product> Saved;
+        //public event EventHandler Canceled;
+        private void CloseDialog(bool success)
+        {
+            var host = Window.GetWindow(this);
+            if (host != null)
+            {
+                host.DialogResult = success;
+                host.Close();
+            }
         }
     }
 }

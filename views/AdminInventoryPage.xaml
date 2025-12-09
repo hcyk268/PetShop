@@ -59,16 +59,6 @@
                                      IsChecked="True"
                                      Margin="0,0,0,8"
                                      Checked="StockFilter_Changed"/>
-                        <RadioButton x:Name="RbBelowMin" 
-                                     Content="Dưới định mức tồn" 
-                                     GroupName="Stock"
-                                     Margin="0,0,0,8"
-                                     Checked="StockFilter_Changed"/>
-                        <RadioButton x:Name="RbAboveMax" 
-                                     Content="Vượt định mức tồn" 
-                                     GroupName="Stock"
-                                     Margin="0,0,0,8"
-                                     Checked="StockFilter_Changed"/>
                         <RadioButton x:Name="RbInStock" 
                                      Content="Còn hàng trong kho" 
                                      GroupName="Stock"
@@ -125,16 +115,30 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
-                        <Button x:Name="BtnAdd"
-                                Style="{StaticResource GradientButtonStyle}"
-                                Content="+ Thêm hàng"
-                                FontSize="14"
-                                BorderThickness="0"
-                                Padding="15,8"
-                                Margin="0,0,10,0"
-                                Cursor="Hand"
-                                FontWeight="SemiBold"
-                                Click="BtnAdd_Click" Width="105">
+                        <Button Style="{StaticResource MaterialDesignIconButton}" 
+                                ToolTip="Thêm sản phẩm"
+                                Click="BtnAdd_Click" 
+                                Height="40" 
+                                Width="40"
+                                Background="White">
+                            <materialDesign:PackIcon x:Name="BtnAdd" 
+                                                     Kind="Plus" 
+                                                     Width="35" 
+                                                     Height="35"
+                                                     Foreground="#ffad57" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Button>
+
+                        <Button Style="{StaticResource MaterialDesignIconButton}" 
+                                ToolTip="Xóa đã chọn"
+                                Click="BtnDeleteSelected_Click" 
+                                Height="40" 
+                                Width="40"
+                                Background="White">
+                            <materialDesign:PackIcon x:Name="BtnDeleteSelected" 
+                                                     Kind="DeleteOutline" 
+                                                     Width="35" 
+                                                     Height="35"
+                                                     Foreground="#ffad57" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Button>
                     </StackPanel>
                 </Grid>
@@ -184,14 +188,20 @@
 
                 <DataGrid.Columns>
                     <!-- Checkbox Column -->
-                    <DataGridCheckBoxColumn Width="50" 
-                                            Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}">
-                        <DataGridCheckBoxColumn.Header>
-                            <CheckBox x:Name="SelectAllCheckBox" 
+                    <DataGridTemplateColumn Width="50">
+                        <DataGridTemplateColumn.Header>
+                            <CheckBox x:Name="SelectAllCheckBox"
                                       Checked="SelectAllCheckBox_Changed"
                                       Unchecked="SelectAllCheckBox_Changed"/>
-                        </DataGridCheckBoxColumn.Header>
-                    </DataGridCheckBoxColumn>
+                        </DataGridTemplateColumn.Header>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
 
                     <!-- Product Code -->
                     <DataGridTextColumn Header="Mã hàng" 
@@ -233,7 +243,7 @@
 
                     <!-- Discount -->
                     <DataGridTextColumn Header="Khuyến mãi" 
-                                        Binding="{Binding CostPrice, StringFormat={}{0:N0}}" 
+                                        Binding="{Binding Product.Discount, StringFormat={}{0:P0}}" 
                                         Width="110">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">

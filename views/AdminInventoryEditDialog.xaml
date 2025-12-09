@@ -29,7 +29,7 @@
                    Margin="0,0,0,20"/>
 
         <!-- Form Fields -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
             <StackPanel>
                 <!-- Product Selection (for new item) -->
                 <StackPanel x:Name="ProductSelectionPanel" Visibility="Visible">
@@ -40,14 +40,14 @@
                                Foreground="#555"/>
                         <Button x:Name="CreateNewProductButton"
                                 Style="{StaticResource GradientButtonStyle}"
-                                Content="+ Tạo sản phẩm mới"
+                                Content="+ Thêm sản phẩm"
                                 HorizontalAlignment="Left"
                                 Foreground="White"
                                 BorderThickness="0"
                                 Padding="10,5"
                                 FontSize="12"
                                 Cursor="Hand"
-                                Click="BtnCreateNewProduct_Click" Margin="279,1,0,0" Width="134">
+                                Click="BtnCreateNewProduct_Click" Margin="316,0,0,0" Width="122">
                         </Button>
                     </Grid>
                     <ComboBox x:Name="ProductComboBox"
@@ -111,6 +111,18 @@
                          VerticalScrollBarVisibility="Auto"
                          Margin="0,0,0,15"/>
 
+                <!-- Discount -->
+                <TextBlock Text="Khuyến mãi (0-1) *"
+                           FontWeight="SemiBold"
+                           Margin="0,0,0,5"
+                           Foreground="#555"/>
+                <TextBox x:Name="TxtDiscount"
+                         Height="40"
+                         Padding="10"
+                         BorderBrush="#E0E0E0"
+                         Text="0"
+                         Margin="0,0,0,15"/>
+
                 <!-- Unit Price -->
                 <TextBlock Text="Giá bán *"
                            FontWeight="SemiBold"
@@ -128,39 +140,6 @@
                            Margin="0,0,0,5"
                            Foreground="#555"/>
                 <TextBox x:Name="TxtStockQuantity"
-                         Height="40"
-                         Padding="10"
-                         BorderBrush="#E0E0E0"
-                         Margin="0,0,0,15"/>
-
-                <!-- Ordered Quantity -->
-                <TextBlock Text="Số lượng đặt hàng"
-                           FontWeight="SemiBold"
-                           Margin="0,0,0,5"
-                           Foreground="#555"/>
-                <TextBox x:Name="TxtOrderedQuantity"
-                         Height="40"
-                         Padding="10"
-                         BorderBrush="#E0E0E0"
-                         Margin="0,0,0,15"/>
-
-                <!-- Min Stock Level -->
-                <TextBlock Text="Định mức tồn tối thiểu"
-                           FontWeight="SemiBold"
-                           Margin="0,0,0,5"
-                           Foreground="#555"/>
-                <TextBox x:Name="TxtMinStockLevel"
-                         Height="40"
-                         Padding="10"
-                         BorderBrush="#E0E0E0"
-                         Margin="0,0,0,15"/>
-
-                <!-- Max Stock Level -->
-                <TextBlock Text="Định mức tồn tối đa"
-                           FontWeight="SemiBold"
-                           Margin="0,0,0,5"
-                           Foreground="#555"/>
-                <TextBox x:Name="TxtMaxStockLevel"
                          Height="40"
                          Padding="10"
                          BorderBrush="#E0E0E0"
@@ -186,7 +165,7 @@
                             Height="40"
                             Width="100"
                             Margin="10,0,0,0"
-                            Background="#007BFF"
+                            Background="#FFAD57"
                             Foreground="White"
                             BorderThickness="0"
                             Cursor="Hand"

@@ -87,7 +87,7 @@ namespace Pet_Shop_Project.Views
 
                     if (user.Role.Equals("Admin", StringComparison.Ordinal))
                     {
-                        AdminWindow adminWindow = new AdminWindow(user.UserId);
+                        AdminWindow adminWindow = new AdminWindow();
                         adminWindow.Show();
                     }
                     // 2. Sau đó mới kiểm tra Vai trò User

@@ -8,18 +8,9 @@ namespace Pet_Shop_Project
     {
         public string userid { get; set; }
 
-        public AdminWindow(string userId)
+        public AdminWindow()
         {
             InitializeComponent();
-            this.userid = userId;
-
-            // Initialize navigation service cho Admin
-            Services.NavigationService.Instance.Initialize(AdminScreen);
-            Services.NavigationService.Instance.setUserId(userid);
-
-            // Navigate đến trang admin dashboard mặc định
-            // Bạn có thể tạo AdminDashboard page hoặc dùng AccountPage
-            AdminScreen.Navigate(new AccountPage(userId));
         }
     }
 }

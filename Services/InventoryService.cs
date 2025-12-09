@@ -129,6 +129,8 @@ namespace Pet_Shop_Project.Services
         {
             const string sql = @"
             BEGIN TRAN
+                DELETE FROM REVIEWS      WHERE ProductId = @ProductId;
+                DELETE FROM ORDER_DETAILS WHERE ProductId = @ProductId;
                 DELETE FROM CART_ITEMS WHERE ProductId = @ProductId;
                 DELETE FROM PRODUCTS   WHERE ProductId = @ProductId;
             COMMIT TRAN";

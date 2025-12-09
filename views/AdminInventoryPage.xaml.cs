@@ -98,15 +98,7 @@ namespace Pet_Shop_Project.Views
             }
 
             // Stock level filter
-            if (RbBelowMin?.IsChecked == true)
-            {
-                filtered = filtered.Where(i => i.StockQuantity < i.MinStockLevel);
-            }
-            else if (RbAboveMax?.IsChecked == true)
-            {
-                filtered = filtered.Where(i => i.StockQuantity > i.MaxStockLevel);
-            }
-            else if (RbInStock?.IsChecked == true)
+            if (RbInStock?.IsChecked == true)
             {
                 filtered = filtered.Where(i => i.StockQuantity > 0);
             }
@@ -280,6 +272,35 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        private async void BtnDeleteSelected_Click(object sender, RoutedEventArgs e)
+        {
+            if (filteredItems == null) return;
+
+            var toDelete = filteredItems.Where(i => i.IsSelected).ToList();
+            if (toDelete.Count == 0)
+            {
+                MessageBox.Show("Chưa chọn mặt hàng nào.", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var confirm = MessageBox.Show(
+                $"Xóa {toDelete.Count} mặt hàng đã chọn?",
+                "Xác nhận xóa",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (confirm != MessageBoxResult.Yes) return;
+
+            foreach (var item in toDelete)
+            {
+                await InventoryService.DeleteInventoryItemAsync(item.ProductId);
+            }
+
+            await LoadInventoryDataAsync(); // reload sẽ clear IsSelected
+        }
+
+
         private async void InventoryDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (InventoryDataGrid.SelectedItem is InventoryItem item)
@@ -323,15 +344,25 @@ namespace Pet_Shop_Project.Views
 
         private void SelectAllCheckBox_Changed(object sender, RoutedEventArgs e)
         {
-            bool isChecked = SelectAllCheckBox?.IsChecked == true;
+            bool isChecked = SelectAllCheckBox.IsChecked == true;
 
             if (currentPageItems != null)
             {
                 foreach (var item in currentPageItems)
                 {
-                    // Implement IsSelected property if needed
+                    item.IsSelected = isChecked;
                 }
             }
+        }
+
+        private void RowCheckChanged(object sender, RoutedEventArgs e)
+        {
+            if (currentPageItems == null || !currentPageItems.Any()) return;
+            SelectAllCheckBox.Checked -= SelectAllCheckBox_Changed;
+            SelectAllCheckBox.Unchecked -= SelectAllCheckBox_Changed;
+            SelectAllCheckBox.IsChecked = currentPageItems.All(i => i.IsSelected);
+            SelectAllCheckBox.Checked += SelectAllCheckBox_Changed;
+            SelectAllCheckBox.Unchecked += SelectAllCheckBox_Changed;
         }
 
         #endregion
