@@ -8,76 +8,101 @@
       xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       d:DesignHeight="650" d:DesignWidth="940"
       mc:Ignorable="d"
-      Background="#F5F5F5">
+      Background="#FFF8F8">
+    <Page.Resources>
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#D32F2F"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#FFCC96"/>
+        <SolidColorBrush x:Key="SecondaryTextBrush" Color="#757575"/>
+    </Page.Resources>
 
     <Grid Margin="25">
-            <Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="1.2*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- ======================= LEFT SIDE ========================= -->
         <StackPanel Grid.Column="0" Margin="10 0 40 0">
 
-            <!-- Greeting -->
             <TextBlock Text="{Binding UserGreeting}"
                        FontSize="30"
                        FontWeight="Bold"
-                       Margin="0 0 0 0"
-                       Foreground="#333">
+                       Margin="0 0 0 10"
+                       Foreground="Black">
                 <TextBlock.Effect>
-                    <DropShadowEffect BlurRadius="8" ShadowDepth="1" Color="#FFE0B2"/>
+                    <DropShadowEffect BlurRadius="5" ShadowDepth="1" Color="#AAAAAA" Opacity="0.4"/>
                 </TextBlock.Effect>
             </TextBlock>
 
-            <!-- Stats Row -->
-            <UniformGrid Rows="1" Columns="4" Margin="0 0 0 0">
-                <!-- Card Template -->
-                <Border CornerRadius="15" Background="White" Margin="4" Padding="20"
-                        BorderBrush="#FF6B6B" BorderThickness="1">
-                    <StackPanel>
-                        <TextBlock Text="Khách hàng" FontSize="12" Margin="0 0 0 5"/>
-                        <TextBlock Text="{Binding TotalUsers}" FontSize="15" FontWeight="Bold"/>
+            <UniformGrid Rows="1" Columns="4" Margin="0 5 0 10">
+                <Border CornerRadius="15" Background="White" Margin="4" Padding="6">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="8" ShadowDepth="2" Color="#AAAAAA" Opacity="0.2"/>
+                    </Border.Effect>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <material:PackIcon Kind="AccountGroup" Width="30" Height="30" VerticalAlignment="Center" 
+                                           Foreground="{StaticResource AccentBrush}" Margin="0 0 10 0"/>
+                        <StackPanel>
+                            <TextBlock Text="Khách hàng" FontSize="12" Foreground="{StaticResource SecondaryTextBrush}"/>
+                            <TextBlock Text="{Binding TotalUsers}" FontSize="15" FontWeight="ExtraBold" Foreground="Black"/>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
 
-                <Border CornerRadius="15" Background="White" Margin="4" Padding="20"
-                        BorderBrush="#FF6B6B" BorderThickness="1">
-                    <StackPanel>
-                        <TextBlock Text="Sản phẩm" FontSize="12" Margin="0 0 0 5"/>
-                        <TextBlock Text="{Binding TotalProducts}" FontSize="15" FontWeight="Bold"/>
+                <Border CornerRadius="15" Background="White" Margin="4" Padding="6">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="8" ShadowDepth="2" Color="#AAAAAA" Opacity="0.2"/>
+                    </Border.Effect>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <material:PackIcon Kind="BasketOutline" Width="30" Height="30" VerticalAlignment="Center" 
+                                           Foreground="{StaticResource AccentBrush}" Margin="0 0 10 0"/>
+                        <StackPanel>
+                            <TextBlock Text="Sản phẩm" FontSize="12" Foreground="{StaticResource SecondaryTextBrush}"/>
+                            <TextBlock Text="{Binding TotalProducts}"  FontSize="15" FontWeight="Bold" Foreground="Black"/>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
 
-                <Border CornerRadius="15" Background="White" Margin="4" Padding="20"
-                        BorderBrush="#FF6B6B" BorderThickness="1">
-                    <StackPanel>
-                        <TextBlock Text="Đơn thành công" FontSize="12" Margin="0 0 0 5"/>
-                        <TextBlock Text="{Binding TotalOrders}" FontSize="15" FontWeight="Bold"/>
+                <Border CornerRadius="15" Background="White" Margin="4" Padding="6">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="8" ShadowDepth="2" Color="#AAAAAA" Opacity="0.2"/>
+                    </Border.Effect>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <material:PackIcon Kind="TruckCheck" Width="30" Height="30" VerticalAlignment="Center" 
+                                           Foreground="{StaticResource AccentBrush}" Margin="0 0 10 0"/>
+                        <StackPanel>
+                            <TextBlock Text="Đơn thành công" FontSize="12" Foreground="{StaticResource SecondaryTextBrush}"/>
+                            <TextBlock Text="{Binding TotalOrders}"  FontSize="15" FontWeight="Bold" Foreground="Black"/>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
 
-                <Border CornerRadius="15" Background="White" Margin="4" Padding="20"
-                        BorderBrush="#FF6B6B" BorderThickness="1">
-                    <StackPanel>
-                        <TextBlock Text="Doanh thu (VND)" FontSize="12"/>
-                        <TextBlock Text="{Binding TotalRevenue}" FontSize="15" FontWeight="Bold"/>
+                <Border CornerRadius="15" Background="White" Margin="4" Padding="6">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="8" ShadowDepth="2" Color="#AAAAAA" Opacity="0.2"/>
+                    </Border.Effect>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <material:PackIcon Kind="CashMultiple" Width="30" Height="30" VerticalAlignment="Center" 
+                                           Foreground="{StaticResource AccentBrush}" Margin="0 0 10 0"/>
+                        <StackPanel>
+                            <TextBlock Text="Doanh thu" FontSize="12" Foreground="{StaticResource SecondaryTextBrush}"/>
+                            <TextBlock Text="{Binding TotalRevenue}"  FontSize="15" FontWeight="Bold" Foreground="Black"/>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
             </UniformGrid>
 
-            <!-- Chart với LiveCharts -->
-            <Border Background="#F8FFFE" CornerRadius="15"
-                    Padding="20" Margin="0 15 0 15"
-                    BorderBrush="#FF6B6B" BorderThickness="1">
+            <Border Background="White" CornerRadius="15"
+                    Padding="20" Margin="0 15 0 15">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="3" Color="#AAAAAA" Opacity="0.15"/>
+                </Border.Effect>
                 <StackPanel>
                     <TextBlock Text="Doanh thu trong tuần"
-                               FontSize="20" FontWeight="SemiBold" Margin="0 0 0 5"/>
+                               FontSize="20" FontWeight="SemiBold" Margin="0 0 0 5" Foreground="Black"/>
 
                     <TextBlock Text="(7 ngày gần nhất)"
-                               FontSize="12" Foreground="#666" Margin="0 0 0 10"/>
+                               FontSize="12" Foreground="{StaticResource SecondaryTextBrush}" Margin="0 0 0 10"/>
 
-                    <!-- LiveCharts CartesianChart -->
                     <lvc:CartesianChart Series="{Binding WeeklyRevenueSeries}" 
                                         Height="220"
                                         LegendLocation="Top"
@@ -86,10 +111,9 @@
                             <lvc:Axis Title="Ngày trong tuần" 
                                       Labels="{Binding WeekLabels}" 
                                       FontSize="11"
-                                      Foreground="#333"
-                                      >
+                                      Foreground="{StaticResource SecondaryTextBrush}">
                                 <lvc:Axis.Separator>
-                                    <lvc:Separator Step="1" StrokeThickness="1" Stroke="#E0E0E0"/>
+                                    <lvc:Separator Step="1" StrokeThickness="1" Stroke="#F0F0F0"/>
                                 </lvc:Axis.Separator>
                             </lvc:Axis>
                         </lvc:CartesianChart.AxisX>
@@ -97,7 +121,7 @@
                             <lvc:Axis Title="Doanh thu (VND)" 
                                       LabelFormatter="{Binding YFormatter}" 
                                       FontSize="11"
-                                      Foreground="#333"
+                                      Foreground="{StaticResource SecondaryTextBrush}"
                                       MinValue="0">
                                 <lvc:Axis.Separator>
                                     <lvc:Separator Step="{Binding YAxisStep}" 
@@ -108,11 +132,10 @@
                             </lvc:Axis>
                         </lvc:CartesianChart.AxisY>
 
-                        <!-- DataTooltip để hiển thị giá trị khi hover -->
                         <lvc:CartesianChart.DataTooltip>
-                            <lvc:DefaultTooltip Background="#FF6B6B" 
+                            <lvc:DefaultTooltip Background="{StaticResource PrimaryBrush}" 
                                                 Foreground="White" 
-                                                BorderBrush="#FF6B6B" 
+                                                BorderBrush="{StaticResource PrimaryBrush}" 
                                                 BorderThickness="1"
                                                 CornerRadius="5"/>
                         </lvc:CartesianChart.DataTooltip>
@@ -120,72 +143,77 @@
                 </StackPanel>
             </Border>
 
-            <!-- Best / Worst Sellers -->
             <Grid Margin="0 0 0 20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Best Seller -->
-                <Border CornerRadius="15" Background="White" Padding="20" Margin="0,10,10,10"
-                        BorderBrush="#FF6B6B" BorderThickness="1">
+                <Border CornerRadius="15" Background="White" Padding="20" Margin="0,10,10,10">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="8" ShadowDepth="2" Color="#AAAAAA" Opacity="0.2"/>
+                    </Border.Effect>
                     <StackPanel>
-                        <TextBlock Text="Best Sellers" FontSize="20" FontWeight="Bold"/>
+                        <TextBlock Text="Best Sellers" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}"/>
                         <ItemsControl ItemsSource="{Binding BestSellers}"/>
                     </StackPanel>
                 </Border>
 
-                <!-- Worst Seller -->
-                <Border Grid.Column="1" CornerRadius="15" Background="White" Padding="20" Margin="10,10,0,10"
-                        BorderBrush="#FF6B6B" BorderThickness="1">
+                <Border Grid.Column="1" CornerRadius="15" Background="White" Padding="20" Margin="10,10,0,10">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="8" ShadowDepth="2" Color="#AAAAAA" Opacity="0.2"/>
+                    </Border.Effect>
                     <StackPanel>
-                        <TextBlock Text="Worst Sellers" FontSize="20" FontWeight="Bold"/>
+                        <TextBlock Text="Worst Sellers" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}"/>
                         <ItemsControl ItemsSource="{Binding WorstSellers}"/>
                     </StackPanel>
                 </Border>
             </Grid>
         </StackPanel>
 
-        <!-- ======================= RIGHT SIDE ========================= -->
         <StackPanel Grid.Column="1" Margin="10">
-            <!-- Admin Info với Avatar Image -->
-            <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
-                <!-- Avatar hình tròn -->
-                <Border Width="55" Height="55" 
-                        CornerRadius="27.5"
-                        BorderThickness="2">
-                    <Border.Clip>
-                        <EllipseGeometry Center="27.5,27.5" RadiusX="27.5" RadiusY="27.5"/>
-                    </Border.Clip>
-                    <Image Source="/Images/bear.jpg"  
-                           Stretch="Uniform"/>
-                </Border>
+            <Border CornerRadius="15" Background="White" Padding="15" Margin="0 0 0 10">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="8" ShadowDepth="2" Color="#AAAAAA" Opacity="0.2"/>
+                </Border.Effect>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="55" Height="55" 
+                            CornerRadius="27.5"
+                            BorderThickness="2"
+                            BorderBrush="{StaticResource PrimaryBrush}">
+                        <Border.Clip>
+                            <EllipseGeometry Center="27.5,27.5" RadiusX="27.5" RadiusY="27.5"/>
+                        </Border.Clip>
+                        <Image Source="/Images/bear.jpg" 
+                               Stretch="Uniform" Margin="-2,-2,-2,-2"/>
+                    </Border>
 
-                <StackPanel Margin="10 0">
-                    <TextBlock Text="Admin" FontSize="20" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding UserName}" FontSize="14" Foreground="#666"/>
+                    <StackPanel Margin="10 0">
+                        <TextBlock Text="Admin" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}"/>
+                        <TextBlock Text="{Binding UserName}" FontSize="14" Foreground="{StaticResource SecondaryTextBrush}"/>
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
+            </Border>
 
-            <!-- Setting Area với Background Image -->
-            <Border CornerRadius="20" Height="180" Margin="0 0 0 10"
-                    BorderBrush="#FF6B6B" BorderThickness="1">
+
+            <Border CornerRadius="20" Height="180" Margin="0 0 0 10">
                 <Border.Background>
                     <ImageBrush ImageSource="/Images/conmeo.jpg" 
                                 Stretch="UniformToFill"/>
                 </Border.Background>
             </Border>
 
-            <!-- Calendar - Auto Size với Viewbox -->
-            <Border CornerRadius="0" 
+            <Border CornerRadius="15" 
                     Padding="5" 
-                    BorderBrush="#FF6B6B" 
                     BorderThickness="1" 
-                    Background="#F8FFFE" Height="329">
-                <Viewbox Stretch="Uniform" Margin="0,-4,0,0" Width="228">
+                    BorderBrush="#F0F0F0"
+                    Background="White">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="8" ShadowDepth="2" Color="#AAAAAA" Opacity="0.2"/>
+                </Border.Effect>
+                <Viewbox Stretch="Uniform" Margin="0,-4,0,0" Width="228" Height="290">
                     <Calendar HorizontalAlignment="Center" 
-                             VerticalAlignment="Center" Height="385" Width="268" />
+                              VerticalAlignment="Center" Width="270" />
                 </Viewbox>
             </Border>
 

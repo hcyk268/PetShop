@@ -136,31 +136,8 @@ namespace Pet_Shop_Project.Views
                 }
             }
         }
-        // ===== NÚT XEM CHI TIẾT USER =====
-        private void ViewUserButton_Click(object sender, RoutedEventArgs e)
-        {
-            string userId = (sender as Button)?.Tag.ToString();
-
-            if (!string.IsNullOrEmpty(userId))
-            {
-                User user = userService.GetUserById(userId);
-
-                if (user != null)
-                {
-                    var detailDialog = new UserDetailDialog(user);
-                    detailDialog.Owner = Window.GetWindow(this);
-                    detailDialog.ShowDialog();
-                }
-                else
-                {
-                    MessageBox.Show("Không tìm thấy thông tin người dùng!",
-                        "Thông báo",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Warning);
-                }
-            }
-        }
-
+        
+       
         // ===== NÚT XÓA USER =====
         private void DeleteUserButton_Click(object sender, RoutedEventArgs e)
         {
