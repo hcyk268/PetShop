@@ -179,6 +179,7 @@
       <DependentUpon>ProductCard.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\InventoryItem.cs" />
+    <Compile Include="Services\DashBoardService.cs" />
     <Compile Include="Services\InventoryService.cs" />
     <Compile Include="Services\ReviewService.cs" />
     <Compile Include="Services\SessionManager.cs" />
@@ -204,6 +205,9 @@
     </Compile>
     <Compile Include="Views\AdminAddReviewDialog.xaml.cs">
       <DependentUpon>AdminAddReviewDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AddEditUserDialog.xaml.cs">
+      <DependentUpon>AddEditUserDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AOPending.xaml.cs">
       <DependentUpon>AOPending.xaml</DependentUpon>
@@ -233,6 +237,12 @@
     </Compile>
     <Compile Include="Views\ChangePhoneDialog.xaml.cs">
       <DependentUpon>ChangePhoneDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DashBoard.xaml.cs">
+      <DependentUpon>DashBoard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DeleteUserDialog.xaml.cs">
+      <DependentUpon>DeleteUserDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
@@ -269,6 +279,12 @@
     </Compile>
     <Compile Include="Views\AdminOrder.xaml.cs">
       <DependentUpon>AdminOrder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserDetailDialog.xaml.cs">
+      <DependentUpon>UserDetailDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserManagement.xaml.cs">
+      <DependentUpon>UserManagement.xaml</DependentUpon>
     </Compile>
     <Page Include="AdminWindow.xaml">
       <SubType>Designer</SubType>
@@ -372,6 +388,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\AddEditUserDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DashBoard.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DeleteUserDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\HomePage.xaml" />
     <Page Include="Views\OQPCanceled.xaml" />
     <Page Include="Views\OQPPendingApproval.xaml" />
@@ -383,6 +411,14 @@
     <Page Include="Views\ProductDetailPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserDetailDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\UserManagement.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\SignIn.xaml" />
     <Page Include="Views\SignUp.xaml" />
