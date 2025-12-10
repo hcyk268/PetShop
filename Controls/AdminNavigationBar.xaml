@@ -40,11 +40,11 @@
                     </StackPanel>
                 </Button>
 
-                <!-- Product Management Button -->
+                <!-- Inventory Management Button -->
                 <Button x:Name="ProductButton" 
                         Style="{StaticResource NavButtonStyle}" 
                         ToolTip="Quản lý kho hàng" 
-                        Click="ProductButton_Click" 
+                        Click="InventoryButton_Click" 
                         Tag="Product">
                     <StackPanel>
                         <materialDesign:PackIcon Kind="PackageVariant" 

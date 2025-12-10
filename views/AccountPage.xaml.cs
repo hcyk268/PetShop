@@ -133,7 +133,7 @@ namespace Pet_Shop_Project.Views
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
 
-                Window1 loginWindow = new Window1();
+                Login loginWindow = new Login();
                 loginWindow.Show();
 
                 Window.GetWindow(this)?.Close();

@@ -90,7 +90,7 @@ namespace Pet_Shop_Project.Views
 
         private async Task LoadDataFromDB()
         {
-            AllUsers = await _userService.GetAllUsers() ?? new ObservableCollection<User>();
+            AllUsers = await _userService.GetAllUsersAsync() ?? new ObservableCollection<User>();
             FilteredUsers = new ObservableCollection<User>(AllUsers);
             CustomerListControl.ItemsSource = FilteredUsers;
 

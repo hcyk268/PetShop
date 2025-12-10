@@ -1,0 +1,64 @@
+﻿using Pet_Shop_Project.Views;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Controls;
+
+namespace Pet_Shop_Project.Services
+{
+    public class AdminNavigationService
+    {
+        private static AdminNavigationService instance;
+        private Frame mainFrame;
+        public static AdminNavigationService Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new AdminNavigationService();
+                }
+                return instance;
+            }
+        }
+        public void Initialize(Frame frame)
+        {
+            mainFrame = frame;
+        }
+
+        public void NavigateToDashBoard()
+        {
+            if (mainFrame != null)
+            {
+                mainFrame.Navigate(new DashBoard());
+            }
+        }
+
+        public void NavigateToInventory()
+        {
+            if (mainFrame != null)
+            {
+                mainFrame.Navigate(new AdminInventory());
+            }
+        }
+
+        public void NavigateToUser()
+        {
+
+        }
+
+        public void NavigateToOrder()
+        {
+
+        }
+        public void NavigateToReview()
+        {
+            if (mainFrame != null)
+            {
+                mainFrame.Navigate(new AdminReviewPage());
+            }
+        }
+    }
+}
