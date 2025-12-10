@@ -15,251 +15,531 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <Grid Grid.Row="0" Margin="30,30,30,20">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+        <!-- Header - Background F5F5F5 -->
+        <Grid Grid.Row="0" Background="#F5F5F5" Height="60">
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        Margin="30,0,0,0">
 
-            <TextBlock Text="Giỏ hàng" 
-                       FontSize="40" 
-                       FontWeight="SemiBold"
-                       Foreground="#333333"
-                       VerticalAlignment="Top"/>
+                <!-- Nút Back -->
+                <Button x:Name="BackButton"
+                        Width="35" Height="35"
+                        BorderThickness="0"
+                        Background="White"
+                        Cursor="Hand"
+                        Click="BackButton_Click"
+                        Margin="0,0,15,0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Width="35" Height="35"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="18">
+                                <materialDesign:PackIcon x:Name="icon"
+                                                         Kind="ArrowLeft"
+                                                         Width="22" Height="22"
+                                                         Foreground="#FFAD57"
+                                                         HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center"/>
+                            </Border>
 
-            <!-- Delete all and select all buttons-->
-            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top">
-                <Button Style="{StaticResource RoundButtonStyle}" 
-                        ToolTip="Chọn tất cả"
-                        Click="SelectAll_Click" 
-                        Height="50" 
-                        Width="50"
-                        Margin="0,0,10,0">
-                    <materialDesign:PackIcon x:Name="Select_All" 
-                                             Kind="SelectAll" 
-                                             Width="30" 
-                                             Height="30"/>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#FFECECEC"/>
+                                </Trigger>
+
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <GradientStop Color="#FFAD56" Offset="0"/>
+                                                <GradientStop Color="#FFC281" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter TargetName="icon" Property="Foreground" Value="White"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
                 </Button>
-                <Button Style="{StaticResource RoundButtonStyle}" 
-                        ToolTip="Xóa đã chọn"
-                        Click="DeleteSelected_Click" 
-                        Height="50" 
-                        Width="50">
-                    <materialDesign:PackIcon x:Name="Delete_all" 
-                                             Kind="DeleteOutline" 
-                                             Width="30" 
-                                             Height="30"/>
-                </Button>
+
+                <!-- Tiêu đề -->
+                <TextBlock Text="Giỏ hàng"
+                           FontSize="28"
+                           FontWeight="Bold"
+                           Foreground="#FFAD57"
+                           VerticalAlignment="Center"
+                           Margin="5,0,0,0"/>
             </StackPanel>
         </Grid>
 
-        <!-- Cart Items ScrollViewer -->
-        <ScrollViewer Grid.Row="1" 
-                      VerticalScrollBarVisibility="Auto"
-                      Padding="30,0,30,120">
-            <ItemsControl x:Name="CartItemsControl">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Background="White" 
-                                BorderBrush="#E0E0E0" 
-                                BorderThickness="2"
-                                CornerRadius="12"
-                                Padding="15"
-                                Margin="0,0,0,15">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
+        <!-- Main Content - Background F8FFFE -->
+        <Grid Grid.Row="1" Background="#F8FFFE">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-                                <CheckBox Grid.Column="0"
-                                          IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                                          VerticalAlignment="Center"
-                                          HorizontalAlignment="Center"
-                                          Margin="0,0,15,0"
-                                          Cursor="Hand">
-                                    <CheckBox.Style>
-                                        <Style TargetType="CheckBox">
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="CheckBox">
-                                                        <Border Width="24" 
-                                                                Height="24"
-                                                                CornerRadius="12"
-                                                                BorderThickness="2"
-                                                                BorderBrush="#DDDDDD">
+            <!-- Filter Section -->
+            <Grid Grid.Row="0" Margin="30,15,30,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-                                                            <Border.Style>
-                                                                <Style TargetType="Border">
-                                                                    <Setter Property="Background" Value="Transparent"/>
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                <!-- Filter Dropdown (Left) -->
+                <StackPanel Grid.Column="0" 
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <materialDesign:PackIcon Kind="Filter"
+                                             Width="24"
+                                             Height="24"
+                                             Foreground="#FFA500"
+                                             VerticalAlignment="Center"
+                                             Margin="0,0,8,0"/>
 
-                                                                            <Setter Property="Background">
-                                                                                <Setter.Value>
-                                                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                                                        <GradientStop Color="#ffc476" Offset="0"/>
-                                                                                        <GradientStop Color="#ffa2a2" Offset="1"/>
-                                                                                    </LinearGradientBrush>
-                                                                                </Setter.Value>
-                                                                            </Setter>
+                    <TextBlock Text="Filter by"
+                               FontSize="14"
+                               FontWeight="SemiBold"
+                               Foreground="#FFA500"
+                               VerticalAlignment="Center"
+                               Margin="0,0,12,0"/>
 
-                                                                            <Setter Property="BorderBrush" Value="#ffa2a2"/>
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </Border.Style>
-                                                            <TextBlock Text="✓"
-                                                                       Foreground="White"
-                                                                       FontSize="14"
-                                                                       FontWeight="Bold"
-                                                                       HorizontalAlignment="Center"
-                                                                       VerticalAlignment="Center">
-                                                                <TextBlock.Style>
-                                                                    <Style TargetType="TextBlock">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                    <Border Background="White"
+                            BorderBrush="#FFA500"
+                            BorderThickness="1.5"
+                            CornerRadius="15"
+                            Height="30"
+                            MinWidth="120"
+                            Padding="12,0">
+                        <ComboBox x:Name="CartFilterComboBox"
+                                  BorderThickness="0"
+                                  Background="Transparent"
+                                  FontSize="13"
+                                  VerticalContentAlignment="Center"
+                                  SelectionChanged="CartFilterComboBox_SelectionChanged">
+                            <ComboBoxItem Content="Tất cả" IsSelected="True"/>
+                            <ComboBoxItem Content="Đã chọn"/>
+                            <ComboBoxItem Content="Chưa chọn"/>
+                        </ComboBox>
+                    </Border>
+                </StackPanel>
+
+                <!-- Select All and Delete Buttons (Right) -->
+                <StackPanel Grid.Column="1" 
+                            Orientation="Horizontal" 
+                            VerticalAlignment="Center">
+                    <!-- Select All Button -->
+                    <Button x:Name="SelectAllButton"
+                            Width="120"
+                            Height="30"
+                            FontSize="14"
+                            FontWeight="SemiBold"
+                            Foreground="White"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            Margin="0,0,10,0"
+                            Click="SelectAll_Click">
+                        <Button.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#FFAD56" Offset="0"/>
+                                <GradientStop Color="#FFC281" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="border"
+                                        Background="{TemplateBinding Background}"
+                                        CornerRadius="15"
+                                        Padding="10,0">
+                                    <StackPanel Orientation="Horizontal"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center">
+                                        <materialDesign:PackIcon x:Name="selectIcon"
+                                                                 Kind="SelectMultiple"
+                                                                 Width="16"
+                                                                 Height="16"
+                                                                 Foreground="White"
+                                                                 Margin="0,0,6,0"
+                                                                 VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="selectText"
+                                                   Text="Chọn tất cả"
+                                                   FontSize="{TemplateBinding FontSize}"
+                                                   FontWeight="{TemplateBinding FontWeight}"
+                                                   Foreground="{TemplateBinding Foreground}"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="border" Property="Effect">
+                                            <Setter.Value>
+                                                <DropShadowEffect ShadowDepth="0" BlurRadius="15" Opacity="0.3"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="border" Property="Background">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                    <GradientStop Color="#FF9D46" Offset="0"/>
+                                                    <GradientStop Color="#FFB271" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <!-- Delete Button -->
+                    <Button x:Name="DeleteButton"
+                            Width="32" 
+                            Height="32"
+                            BorderThickness="0"
+                            Background="Transparent"
+                            Cursor="Hand"
+                            Click="DeleteSelected_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="border"
+                                        Width="32" Height="32"
+                                        Background="{TemplateBinding Background}"
+                                        CornerRadius="18">
+                                    <materialDesign:PackIcon x:Name="icon"
+                                                             Kind="Delete"
+                                                             Width="24" Height="24"
+                                                             Foreground="#FFAD56"
+                                                             HorizontalAlignment="Center"
+                                                             VerticalAlignment="Center"/>
+                                </Border>
+
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="#FFECECEC"/>
+                                    </Trigger>
+
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="border" Property="Background">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                    <GradientStop Color="#FFAD56" Offset="0"/>
+                                                    <GradientStop Color="#FFC281" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter TargetName="icon" Property="Foreground" Value="White"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <!-- Cart Items ScrollViewer -->
+            <ScrollViewer Grid.Row="1" 
+                          VerticalScrollBarVisibility="Hidden"
+                          Padding="30,0,30,120">
+                <ItemsControl x:Name="CartItemsControl">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <!-- Outer Border with Shadow và Click event -->
+                            <Border x:Name="OuterBorder"
+                                    Background="White" 
+                                    BorderBrush="#E0E0E0" 
+                                    BorderThickness="2"
+                                    CornerRadius="12"
+                                    Padding="15"
+                                    Margin="20,0,20,15"
+                                    Cursor="Hand"
+                                    MouseLeftButtonDown="CartItem_Click"
+                                    Tag="{Binding}">
+                                <Border.Effect>
+                                    <DropShadowEffect x:Name="ItemShadow"
+                                                      ShadowDepth="2"
+                                                      BlurRadius="10"
+                                                      Opacity="0.15"
+                                                      Color="Black"/>
+                                </Border.Effect>
+
+                                <Border.Triggers>
+                                    <EventTrigger RoutedEvent="MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="ItemShadow"
+                                                               Storyboard.TargetProperty="BlurRadius"
+                                                               To="20"
+                                                               Duration="0:0:0.2"/>
+                                                <DoubleAnimation Storyboard.TargetName="ItemShadow"
+                                                               Storyboard.TargetProperty="Opacity"
+                                                               To="0.25"
+                                                               Duration="0:0:0.2"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="ItemShadow"
+                                                               Storyboard.TargetProperty="BlurRadius"
+                                                               To="10"
+                                                               Duration="0:0:0.2"/>
+                                                <DoubleAnimation Storyboard.TargetName="ItemShadow"
+                                                               Storyboard.TargetProperty="Opacity"
+                                                               To="0.15"
+                                                               Duration="0:0:0.2"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Border.Triggers>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <CheckBox Grid.Column="0"
+                                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"
+                                              Margin="0,0,15,0"
+                                              Cursor="Hand"
+                                              MouseLeftButtonDown="CheckBox_PreventBubble">
+                                        <CheckBox.Style>
+                                            <Style TargetType="CheckBox">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="CheckBox">
+                                                            <Border Width="24" 
+                                                                    Height="24"
+                                                                    CornerRadius="12"
+                                                                    BorderThickness="2"
+                                                                    BorderBrush="#DDDDDD">
+
+                                                                <Border.Style>
+                                                                    <Style TargetType="Border">
+                                                                        <Setter Property="Background" Value="Transparent"/>
                                                                         <Style.Triggers>
                                                                             <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
-                                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                                <Setter Property="Background">
+                                                                                    <Setter.Value>
+                                                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                                                            <GradientStop Color="#ffc476" Offset="0"/>
+                                                                                            <GradientStop Color="#ffa2a2" Offset="1"/>
+                                                                                        </LinearGradientBrush>
+                                                                                    </Setter.Value>
+                                                                                </Setter>
+                                                                                <Setter Property="BorderBrush" Value="#ffa2a2"/>
                                                                             </DataTrigger>
                                                                         </Style.Triggers>
                                                                     </Style>
-                                                                </TextBlock.Style>
-                                                            </TextBlock>
-                                                        </Border>
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </CheckBox.Style>
-                                </CheckBox>
-                                
-                                <!-- Product Image -->
-                                <Border Grid.Column="1" 
-                                        Width="80" Height="80"
-                                        CornerRadius="8"
-                                        Background="#F0F0F0"
-                                        Margin="0,0,15,0">
-                                    <Image Source="{Binding Image}" Stretch="UniformToFill"/>
-                                </Border>
+                                                                </Border.Style>
+                                                                <TextBlock Text="✓"
+                                                                           Foreground="White"
+                                                                           FontSize="14"
+                                                                           FontWeight="Bold"
+                                                                           HorizontalAlignment="Center"
+                                                                           VerticalAlignment="Center">
+                                                                    <TextBlock.Style>
+                                                                        <Style TargetType="TextBlock">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </TextBlock.Style>
+                                                                </TextBlock>
+                                                            </Border>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </CheckBox.Style>
+                                    </CheckBox>
 
-                                <!-- Product Details -->
-                                <StackPanel Grid.Column="2" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding Name}" 
-                                               FontSize="16" 
-                                               FontWeight="SemiBold"
-                                               Foreground="#333333"
-                                               Margin="0,0,0,6"/>
+                                    <!-- Product Image with Discount Badge -->
+                                    <Grid Grid.Column="1" 
+                                          Width="80" Height="80"
+                                          Margin="0,0,15,0">
 
-                                    <Border Background="#F5F5F5"
-                                            BorderBrush="Transparent"
-                                            BorderThickness="1"
-                                            CornerRadius="4"
-                                            Padding="10,4"
-                                            HorizontalAlignment="Left"
-                                            Margin="0,0,0,6"
-                                            Cursor="Hand">
-                                        <TextBlock Text="{Binding Variant}" 
-                                                   FontSize="13"
-                                                   Foreground="#666666"/>
-                                    </Border>
+                                        <!-- Image Border -->
+                                        <Border x:Name="ImageBorder"
+                                                CornerRadius="8"
+                                                Background="#F0F0F0"
+                                                ClipToBounds="True"
+                                                Loaded="ImageBorder_Loaded">
+                                            <Image Source="{Binding Image}" Stretch="UniformToFill"/>
+                                        </Border>
 
-                                    <TextBlock Text="{Binding Price, StringFormat={}{0:N0}đ}" 
-                                               FontSize="16" 
-                                               FontWeight="Medium"
-                                               Foreground="#FF6B6B"
-                                               Margin="0,0,0,10"/>
+                                        <!-- DISCOUNT BADGE -->
+                                        <Grid x:Name="DiscountBadge"
+                                              Width="32"
+                                              Height="13"
+                                              HorizontalAlignment="Right"
+                                              VerticalAlignment="Top"
+                                              Margin="0,4,4,0"
+                                              Visibility="{Binding DiscountVisibility}">
 
-                                    <!-- Quantity Control -->
-                                    <StackPanel Orientation="Horizontal">
-                                        <Button Style="{StaticResource QtyButtonStyle}" 
-                                                Content="−"
-                                                Click="DecreaseQty_Click"
-                                                Tag="{Binding}"/>
-                                        <TextBlock Text="{Binding Quantity}" 
+                                            <!-- Arrow shape path -->
+                                            <Path Fill="#FF8284"
+                                                  Data="M 6,0 L 32,0 L 32,13 L 6,13 L 0,6.5 Z"
+                                                  Stretch="Fill"/>
+
+                                            <!-- Text overlay -->
+                                            <TextBlock Text="{Binding DiscountText}"
+                                                       FontSize="10"
+                                                       FontWeight="Bold"
+                                                       Foreground="White"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       Margin="3,0,0,0"/>
+                                        </Grid>
+                                    </Grid>
+
+                                    <!-- Product Details -->
+                                    <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Name}" 
+                                                   FontSize="16" 
                                                    FontWeight="SemiBold"
-                                                   Margin="15,0"
-                                                   VerticalAlignment="Center"
-                                                   MinWidth="30"
-                                                   TextAlignment="Center"/>
-                                        <Button Style="{StaticResource QtyButtonStyle}" 
-                                                Content="+"
-                                                Click="IncreaseQty_Click"
-                                                Tag="{Binding}"/>
+                                                   Foreground="#333333"
+                                                   Margin="0,0,0,6"/>
+
+                                        <Border Background="#F5F5F5"
+                                                BorderBrush="Transparent"
+                                                BorderThickness="1"
+                                                CornerRadius="4"
+                                                Padding="10,4"
+                                                HorizontalAlignment="Left"
+                                                Margin="0,0,0,6"
+                                                Cursor="Hand"
+                                                Visibility="{Binding VariantVisibility}">
+                                            <TextBlock Text="{Binding Variant}" 
+                                                       FontSize="13"
+                                                       Foreground="#666666"/>
+                                        </Border>
+
+                                        <!-- Price Section with Discount Badge -->
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                            <TextBlock Text="{Binding DisplayPrice}" 
+                                                       FontSize="16" 
+                                                       FontWeight="Medium"
+                                                       Foreground="{Binding PriceForeground}"
+                                                       Margin="0,0,8,0"
+                                                       VerticalAlignment="Center"/>
+
+                                            <!-- Discount Badge (instead of strikethrough) -->
+                                            <Border Background="#FFE5E5"
+                                                    BorderBrush="#FF8284"
+                                                    BorderThickness="1"
+                                                    CornerRadius="8"
+                                                    Padding="6,2"
+                                                    VerticalAlignment="Center"
+                                                    Visibility="{Binding OriginalPriceVisibility}">
+                                                <TextBlock Text="{Binding DiscountText}"
+                                                           FontSize="11"
+                                                           FontWeight="Bold"
+                                                           Foreground="#FF6B6B"/>
+                                            </Border>
+                                        </StackPanel>
+
+                                        <!-- Quantity Control -->
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Style="{StaticResource QtyButtonStyle}" 
+                                                    Content="−"
+                                                    Click="DecreaseQty_Click"
+                                                    MouseLeftButtonDown="Button_PreventBubble"
+                                                    Tag="{Binding}"/>
+                                            <TextBlock Text="{Binding Quantity}" 
+                                                       FontWeight="SemiBold"
+                                                       Margin="15,0"
+                                                       VerticalAlignment="Center"
+                                                       MinWidth="30"
+                                                       TextAlignment="Center"/>
+                                            <Button Style="{StaticResource QtyButtonStyle}" 
+                                                    Content="+"
+                                                    Click="IncreaseQty_Click"
+                                                    MouseLeftButtonDown="Button_PreventBubble"
+                                                    Tag="{Binding}"/>
+                                        </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
 
-        <!-- Floating Summary Box (Bottom Right) -->
-        <Border Grid.Row="1"
-                Background="White"
-                CornerRadius="12"
-                Padding="20,15"
-                Margin="0,0,20,20"
-                MinWidth="280"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom">
-            <Border.Effect>
-                <DropShadowEffect BlurRadius="20" ShadowDepth="4" Opacity="0.2"/>
-            </Border.Effect>
+            <!-- Floating Summary Box (Bottom Right) -->
+            <Border Grid.Row="1"
+                    Background="White"
+                    CornerRadius="12"
+                    Padding="20,15"
+                    Margin="0,0,20,20"
+                    MinWidth="280"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="20" ShadowDepth="4" Opacity="0.2"/>
+                </Border.Effect>
 
-            <StackPanel>
-                <!-- Total Items -->
-                <Grid Margin="0,0,0,8">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Tổng" 
-                               Foreground="#666666" 
-                               FontSize="14"/>
-                    <TextBlock Grid.Column="1"
-                               x:Name="TotalItemsText"
-                               Text="0 sản phẩm" 
-                               FontWeight="SemiBold"
-                               FontSize="14"
-                               Foreground="#333333"/>
-                </Grid>
-
-                <!-- Total Price -->
-                <Border BorderBrush="#E0E0E0" 
-                        BorderThickness="0,1,0,0" 
-                        Padding="0,10,0,0"
-                        Margin="0,0,0,10">
-                    <Grid>
+                <StackPanel>
+                    <!-- Total Items -->
+                    <Grid Margin="0,0,0,8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Thành tiền" 
+                        <TextBlock Text="Tổng" 
                                    Foreground="#666666" 
-                                   FontSize="16"/>
+                                   FontSize="14"/>
                         <TextBlock Grid.Column="1"
-                                   x:Name="TotalPriceText"
-                                   Text="0đ" 
+                                   x:Name="TotalItemsText"
+                                   Text="0 sản phẩm" 
                                    FontWeight="SemiBold"
-                                   FontSize="18"
-                                   Foreground="#FF6B6B"/>
+                                   FontSize="14"
+                                   Foreground="#333333"/>
                     </Grid>
-                </Border>
 
-                <!-- Order Button -->
-                <Button x:Name="Order" 
-                        Style="{StaticResource GradientButtonStyle}"
-                        Content="Mua hàng"
-                        Width="238"
-                        Height="45"
-                        FontSize="18"
-                        Click="PlaceOrder_Click"/>
-            </StackPanel>
-        </Border>
+                    <!-- Total Price -->
+                    <Border BorderBrush="#E0E0E0" 
+                            BorderThickness="0,1,0,0" 
+                            Padding="0,10,0,0"
+                            Margin="0,0,0,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Thành tiền" 
+                                       Foreground="#666666" 
+                                       FontSize="16"/>
+                            <TextBlock Grid.Column="1"
+                                       x:Name="TotalPriceText"
+                                       Text="0đ" 
+                                       FontWeight="SemiBold"
+                                       FontSize="18"
+                                       Foreground="#FF6B6B"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Order Button -->
+                    <Button x:Name="Order" 
+                            Style="{StaticResource GradientButtonStyle}"
+                            Content="Mua hàng"
+                            Width="238"
+                            Height="45"
+                            FontSize="18"
+                            Click="PlaceOrder_Click"/>
+                </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
 </Page>

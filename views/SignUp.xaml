@@ -5,10 +5,14 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d"
-      Height="600"
+      Height="435"
       Width="550"
       Background="#F5F5F5">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="7*"/>
+            <RowDefinition Height="143*"/>
+        </Grid.RowDefinitions>
         <!-- Background Decoration -->
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -22,8 +26,8 @@
                 MaxHeight="600"
                 Background="White"
                 CornerRadius="20"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center">
+                VerticalAlignment="Top"
+                HorizontalAlignment="Center" Grid.RowSpan="2">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="30"
                                   ShadowDepth="0"
@@ -34,7 +38,7 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled"
                           Padding="50,30">
-                <Grid>
+                <Grid Height="916">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -74,8 +78,8 @@
 
                     <!-- Full Name -->
                     <StackPanel Grid.Row="2" Margin="0,0,0,15">
-                        <TextBlock Text="Họ và tên" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6"/>
-                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42">
+                        <TextBlock Text="Họ và tên" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
+                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
                             <Grid Margin="12,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -89,8 +93,8 @@
 
                     <!-- Username -->
                     <StackPanel Grid.Row="3" Margin="0,0,0,15">
-                        <TextBlock Text="Tên đăng nhập" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6"/>
-                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42">
+                        <TextBlock Text="Tên đăng nhập" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
+                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
                             <Grid Margin="12,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -104,8 +108,8 @@
 
                     <!-- Email -->
                     <StackPanel Grid.Row="4" Margin="0,0,0,15">
-                        <TextBlock Text="Email" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6"/>
-                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42">
+                        <TextBlock Text="Email" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
+                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
                             <Grid Margin="12,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -119,8 +123,8 @@
 
                     <!-- Phone -->
                     <StackPanel Grid.Row="5" Margin="0,0,0,15">
-                        <TextBlock Text="Số điện thoại" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6"/>
-                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42">
+                        <TextBlock Text="Số điện thoại" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
+                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
                             <Grid Margin="12,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -134,8 +138,8 @@
 
                     <!-- Address (NEW) -->
                     <StackPanel Grid.Row="6" Margin="0,0,0,15">
-                        <TextBlock Text="Địa chỉ" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6"/>
-                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42">
+                        <TextBlock Text="Địa chỉ" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
+                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
                             <Grid Margin="12,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -149,8 +153,8 @@
 
                     <!-- Password -->
                     <StackPanel Grid.Row="7" Margin="0,0,0,15">
-                        <TextBlock Text="Mật khẩu" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6"/>
-                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42">
+                        <TextBlock Text="Mật khẩu" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
+                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
                             <Grid Margin="12,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -164,8 +168,8 @@
 
                     <!-- Confirm Password -->
                     <StackPanel Grid.Row="8" Margin="0,0,0,15">
-                        <TextBlock Text="Xác nhận mật khẩu" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6"/>
-                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42">
+                        <TextBlock Text="Xác nhận mật khẩu" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
+                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
                             <Grid Margin="12,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -178,7 +182,7 @@
                     </StackPanel>
 
                     <!-- Terms Checkbox -->
-                    <CheckBox Grid.Row="9" x:Name="TermsCheckBox" Margin="5,0,0,20" FontSize="13" Foreground="#666">
+                    <CheckBox Grid.Row="9" x:Name="TermsCheckBox" Margin="35,0,0,20" FontSize="13" Foreground="#666">
                         <TextBlock TextWrapping="Wrap">
                             <Run Text="Tôi đồng ý với "/>
                             <Hyperlink TextDecorations="None" Foreground="#F78272">
@@ -192,7 +196,7 @@
                     </CheckBox>
 
                     <!-- Signup Button -->
-                    <Button Grid.Row="10" x:Name="SignUpButton" Height="48" FontSize="15" FontWeight="Bold" Content="TẠO TÀI KHOẢN" Click="SignUpButton_Click" Cursor="Hand" Margin="5,0,0,18">
+                    <Button Grid.Row="10" x:Name="SignUpButton" Height="48" Width="468" FontSize="15" FontWeight="Bold" Content="TẠO TÀI KHOẢN" Click="SignUpButton_Click" Cursor="Hand" Margin="5,0,0,18">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Background">

@@ -43,23 +43,23 @@ namespace Pet_Shop_Project.Views
             currentUser = user ?? throw new ArgumentNullException(nameof(user));
             orderDetails = cartItems ?? throw new ArgumentNullException(nameof(cartItems));
             if (!orderDetails.Any())
-            throw new InvalidOperationException("Giỏ hàng trống");
+                throw new InvalidOperationException("Giỏ hàng trống");
             InitializeComponent();
             Loaded += Payment_Loaded;
         }
 
-        private bool HasSufficientStock()
+        private async Task<bool> HasSufficientStockAsync()
         {
             const string sql = "SELECT UnitInStock FROM PRODUCTS WHERE ProductId=@ProductId";
             using (var conn = new SqlConnection(_conn))
             {
-                conn.Open();
+                await conn.OpenAsync();
                 foreach (var od in orderDetails)
                 {
                     using (var cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@ProductId", od.ProductId);
-                        var stock = (int?)cmd.ExecuteScalar() ?? 0;
+                        var stock = (int?)await cmd.ExecuteScalarAsync() ?? 0;
                         if (od.Quantity > stock)
                         {
                             MessageBox.Show($"Sản phẩm '{od.Product?.Name}' chỉ còn {stock} trong kho.",
@@ -72,7 +72,7 @@ namespace Pet_Shop_Project.Views
             return true;
         }
 
-        private bool SaveOrderToDatabase(Order order)
+        private async Task<bool> SaveOrderToDatabaseAsync(Order order)
         {
             const string insertOrder = @"INSERT INTO ORDERS (UserId, OrderDate, TotalAmount, ApprovalStatus,
                                         PaymentStatus, ShippingStatus, Address, Note)
@@ -89,7 +89,7 @@ namespace Pet_Shop_Project.Views
 
             using (var conn = new SqlConnection(_conn))
             {
-                conn.Open();
+                await conn.OpenAsync();
                 using (var tx = conn.BeginTransaction())
                 {
                     try
@@ -149,7 +149,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
-        private void ClearPurchasedItemsFromDb(IEnumerable<OrderDetail> details)
+        private async Task<bool> ClearPurchasedItemsFromDbAsync(IEnumerable<OrderDetail> details)
         {
             const string sql = @"DELETE ci FROM CART_ITEMS ci
                                 JOIN CART c ON c.CartId = ci.CartId
@@ -157,19 +157,19 @@ namespace Pet_Shop_Project.Views
 
             using (var conn = new SqlConnection(_conn))
             {
-                conn.Open();
+                await conn.OpenAsync();
                 foreach (var d in details)
                 {
                     using (var cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@UserId", currentUser.UserId);
                         cmd.Parameters.AddWithValue("@ProductId", d.ProductId);
-                        cmd.ExecuteNonQuery();
+                        await cmd.ExecuteNonQueryAsync();
                     }
                 }
             }
+            return true;
         }
-
 
         #region Load Data
 
@@ -187,26 +187,55 @@ namespace Pet_Shop_Project.Views
         {
             if (!IsLoaded) return;
             if (orderDetails == null || currentUser == null) return;
-            if (CustomerNameText == null || CustomerPhoneText == null || CustomerAddressText == null) return;
-            
+
             UpdateAddress();
             UpdateProducts();
             UpdateSummary();
         }
 
-        // Cập nhật địa chỉ
+        // Cập nhật địa chỉ - populate các TextBox
         private void UpdateAddress()
         {
             if (currentUser != null)
             {
-                if (currentUser == null ||
-                    CustomerNameText == null || CustomerPhoneText == null ||
-                    CustomerAddressText == null || DefaultAddressBadge == null)
+                if (CustomerNameTextBox == null || CustomerPhoneTextBox == null ||
+                    ProvinceComboBox == null || DetailedAddressTextBox == null)
                     return;
-                CustomerNameText.Text = currentUser.FullName;
-                CustomerPhoneText.Text = currentUser.Phone;
-                CustomerAddressText.Text = currentUser.Address;
-                DefaultAddressBadge.Visibility = Visibility.Visible;
+
+                // Điền thông tin hiện có từ currentUser
+                CustomerNameTextBox.Text = currentUser.FullName;
+                CustomerPhoneTextBox.Text = currentUser.Phone;
+
+                // Parse địa chỉ để tách tỉnh/thành phố
+                // Format: "Số nhà, đường, phường, quận, Tỉnh/Thành phố"
+                if (!string.IsNullOrEmpty(currentUser.Address))
+                {
+                    var addressParts = currentUser.Address.Split(',');
+                    if (addressParts.Length > 0)
+                    {
+                        // Lấy phần cuối cùng là tỉnh/thành phố
+                        string province = addressParts[addressParts.Length - 1].Trim();
+
+                        // Tìm và chọn tỉnh/thành phố trong ComboBox
+                        foreach (ComboBoxItem item in ProvinceComboBox.Items)
+                        {
+                            if (item.Content.ToString().Contains(province) ||
+                                province.Contains(item.Content.ToString()))
+                            {
+                                ProvinceComboBox.SelectedItem = item;
+                                break;
+                            }
+                        }
+
+                        // Phần còn lại là địa chỉ chi tiết
+                        if (addressParts.Length > 1)
+                        {
+                            var detailedAddress = string.Join(", ",
+                                addressParts.Take(addressParts.Length - 1));
+                            DetailedAddressTextBox.Text = detailedAddress.Trim();
+                        }
+                    }
+                }
             }
         }
 
@@ -230,7 +259,7 @@ namespace Pet_Shop_Project.Views
             // Cập nhật số lượng
             int totalItems = orderDetails.Sum(od => od.Quantity);
             TotalItemsText.Text = totalItems == 1 ? "1 sản phẩm" : $"{totalItems} sản phẩm";
-            SubtotalText.Text = $"₫ {subtotal:N0}";
+            SubtotalText.Text = $"{subtotal:N0}đ";
         }
 
         // Cập nhật tổng kết thanh toán
@@ -243,7 +272,7 @@ namespace Pet_Shop_Project.Views
                 selectedShippingMethod = "Viettel Post";
                 if (ShippingFeeText != null)
                 {
-                    ShippingFeeText.Text = "₫ 0";
+                    ShippingFeeText.Text = "0đ";
                     ShippingFeeText.Foreground = new SolidColorBrush(Color.FromRgb(76, 175, 80)); // #4CAF50
                 }
             }
@@ -253,7 +282,7 @@ namespace Pet_Shop_Project.Views
                 selectedShippingMethod = "Giao hàng nhanh";
                 if (ShippingFeeText != null)
                 {
-                    ShippingFeeText.Text = $"₫ {shippingFee:N0}";
+                    ShippingFeeText.Text = $"{shippingFee:N0}đ";
                     ShippingFeeText.Foreground = new SolidColorBrush(Color.FromRgb(51, 51, 51)); // #333333
                 }
             }
@@ -261,14 +290,14 @@ namespace Pet_Shop_Project.Views
             // Cập nhật subtotal
             if (SummarySubtotalText != null)
             {
-                SummarySubtotalText.Text = $"₫ {subtotal:N0}";
+                SummarySubtotalText.Text = $"{subtotal:N0}đ";
             }
 
             // Tổng cộng
             decimal total = subtotal + shippingFee;
-            if (SummarySubtotalText != null)
+            if (TotalAmountText != null)
             {
-                TotalAmountText.Text = $"₫ {subtotal + shippingFee:N0}";
+                TotalAmountText.Text = $"{total:N0}đ";
             }
         }
 
@@ -292,14 +321,56 @@ namespace Pet_Shop_Project.Views
         }
 
         // Đặt hàng
-        private void PlaceOrder_Click(object sender, RoutedEventArgs e)
+        private async void PlaceOrder_Click(object sender, RoutedEventArgs e)
         {
-            if (currentUser == null || orderDetails == null || !orderDetails.Any())
+            // Validate thông tin địa chỉ
+            if (string.IsNullOrWhiteSpace(CustomerNameTextBox.Text))
             {
-                MessageBox.Show("Thiếu thông tin đơn hàng hoặc người dùng.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Vui lòng nhập họ và tên", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                CustomerNameTextBox.Focus();
                 return;
             }
-            if (!HasSufficientStock()) return;
+
+            if (string.IsNullOrWhiteSpace(CustomerPhoneTextBox.Text))
+            {
+                MessageBox.Show("Vui lòng nhập số điện thoại", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                CustomerPhoneTextBox.Focus();
+                return;
+            }
+
+            if (ProvinceComboBox.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn Tỉnh/Thành phố", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                ProvinceComboBox.Focus();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(DetailedAddressTextBox.Text))
+            {
+                MessageBox.Show("Vui lòng nhập địa chỉ cụ thể", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                DetailedAddressTextBox.Focus();
+                return;
+            }
+
+            if (currentUser == null || orderDetails == null || !orderDetails.Any())
+            {
+                MessageBox.Show("Thiếu thông tin đơn hàng hoặc người dùng.", "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!await HasSufficientStockAsync()) return;
+
+            // Tạo địa chỉ đầy đủ từ các ô nhập
+            string fullName = CustomerNameTextBox.Text.Trim();
+            string phone = CustomerPhoneTextBox.Text.Trim();
+            string province = (ProvinceComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
+            string detailedAddress = DetailedAddressTextBox.Text.Trim();
+            string fullAddress = $"{detailedAddress}, {province}";
 
             const string paymentMethod = "COD";
             const string paymentMethodDisplay = "Thanh toán khi nhận hàng (COD)";
@@ -308,16 +379,15 @@ namespace Pet_Shop_Project.Views
             decimal total = subtotal + shippingFee;
 
             string orderInfo = $"Xác nhận đặt hàng?\n\n" +
-                              $"Người nhận: {currentUser.FullName}\n" +
-                              $"SĐT: {currentUser.Phone}\n" +
-                              $"Địa chỉ: {currentUser.Address}\n\n" +
+                              $"Người nhận: {fullName}\n" +
+                              $"SĐT: {phone}\n" +
+                              $"Địa chỉ: {fullAddress}\n\n" +
                               $"Số sản phẩm: {orderDetails.Sum(od => od.Quantity)}\n" +
                               $"Tạm tính: {subtotal:N0}đ\n" +
-                              $"Phí ship: {shippingFee:N0}đ\n";
-                              
-            orderInfo += $"Tổng cộng: {total:N0}đ\n\n" +
-                        $"Phương thức vận chuyển: {selectedShippingMethod}\n" +
-                        $"Phương thức thanh toán: {paymentMethodDisplay}\n";
+                              $"Phí ship: {shippingFee:N0}đ\n" +
+                              $"Tổng cộng: {total:N0}đ\n\n" +
+                              $"Phương thức vận chuyển: {selectedShippingMethod}\n" +
+                              $"Phương thức thanh toán: {paymentMethodDisplay}\n";
 
             if (!string.IsNullOrEmpty(note))
             {
@@ -329,15 +399,13 @@ namespace Pet_Shop_Project.Views
 
             if (result == MessageBoxResult.Yes)
             {
-                // Tạo đơn hàng mới
-                var newOrder = CreateOrder(paymentMethod, note, total);
+                // Tạo đơn hàng mới với địa chỉ đã cập nhật
+                var newOrder = CreateOrder(paymentMethod, note, total, fullAddress);
 
-                // TODO: Lưu đơn hàng vào database
-                // bool success = SaveOrderToDatabase(newOrder);
-                bool success = true; // Giả lập thành công
+                var success = true;
                 try
                 {
-                    success = SaveOrderToDatabase(newOrder);
+                    success = await SaveOrderToDatabaseAsync(newOrder);
                 }
                 catch (Exception ex)
                 {
@@ -355,14 +423,15 @@ namespace Pet_Shop_Project.Views
                         $"Cảm ơn bạn đã mua hàng. Chúng tôi sẽ liên hệ với bạn sớm nhất.",
                         "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    ClearPurchasedItemsFromDb(orderDetails); // xóa khỏi CART_ITEMS của user
+                    await ClearPurchasedItemsFromDbAsync(orderDetails);
                     CartService.RemoveByProductIds(orderDetails.Select(d => d.ProductId));
                 }
                 else
                 {
                     MessageBox.Show("Đặt hàng thất bại. Vui lòng thử lại sau.",
-                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+
                 // Quay về trang chính hoặc trang đơn hàng
                 NavigationService?.GoBack();
             }
@@ -372,8 +441,8 @@ namespace Pet_Shop_Project.Views
 
         #region Helper Methods
 
-        // Tạo đối tượng Order
-        private Order CreateOrder(string paymentMethod, string note, decimal total)
+        // Tạo đối tượng Order với địa chỉ tùy chỉnh
+        private Order CreateOrder(string paymentMethod, string note, decimal total, string address)
         {
             var order = new Order
             {
@@ -384,7 +453,7 @@ namespace Pet_Shop_Project.Views
                 ApprovalStatus = "Waiting",
                 PaymentStatus = "Pending",
                 ShippingStatus = "Pending",
-                Address = currentUser.Address,
+                Address = address, // Sử dụng địa chỉ từ form
                 Note = note,
                 Details = new System.Collections.ObjectModel.ObservableCollection<OrderDetail>(orderDetails)
             };

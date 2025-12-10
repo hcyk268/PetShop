@@ -1,6 +1,7 @@
 ﻿using Pet_Shop_Project.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
@@ -293,7 +294,61 @@ namespace Pet_Shop_Project.Services
                 throw new Exception($"Không thể đăng ký tài khoản: {ex.Message}");
             }
         }
+        // Thêm method này vào cuối class UserService (trước dấu đóng ngoặc })
 
+        // Đổi mật khẩu
+        public bool ChangePassword(string userId, string oldPassword, string newPassword)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    // Kiểm tra mật khẩu cũ có đúng không
+                    string checkQuery = @"SELECT Password FROM Users WHERE UserId = @UserId";
+
+                    using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
+                    {
+                        checkCmd.Parameters.AddWithValue("@UserId", userId);
+
+                        object result = checkCmd.ExecuteScalar();
+
+                        if (result == null)
+                        {
+                            return false; // User không tồn tại
+                        }
+
+                        string storedPassword = result.ToString();
+
+                        // So sánh mật khẩu cũ
+                        if (oldPassword != storedPassword)
+                        {
+                            return false; // Mật khẩu cũ không đúng
+                        }
+                    }
+
+                    // Cập nhật mật khẩu mới
+                    string updateQuery = @"UPDATE Users 
+                                  SET Password = @NewPassword 
+                                  WHERE UserId = @UserId";
+
+                    using (SqlCommand updateCmd = new SqlCommand(updateQuery, conn))
+                    {
+                        updateCmd.Parameters.AddWithValue("@UserId", userId);
+                        updateCmd.Parameters.AddWithValue("@NewPassword", newPassword);
+
+                        int rowsAffected = updateCmd.ExecuteNonQuery();
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"ChangePassword error: {ex.Message}");
+                throw new Exception($"Lỗi khi đổi mật khẩu: {ex.Message}");
+            }
+        }
         // Cập nhật thông tin user
         public bool UpdateUser(User user)
         {
@@ -328,6 +383,51 @@ namespace Pet_Shop_Project.Services
                 System.Diagnostics.Debug.WriteLine($"UpdateUser error: {ex.Message}");
                 return false;
             }
+        }
+
+        public async Task<ObservableCollection<User>> GetAllUsers()
+        {
+            ObservableCollection<User> allUsers = new ObservableCollection<User>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    await conn.OpenAsync();
+
+                    var query = " SELECT * FROM USERS";
+
+                    using (var cmd = new SqlCommand(query, conn))
+                    {
+                        using (var reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                User user = new User
+                                {
+                                    UserId = reader["UserId"].ToString(),
+                                    FullName = reader["FullName"].ToString(),
+                                    Email = reader["Email"].ToString(),
+                                    Password = reader["Password"].ToString(),
+                                    Phone = reader["Phone"].ToString(),
+                                    Address = reader["Address"].ToString(),
+                                    Role = reader["Role"].ToString(),
+                                    Username = reader["Username"].ToString(),
+                                    CreatedDate = (DateTime)reader["CreatedDate"]
+                                };
+                                allUsers.Add(user);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                return null;
+            }
+
+            return allUsers;
         }
     }
 }
