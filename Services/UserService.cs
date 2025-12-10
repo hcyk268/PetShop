@@ -76,7 +76,76 @@ namespace Pet_Shop_Project.Services
                 throw new Exception($"Lỗi xác thực: {ex.Message}");
             }
         }
+        // Lấy tất cả users (cho Admin quản lý)
+        public List<User> GetAllUsers()
+        {
+            List<User> users = new List<User>();
 
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = @"SELECT UserId, Username, FullName, Email, Phone, Address, Role
+                                    FROM Users 
+                                    ORDER BY UserId DESC";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                users.Add(new User
+                                {
+                                    UserId = reader["UserId"].ToString(),
+                                    FullName = reader["FullName"].ToString(),
+                                    Email = reader["Email"]?.ToString(),
+                                    Phone = reader["Phone"]?.ToString(),
+                                    Address = reader["Address"]?.ToString(),
+                                    Role = reader["Role"].ToString()
+                                });
+                            }
+                        }
+                    }
+                }
+
+                return users;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"GetAllUsers error: {ex.Message}");
+                throw;
+            }
+        }
+
+        // Xóa user
+        public bool DeleteUser(string userId)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = "DELETE FROM USERS WHERE UserId = @UserId";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserId", userId);
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"DeleteUser error: {ex.Message}");
+                throw new Exception($"Không thể xóa người dùng: {ex.Message}");
+            }
+        }
         // Hash password bằng SHA256
         private string HashPassword(string password)
         {
