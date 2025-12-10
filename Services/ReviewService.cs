@@ -184,5 +184,114 @@ namespace Pet_Shop_Project.Services
                 return false;
             }
         }
+
+        // Lấy tất cả reviews
+        public async Task<List<Review>> GetAllReviewsAsync()
+        {
+            List<Review> reviews = new List<Review>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    await conn.OpenAsync();
+                    string query = @"SELECT ReviewId, ProductId, UserId, Rating, Comment, ReviewDate
+                                    FROM dbo.REVIEWS
+                                    ORDER BY ReviewDate DESC";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                Review review = new Review
+                                {
+                                    ReviewId = reader["ReviewId"].ToString(),
+                                    ProductId = reader["ProductId"].ToString(),
+                                    UserId = reader["UserId"].ToString(),
+                                    Rating = Convert.ToInt32(reader["Rating"]),
+                                    Comment = reader["Comment"].ToString(),
+                                    ReviewDate = Convert.ToDateTime(reader["ReviewDate"])
+                                };
+                                reviews.Add(review);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Lỗi khi lấy danh sách reviews: {ex.Message}", "Lỗi",
+                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+            }
+
+            return reviews;
+        }
+
+        // Xóa review theo ReviewId
+        public async Task<bool> DeleteReviewAsync(string reviewId)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    await conn.OpenAsync();
+                    string query = "DELETE FROM dbo.REVIEWS WHERE ReviewId = @ReviewId";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ReviewId", reviewId);
+                        int rowsAffected = await cmd.ExecuteNonQueryAsync();
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Lỗi khi xóa review: {ex.Message}", "Lỗi",
+                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                return false;
+            }
+        }
+
+        // Lấy danh sách sản phẩm
+        public async Task<List<Product>> GetAllProductsForSelectionAsync()
+        {
+            List<Product> products = new List<Product>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    await conn.OpenAsync();
+                    string query = "SELECT ProductId, Name, Picture FROM dbo.PRODUCTS ORDER BY Name";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                Product product = new Product
+                                {
+                                    ProductId = reader["ProductId"].ToString(),
+                                    Name = reader["Name"].ToString(),
+                                    Picture = reader["Picture"]?.ToString() ?? ""
+                                };
+                                products.Add(product);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Lỗi lấy danh sách sản phẩm: {ex.Message}");
+            }
+
+            return products;
+        }
     }
 }
+

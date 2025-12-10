@@ -24,7 +24,7 @@
         <Frame Grid.Column="1" 
                x:Name="AdminScreen" 
                NavigationUIVisibility="Hidden"
-               Source="/views/AdminInventoryPage.xaml">
+               Source="/views/AdminReviewPage.xaml">
         </Frame>
     </Grid>
 </Window>

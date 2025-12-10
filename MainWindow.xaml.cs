@@ -26,7 +26,7 @@ namespace Pet_Shop_Project
             this.userid = userId;
             Services.NavigationService.Instance.Initialize(MainScreen);
             Services.NavigationService.Instance.setUserId(userid);
-            MainScreen.Navigate(new AccountPage(userId));
+            Services.NavigationService.Instance.NavigateToHome();
         }
     }
 }

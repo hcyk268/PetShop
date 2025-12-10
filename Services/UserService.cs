@@ -1,4 +1,4 @@
-﻿using Pet_Shop_Project.Models;
+using Pet_Shop_Project.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -346,7 +346,7 @@ namespace Pet_Shop_Project.Services
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"ChangePassword error: {ex.Message}");
-                throw new Exception($"Lỗi khi đổi mật khẩu: {ex.Message}");
+                throw new Exception($"LÃƒÆ’Ã‚Â¡Ãƒâ€šÃ‚Â»ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Âi khi ÃƒÆ’Ã¢â‚¬Å¾ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“ÃƒÆ’Ã‚Â¡Ãƒâ€šÃ‚Â»ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢i mÃƒÆ’Ã‚Â¡Ãƒâ€šÃ‚ÂºÃƒâ€šÃ‚Â­t khÃƒÆ’Ã‚Â¡Ãƒâ€šÃ‚ÂºÃƒâ€šÃ‚Â©u: {ex.Message}");
             }
         }
         // Cập nhật thông tin user
@@ -429,5 +429,87 @@ namespace Pet_Shop_Project.Services
 
             return allUsers;
         }
+
+        public async Task<ObservableCollection<User>> GetAllCustomer()
+        {
+            ObservableCollection<User> allCustomers = new ObservableCollection<User>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    await conn.OpenAsync();
+
+                    var query = " SELECT * FROM USERS WHERE Role = 'User'";
+
+                    using (var cmd = new SqlCommand(query, conn))
+                    {
+                        using (var reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                User user = new User
+                                {
+                                    UserId = reader["UserId"].ToString(),
+                                    FullName = reader["FullName"].ToString(),
+                                    Email = reader["Email"].ToString(),
+                                    Password = reader["Password"].ToString(),
+                                    Phone = reader["Phone"].ToString(),
+                                    Address = reader["Address"].ToString(),
+                                    Role = reader["Role"].ToString(),
+                                    Username = reader["Username"].ToString(),
+                                    CreatedDate = (DateTime)reader["CreatedDate"]
+                                };
+                                allCustomers.Add(user);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                return null;
+            }
+
+            return allCustomers;
+        }
+
+        public async Task<string> AddVirtualUser(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Tên không được để trống", nameof(name));
+            }
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+
+                string query = @"INSERT INTO Users
+                                (Username, FullName, Email, Password, Role, CreatedDate)
+                                OUTPUT INSERTED.UserId
+                                VALUES
+                                (@Username, @FullName, @Email, @Password, @Role, @CreatedDate)";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Username", "Virtual_" + DateTime.Now.ToString("ddMMyyHHmmss"));
+                    cmd.Parameters.AddWithValue("@FullName", name.Trim());
+                    cmd.Parameters.AddWithValue("@Email", "Virtual_" + DateTime.Now.ToString("ddMMyyHHmmss"));
+                    cmd.Parameters.AddWithValue("@Password", "Virtual_" + DateTime.Now.ToString("ddMMyyHHmmss"));
+                    cmd.Parameters.AddWithValue("@Role", "User");
+                    cmd.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
+
+                    object result = await cmd.ExecuteScalarAsync();
+                    if (result == null || result == DBNull.Value)
+                    {
+                        throw new Exception("Không lấy được UserId sau khi insert");
+                    }
+                    return result.ToString();
+                }
+            }
+        }
     }
+
 }
