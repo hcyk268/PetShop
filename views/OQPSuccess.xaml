@@ -121,23 +121,83 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Border BorderBrush='#FFE2B6' BorderThickness='1' CornerRadius='6' Padding='10' Margin='0,0,0,6' Background='#FFFDF8'>
-                                                <DockPanel>
-                                                    <Border Width="60" Height="60" CornerRadius="10" BorderBrush="Transparent" BorderThickness="1" Margin="0 0 10 0" Background="White" Loaded="ImageBorder_Loaded">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <!-- Product Image -->
+                                                    <Border Grid.Column="0" Width="60" Height="60" CornerRadius="10" BorderBrush="Transparent" BorderThickness="1" Margin="0,0,10,0" Background="White" Loaded="ImageBorder_Loaded">
                                                         <Image Source='{Binding Product.Picture}' Stretch='UniformToFill'/>
                                                     </Border>
-                                                    <StackPanel>
+
+                                                    <!-- Product Info -->
+                                                    <StackPanel Grid.Column="1">
                                                         <TextBlock Text='{Binding Product.Name}' FontWeight='SemiBold'/>
                                                         <TextBlock Text='{Binding Product.Description}' FontStyle='Italic' Foreground='Gray' TextWrapping='Wrap' MaxWidth='600'/>
                                                         <TextBlock Margin='0,4,0,0'>
-                                                        <Run Text='Số lượng: '/>
-                                                        <Run Text='{Binding Quantity}'/>
-                                                        <Run Text=' | Giá: '/>
-                                                        <Run Text='{Binding Product.UnitPrice, StringFormat="{}{0:N0} ₫"}'/>
-                                                        <Run Text=' | Giảm: '/>
-                                                        <Run Text='{Binding Product.Discount, StringFormat={}{0:P0}}'/>
+                                                            <Run Text='Số lượng: '/>
+                                                            <Run Text='{Binding Quantity}'/>
+                                                            <Run Text=' | Giá: '/>
+                                                            <Run Text='{Binding Product.UnitPrice, StringFormat="{}{0:N0} ₫"}'/>
+                                                            <Run Text=' | Giảm: '/>
+                                                            <Run Text='{Binding Product.Discount, StringFormat={}{0:P0}}'/>
                                                         </TextBlock>
                                                     </StackPanel>
-                                                </DockPanel>
+
+                                                    <!-- Review Button -->
+                                                    <Button Grid.Column="2"
+                                                            Width="115"
+                                                            Height="35"
+                                                            VerticalAlignment="Center"
+                                                            Margin="10,0,0,0"
+                                                            BorderThickness="1.5"
+                                                            BorderBrush="#F9D978"
+                                                            Background="Transparent"
+                                                            Cursor="Hand"
+                                                            Click="ReviewButton_Click"
+                                                            Tag="{Binding}">
+                                                        <Button.Template>
+                                                            <ControlTemplate TargetType="Button">
+                                                                <Border x:Name="border"
+                                                                        Background="{TemplateBinding Background}"
+                                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                                        CornerRadius="8">
+                                                                    <StackPanel Orientation="Horizontal"
+                                                                                HorizontalAlignment="Center"
+                                                                                VerticalAlignment="Center">
+                                                                        <materialDesign:PackIcon x:Name="icon"
+                                                                                                 Kind="RateReview"
+                                                                                                 Width="18"
+                                                                                                 Height="18"
+                                                                                                 Foreground="#F9D978"
+                                                                                                 VerticalAlignment="Center"
+                                                                                                 Margin="0,0,6,0"/>
+                                                                        <TextBlock x:Name="text"
+                                                                                   Text="Đánh giá"
+                                                                                   FontSize="15"
+                                                                                   FontWeight="SemiBold"
+                                                                                   Foreground="#F9D978"
+                                                                                   VerticalAlignment="Center"/>
+                                                                    </StackPanel>
+                                                                </Border>
+                                                                <ControlTemplate.Triggers>
+                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                        <Setter TargetName="border" Property="Background" Value="#F9D978"/>
+                                                                        <Setter TargetName="icon" Property="Foreground" Value="White"/>
+                                                                        <Setter TargetName="text" Property="Foreground" Value="White"/>
+                                                                    </Trigger>
+                                                                    <Trigger Property="IsPressed" Value="True">
+                                                                        <Setter TargetName="border" Property="Background" Value="#F0C860"/>
+                                                                    </Trigger>
+                                                                </ControlTemplate.Triggers>
+                                                            </ControlTemplate>
+                                                        </Button.Template>
+                                                    </Button>
+                                                </Grid>
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
@@ -146,7 +206,7 @@
                                 <StackPanel Grid.Row='3' Orientation='Horizontal' HorizontalAlignment='Right'>
                                     <Button Style="{StaticResource MaterialDesignOutlinedButton}" Padding="12 8" Tag="{Binding}" Click="reorderbtn_Click">
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                            <materialDesign:PackIcon Kind="Replay" Width="20" Height="20" Margin="0 0 6 0" VerticalAlignment="Center"/>
+                                            <materialDesign:PackIcon Kind="Replay" Width="20" Height="20" Margin="0,0,6,0" VerticalAlignment="Center"/>
                                             <TextBlock Text="Đặt lại" FontWeight="SemiBold" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Button>

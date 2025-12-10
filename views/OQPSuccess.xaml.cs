@@ -23,10 +23,13 @@ namespace Pet_Shop_Project.Views
         private ObservableCollection<Order> _orderSuccesses;
         private ObservableCollection<Order> _allOrders;
         private readonly string _connectionDB = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
-        public OQPSuccess(ObservableCollection<Order> allOrders)
+        private string _userId;
+
+        public OQPSuccess(ObservableCollection<Order> allOrders, string userId)
         {
             InitializeComponent();
             _allOrders = allOrders;
+            _userId = userId;
             OrderSuccesses = new ObservableCollection<Order>();
             AttachExistingOrders();
             FilterOrders();
@@ -50,7 +53,7 @@ namespace Pet_Shop_Project.Views
             foreach (var order in _allOrders)
                 if (order.ShippingStatus == "Delivered")
                     OrderSuccesses.Add(order);
-            
+
             OnPropertyChanged(nameof(TotalOrderSuccess));
         }
 
@@ -70,6 +73,49 @@ namespace Pet_Shop_Project.Views
                 RadiusX = border.CornerRadius.TopLeft,
                 RadiusY = border.CornerRadius.TopLeft
             };
+        }
+
+        private void ReviewButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var button = sender as Button;
+                var orderDetail = button?.Tag as OrderDetail;
+
+                if (orderDetail == null)
+                {
+                    MessageBox.Show("Không thể lấy thông tin sản phẩm!", "Lỗi",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(_userId))
+                {
+                    MessageBox.Show("Không xác định được người dùng!", "Lỗi",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Mở ReviewWindow
+                var reviewWindow = new ReviewWindow(orderDetail, _userId)
+                {
+                    Owner = Window.GetWindow(this),
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner
+                };
+
+                bool? result = reviewWindow.ShowDialog();
+
+                if (result == true)
+                {
+                    // Đánh giá thành công
+                    // Có thể refresh UI hoặc cập nhật trạng thái nếu cần
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Có lỗi xảy ra: {ex.Message}", "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private async void reorderbtn_Click(object sender, RoutedEventArgs e)

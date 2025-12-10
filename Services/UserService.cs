@@ -385,7 +385,7 @@ namespace Pet_Shop_Project.Services
             }
         }
 
-        public async Task<ObservableCollection<User>> GetAllUsers()
+        public async Task<ObservableCollection<User>> GetAllUsersAsync()
         {
             ObservableCollection<User> allUsers = new ObservableCollection<User>();
 

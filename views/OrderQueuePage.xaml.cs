@@ -16,14 +16,14 @@ namespace Pet_Shop_Project.Views
     public partial class OrderQueuePage : Page, INotifyPropertyChanged
     {
         private OrderService _orderService = new OrderService();
-        
+
         private ObservableCollection<Order> _allOrders;
 
         private bool _active = false;
 
         private string _userid;
 
-        SolidColorBrush defaulttext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#222")); 
+        SolidColorBrush defaulttext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#222"));
         SolidColorBrush clickedtext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF6B6B"));
 
         public OrderQueuePage(string userid)
@@ -63,7 +63,7 @@ namespace Pet_Shop_Project.Views
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -115,7 +115,7 @@ namespace Pet_Shop_Project.Views
             setForeColorDefault();
             odpsuccessbutton.Foreground = clickedtext;
 
-            MainScreenOQP.Navigate(new OQPSuccess(AllOrders));
+            MainScreenOQP.Navigate(new OQPSuccess(AllOrders, _userid));
         }
 
         private void odpcanceledbutton_Click(object sender, RoutedEventArgs e)
