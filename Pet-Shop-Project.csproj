@@ -179,6 +179,7 @@
       <DependentUpon>ProductCard.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\InventoryItem.cs" />
+    <Compile Include="Services\AdminNavigationService.cs" />
     <Compile Include="Services\DashBoardService.cs" />
     <Compile Include="Services\InventoryService.cs" />
     <Compile Include="Services\ReviewService.cs" />
