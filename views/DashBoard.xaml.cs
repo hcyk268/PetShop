@@ -8,6 +8,11 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using LiveCharts;
+using LiveCharts.Wpf;
+using Pet_Shop_Project.Models;
+using Pet_Shop_Project.Services;
+
 
 namespace Pet_Shop_Project.Views
 {
@@ -16,13 +21,30 @@ namespace Pet_Shop_Project.Views
         private string currentUserId;
         private UserService userService;
         private User currentUser;
-        public DashBoard() : this("Admin")
+
+        // Constructor không tham số - sử dụng mặc định
+        public DashBoard()
         {
+            InitializeComponent();
+
+            currentUserId = "Admin";
+            userService = new UserService();
+
+            // Load thông tin user từ database
+            LoadUserInfo();
+
+            // Khởi tạo ViewModel với tên user
+            if (currentUser != null)
+            {
+                DataContext = new DashboardViewModel(currentUser.FullName ?? "Admin");
+            }
+            else
+            {
+                DataContext = new DashboardViewModel("Admin");
+            }
         }
 
-
-
-        // Constructor chính - nhận userId từ trang Login
+        // Constructor có tham số - nhận userId từ trang Login
         public DashBoard(string userId)
         {
             InitializeComponent();
@@ -43,6 +65,7 @@ namespace Pet_Shop_Project.Views
                 DataContext = new DashboardViewModel("Admin");
             }
         }
+
         private void LoadUserInfo()
         {
             try
@@ -123,21 +146,21 @@ public class DashboardViewModel
 
         // Tạo series cho biểu đồ với màu sắc rõ ràng
         WeeklyRevenueSeries = new SeriesCollection
+        {
+            new LineSeries
             {
-                new LineSeries
-                {
-                    Title = "💰 Doanh thu",
-                    Values = new ChartValues<double>(values),
-                    PointGeometry = DefaultGeometries.Circle,
-                    PointGeometrySize = 12,
-                    Fill = new SolidColorBrush(Color.FromArgb(80, 255, 140, 0)),  // Cam trong suốt
-                    Stroke = new SolidColorBrush(Color.FromRgb(255, 140, 0)),     // Cam đậm
-                    StrokeThickness = 4,
-                    LineSmoothness = 0.3,  // Đường cong mượt hơn
-                    DataLabels = true,     // Hiển thị số trên mỗi điểm
-                    LabelPoint = point => (point.Y / 1000).ToString("N0") + "k"  // Format: 100k, 200k
-                }
-            };
+                Title = "💰 Doanh thu",
+                Values = new ChartValues<double>(values),
+                PointGeometry = DefaultGeometries.Circle,
+                PointGeometrySize = 12,
+                Fill = new SolidColorBrush(Color.FromArgb(80, 255, 140, 0)),  // Cam trong suốt
+                Stroke = new SolidColorBrush(Color.FromRgb(255, 140, 0)),     // Cam đậm
+                StrokeThickness = 4,
+                LineSmoothness = 0.3,  // Đường cong mượt hơn
+                DataLabels = true,     // Hiển thị số trên mỗi điểm
+                LabelPoint = point => (point.Y / 1000).ToString("N0") + "k"  // Format: 100k, 200k
+            }
+        };
 
         // Formatter cho trục Y (hiển thị số tiền)
         YFormatter = value => {
