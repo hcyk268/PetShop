@@ -25,7 +25,7 @@ namespace Pet_Shop_Project.Views
     {
         private ObservableCollection<InventoryItem> allItems;
         private ObservableCollection<InventoryItem> filteredItems;
-        private List<InventoryItem> currentPageItems;
+        private ObservableCollection<InventoryItem> currentPageItems;
 
         private int currentPage = 1;
         private const int itemsPerPage = 10;
@@ -136,7 +136,9 @@ namespace Pet_Shop_Project.Views
                 currentPage = 1;
 
             int skip = (currentPage - 1) * itemsPerPage;
-            currentPageItems = filteredItems.Skip(skip).Take(itemsPerPage).ToList();
+            currentPageItems = new ObservableCollection<InventoryItem>(
+                filteredItems.Skip(skip).Take(itemsPerPage)
+            );
 
             InventoryDataGrid.ItemsSource = currentPageItems;
 

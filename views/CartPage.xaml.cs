@@ -199,7 +199,7 @@ namespace Pet_Shop_Project.Views
         }
 
         // Xóa nhiều sản phẩm cùng lúc
-        private async Task DeleteMultipleCartItemsFromDatabaseAsync(List<string> cartItemIds)
+        private async Task DeleteMultipleCartItemsFromDatabaseAsync(IEnumerable<string> cartItemIds)
         {
             try
             {
@@ -452,9 +452,9 @@ namespace Pet_Shop_Project.Views
         #endregion
 
         #region Helper Methods
-        private List<OrderDetail> ConvertToOrderDetails(List<CartItem> cartItems)
+        private ObservableCollection<OrderDetail> ConvertToOrderDetails(List<CartItem> cartItems)
         {
-            var orderDetails = new List<OrderDetail>();
+            var orderDetails = new ObservableCollection<OrderDetail>();
 
             foreach (var cartItem in cartItems)
             {
