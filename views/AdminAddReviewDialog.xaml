@@ -55,12 +55,13 @@
                     <!-- User Name -->
                     <TextBlock Text="Tên người đánh giá" FontWeight="SemiBold" Margin="0,0,0,4"/>
                     <TextBox x:Name="TxtUserName"
+                             AcceptsTab="True"
                              Height="34"
                              Padding="10,6"
                              Margin="0,0,0,12"/>
 
                     <!-- Rating -->
-                    <TextBlock Text="Đánh giá" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                    <TextBlock Text="Đánh giá" FontWeight="SemiBold" Margin="0,0,0,4" />
                     <Border Background="#F8F8F8"
                             BorderBrush="#E8E8E8"
                             BorderThickness="1"
@@ -79,6 +80,7 @@
                     <!-- Comment -->
                     <TextBlock Text="Nội dung" FontWeight="SemiBold" Margin="0,0,0,4"/>
                     <TextBox x:Name="TxtComment"
+                             AcceptsTab="True"
                              Height="70"
                              Padding="10"
                              TextWrapping="Wrap"
@@ -97,10 +99,9 @@
                             Content="Hủy"
                             Height="38"
                             Margin="0,0,8,0"
-                            Background="#F3F3F3"
-                            Foreground="#333"
                             Click="BtnCancel_Click"
-                            Style="{StaticResource QtyButtonStyle}"/>
+                            Style="{StaticResource GradientButtonStyle}"/>  
+
 
                     <Button Grid.Column="1"
                             Content="Lưu"
