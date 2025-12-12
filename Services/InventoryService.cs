@@ -87,7 +87,7 @@ namespace Pet_Shop_Project.Services
                     {
                         cmd.Parameters.AddWithValue("@ProductId", item.ProductId);
                         cmd.Parameters.AddWithValue("@StockQuantity", item.StockQuantity);
-                        return cmd.ExecuteNonQuery() > 0;                        
+                        return await cmd.ExecuteNonQueryAsync() > 0;                        
                     }
                 }
             }
@@ -114,7 +114,7 @@ namespace Pet_Shop_Project.Services
                     {
                         cmd.Parameters.AddWithValue("@ProductId", item.ProductId);
                         cmd.Parameters.AddWithValue("@StockQuantity", item.StockQuantity);
-                        return cmd.ExecuteNonQuery() > 0;
+                        return await cmd.ExecuteNonQueryAsync() > 0;
                     }
                 }
             }
@@ -142,7 +142,7 @@ namespace Pet_Shop_Project.Services
                     using (var cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@ProductId", productId);
-                        return cmd.ExecuteNonQuery() > 0;
+                        return await cmd.ExecuteNonQueryAsync() > 0;
                     }
                 }
             }
