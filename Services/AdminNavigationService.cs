@@ -51,13 +51,24 @@ namespace Pet_Shop_Project.Services
 
         public void NavigateToOrder()
         {
-
+            if (mainFrame != null)
+            {
+                mainFrame.Navigate(new AdminOrder());
+            }
         }
         public void NavigateToReview()
         {
             if (mainFrame != null)
             {
                 mainFrame.Navigate(new AdminReviewPage());
+            }
+        }
+
+        public void NavigateToCreateOrder()
+        {
+            if (mainFrame != null)
+            {
+                mainFrame.Navigate(new AdminCreateOrder());
             }
         }
     }

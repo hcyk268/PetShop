@@ -502,10 +502,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <!-- Images and Resources -->
-  <ItemGroup>
-    <Content Include=".gitignore" />
-  </ItemGroup>
+  <!-- Images and Resources -->
   <ItemGroup>
     <Resource Include="Images\avt.jpg" />
     <Resource Include="Images\bear.jpg" />
@@ -526,24 +523,7 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\download.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\peach.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\avt.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\bear.jpg" />
-    <Resource Include="Images\bear1.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include=".gitignore" />
-    <Resource Include="peach.png" />
-  </ItemGroup>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets')" />
   <Import Project="packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\build\Microsoft.Xaml.Behaviors.Wpf.targets" Condition="Exists('packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\build\Microsoft.Xaml.Behaviors.Wpf.targets')" />
