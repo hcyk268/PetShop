@@ -39,9 +39,9 @@ namespace Pet_Shop_Project.Controls
             
         }
 
-        private void ShippingButton_Click(object sender, RoutedEventArgs e)
+        private void OrderButton_Click(object sender, RoutedEventArgs e)
         {
-           
+           Services.AdminNavigationService.Instance.NavigateToOrder();
         }
 
         private void ReviewButton_Click(object sender, RoutedEventArgs e)
