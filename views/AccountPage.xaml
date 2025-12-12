@@ -92,7 +92,7 @@
                     <TextBlock x:Name="UserNameText"
                               Text="Username"
                               FontSize="22"
-                              FontWeight="SemiBold"
+                              FontWeight="Bold"
                               Foreground="#FF6B6B"
                               HorizontalAlignment="Center"
                               TextWrapping="Wrap"
@@ -104,15 +104,25 @@
                            CornerRadius="12"
                            Padding="12,6"
                            Margin="0,0,0,30"
-                           HorizontalAlignment="Center" Width="126" Height="30">
-                        <TextBlock x:Name="RoleText"
-                                  Text="Khách hàng"
-                                  FontSize="13"
-                                  FontWeight="Medium"
-                                  TextAlignment="Center"
-                                  Foreground="White"
-                                  VerticalAlignment="Center"/>
-                        
+                           HorizontalAlignment="Center" 
+                           Height="30">
+                        <StackPanel Orientation="Horizontal" 
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center">
+                            <materialDesign:PackIcon x:Name="RoleIcon"
+                                                   Kind="Account"
+                                                   Width="16"
+                                                   Height="16"
+                                                   Foreground="White"
+                                                   Margin="0,0,6,0"
+                                                   VerticalAlignment="Center"/>
+                            <TextBlock x:Name="RoleText"
+                                      Text="Khách hàng"
+                                      FontSize="13"
+                                      FontWeight="Medium"
+                                      Foreground="White"
+                                      VerticalAlignment="Center"/>
+                        </StackPanel>
                     </Border>
 
                     <!-- Change Password Button -->
@@ -122,7 +132,7 @@
                            FontSize="13"
                            FontWeight="Medium"
                            Height="30"
-                           Margin="0,0,0,10"
+                           Margin="0,95,0,10"
                            BorderThickness="0"
                            Cursor="Hand"
                            Click="ChangePassword_Click" Width="145">
@@ -195,8 +205,6 @@
                             </Style>
                         </Button.Style>
                     </Button>
-
-                    <!-- Logout Button -->
                 </StackPanel>
             </Border>
 
@@ -210,22 +218,59 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                              HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,0">
                     <StackPanel>
-                        <!-- Title -->
+                        <!-- Title with Edit/Save/Cancel Buttons -->
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                             <TextBlock Text="Thông tin liên hệ"
                                       FontSize="18"
                                       FontWeight="Bold"
                                       Foreground="#FFAD57"
                                       VerticalAlignment="Center"/>
-                            <Button Background="Transparent"
+
+                            <!-- Edit Button -->
+                            <Button x:Name="EditButton"
+                                   Background="Transparent"
                                    BorderThickness="0"
                                    Cursor="Hand"
                                    Padding="5"
-                                   Margin="10,0,0,0">
+                                   Margin="10,0,0,0"
+                                   Click="EditButton_Click"
+                                   ToolTip="Chỉnh sửa thông tin">
                                 <materialDesign:PackIcon Kind="Pencil"
                                                        Width="18"
                                                        Height="18"
                                                        Foreground="#666666"/>
+                            </Button>
+
+                            <!-- Save Button (Hidden by default) -->
+                            <Button x:Name="SaveButton"
+                                   Background="Transparent"
+                                   BorderThickness="0"
+                                   Cursor="Hand"
+                                   Padding="5"
+                                   Margin="5,0,0,0"
+                                   Click="SaveButton_Click"
+                                   Visibility="Collapsed"
+                                   ToolTip="Lưu thay đổi">
+                                <materialDesign:PackIcon Kind="ContentSave"
+                                                       Width="18"
+                                                       Height="18"
+                                                       Foreground="#4CAF50"/>
+                            </Button>
+
+                            <!-- Cancel Button (Hidden by default) -->
+                            <Button x:Name="CancelButton"
+                                   Background="Transparent"
+                                   BorderThickness="0"
+                                   Cursor="Hand"
+                                   Padding="5"
+                                   Margin="5,0,0,0"
+                                   Click="CancelButton_Click"
+                                   Visibility="Collapsed"
+                                   ToolTip="Hủy">
+                                <materialDesign:PackIcon Kind="Close"
+                                                       Width="18"
+                                                       Height="18"
+                                                       Foreground="#F44336"/>
                             </Button>
                         </StackPanel>
 
@@ -236,13 +281,29 @@
                                       FontWeight="Medium"
                                       Foreground="#757575"
                                       Margin="0,0,0,5"/>
-                            <Border Background="#FFF3E6"
+                            <!-- Display Mode -->
+                            <Border x:Name="EmailDisplayBorder"
+                                   Background="#FFF3E6"
                                    CornerRadius="8"
                                    Padding="15,12">
                                 <TextBlock x:Name="EmailText"
                                           Text="email@example.com"
                                           FontSize="14"
                                           Foreground="#333333"/>
+                            </Border>
+                            <!-- Edit Mode -->
+                            <Border x:Name="EmailEditBorder"
+                                   Background="#FFF3E6"
+                                   CornerRadius="8"
+                                   Padding="10,8"
+                                   Visibility="Collapsed">
+                                <TextBox x:Name="EmailTextBox"
+                                        Text="email@example.com"
+                                        FontSize="14"
+                                        Foreground="#333333"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Padding="5,4"/>
                             </Border>
                         </StackPanel>
 
@@ -253,7 +314,9 @@
                                       FontWeight="Medium"
                                       Foreground="#757575"
                                       Margin="0,0,0,5"/>
-                            <Border Background="#FFF3E6"
+                            <!-- Display Mode -->
+                            <Border x:Name="AddressDisplayBorder"
+                                   Background="#FFF3E6"
                                    CornerRadius="8"
                                    Padding="15,12">
                                 <TextBlock x:Name="AddressText"
@@ -261,6 +324,23 @@
                                           FontSize="14"
                                           Foreground="#999999"
                                           TextWrapping="Wrap"/>
+                            </Border>
+                            <!-- Edit Mode -->
+                            <Border x:Name="AddressEditBorder"
+                                   Background="#FFF3E6"
+                                   CornerRadius="8"
+                                   Padding="10,8"
+                                   Visibility="Collapsed">
+                                <TextBox x:Name="AddressTextBox"
+                                        Text="Chưa cập nhật"
+                                        FontSize="14"
+                                        Foreground="#333333"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Padding="5,4"
+                                        TextWrapping="Wrap"
+                                        AcceptsReturn="True"
+                                        MinHeight="40"/>
                             </Border>
                         </StackPanel>
 
@@ -271,13 +351,29 @@
                                       FontWeight="Medium"
                                       Foreground="#757575"
                                       Margin="0,0,0,8"/>
-                            <Border Background="#FFF3E6"
+                            <!-- Display Mode -->
+                            <Border x:Name="PhoneDisplayBorder"
+                                   Background="#FFF3E6"
                                    CornerRadius="8"
                                    Padding="15,12">
                                 <TextBlock x:Name="PhoneText"
                                           Text="Chưa cập nhật"
                                           FontSize="14"
                                           Foreground="#999999"/>
+                            </Border>
+                            <!-- Edit Mode -->
+                            <Border x:Name="PhoneEditBorder"
+                                   Background="#FFF3E6"
+                                   CornerRadius="8"
+                                   Padding="10,8"
+                                   Visibility="Collapsed">
+                                <TextBox x:Name="PhoneTextBox"
+                                        Text="Chưa cập nhật"
+                                        FontSize="14"
+                                        Foreground="#333333"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Padding="5,4"/>
                             </Border>
                         </StackPanel>
 
@@ -295,16 +391,33 @@
                                       FontWeight="Medium"
                                       Foreground="#757575"
                                       Margin="0,0,0,5"/>
-                            <Border Background="#FFF3E6"
+                            <!-- Display Mode -->
+                            <Border x:Name="FullNameDisplayBorder"
+                                   Background="#FFF3E6"
                                    CornerRadius="8"
                                    Padding="15,12">
-                                <TextBlock Text="Chưa cập nhật"
+                                <TextBlock x:Name="FullNameText"
+                                          Text="Chưa cập nhật"
                                           FontSize="14"
                                           Foreground="#999999"/>
                             </Border>
+                            <!-- Edit Mode -->
+                            <Border x:Name="FullNameEditBorder"
+                                   Background="#FFF3E6"
+                                   CornerRadius="8"
+                                   Padding="10,8"
+                                   Visibility="Collapsed">
+                                <TextBox x:Name="FullNameTextBox"
+                                        Text="Chưa cập nhật"
+                                        FontSize="14"
+                                        Foreground="#333333"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Padding="5,4"/>
+                            </Border>
                         </StackPanel>
 
-                        <!-- Join Date -->
+                        <!-- Join Date (Read-only) -->
                         <StackPanel Margin="0,5,0,15">
                             <TextBlock Text="Ngày tham gia:"
                                       FontSize="14"

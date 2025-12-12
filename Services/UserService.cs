@@ -372,7 +372,7 @@ namespace Pet_Shop_Project.Services
                         cmd.Parameters.AddWithValue("@Email", user.Email ?? "");
                         cmd.Parameters.AddWithValue("@Phone", user.Phone ?? "");
                         cmd.Parameters.AddWithValue("@Address", user.Address ?? "");
-                        cmd.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
+
                         int rowsAffected = cmd.ExecuteNonQuery();
                         return rowsAffected > 0;
                     }
