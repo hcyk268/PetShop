@@ -29,9 +29,9 @@ namespace Pet_Shop_Project.Controls
             
         }
 
-        private void ProductButton_Click(object sender, RoutedEventArgs e)
+        private void InventoryButton_Click(object sender, RoutedEventArgs e)
         {
-           
+           Services.AdminNavigationService.Instance.NavigateToInventory();
         }
 
         private void UserButton_Click(object sender, RoutedEventArgs e)
@@ -39,14 +39,14 @@ namespace Pet_Shop_Project.Controls
             
         }
 
-        private void ShippingButton_Click(object sender, RoutedEventArgs e)
+        private void OrderButton_Click(object sender, RoutedEventArgs e)
         {
-           
+           Services.AdminNavigationService.Instance.NavigateToOrder();
         }
 
         private void ReviewButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            Services.AdminNavigationService.Instance.NavigateToReview();
         }
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
@@ -56,7 +56,19 @@ namespace Pet_Shop_Project.Controls
                 "Xác nhận đăng xuất",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question);
-           // Placeholder
+
+            if (result == MessageBoxResult.Yes)
+            {
+                MessageBox.Show("Đăng xuất thành công!",
+                    "Thông báo",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+                 
+                Login loginWindow = new Login();
+                loginWindow.Show();
+
+                Window.GetWindow(this)?.Close();
+            }
         }
     }
 }

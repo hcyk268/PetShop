@@ -81,7 +81,7 @@ namespace Pet_Shop_Project.Views
 
         private void CreateOrderButton_Click(object sender, RoutedEventArgs e)
         {
-            //chuyen tab
+            Services.AdminNavigationService.Instance.NavigateToCreateOrder();
         }
 
         private void pendingbtn_Click(object sender, RoutedEventArgs e)

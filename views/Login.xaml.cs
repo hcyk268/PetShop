@@ -15,9 +15,9 @@ using System.Windows.Shapes;
 
 namespace Pet_Shop_Project.Views
 {
-    public partial class Window1 : Window
+    public partial class Login : Window
     {
-        public Window1()
+        public Login()
         {
             InitializeComponent();
 
