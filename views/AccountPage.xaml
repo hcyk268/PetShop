@@ -6,42 +6,61 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       d:DesignHeight="650" d:DesignWidth="940"
-      Background="#F5F5F5">
-    <Grid Margin="25">
+      Background="White">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+
         <!-- Header -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,30">
-            <TextBlock Text="THÔNG TIN TÀI KHOẢN"
-                      FontSize="32"
-                      FontWeight="Bold"
-                      Foreground="#F78272"
-                      HorizontalAlignment="Center"/>
-        </StackPanel>
+        <Border Grid.Row="0" 
+                Background="White" 
+                Padding="20,15"
+                BorderBrush="#E0E0E0"
+                BorderThickness="0,0,0,1">
+            <Grid>
+                <Button HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Padding="5">
+                    <materialDesign:PackIcon Kind="ArrowLeft"
+                                           Width="24"
+                                           Height="24"
+                                           Foreground="#FF9966"/>
+                </Button>
+                <TextBlock Text="Tài khoản"
+                          FontSize="20"
+                          FontWeight="SemiBold"
+                          Foreground="#FF9966"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Center" Margin="48,0,0,0"/>
+            </Grid>
+        </Border>
+
         <!-- Main Content -->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Margin="30">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="20"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <!-- Left Panel - Avatar & Role -->
+
+            <!-- Left Panel - Avatar & Buttons -->
             <Border Grid.Column="0"
-                   Background="White"
-                   CornerRadius="20"
-                   Padding="30"
-                   Margin="0,0,20,0">
-                <Border.Effect>
-                    <DropShadowEffect ShadowDepth="0" BlurRadius="20" Opacity="0.1"/>
-                </Border.Effect>
+                    Background="White"
+                    CornerRadius="15"
+                    Padding="20"
+                    BorderBrush="#F0F0F0"
+                    BorderThickness="1" Grid.ColumnSpan="2" Margin="0,0,10,0">
                 <StackPanel HorizontalAlignment="Center">
                     <!-- Avatar -->
-                    <Grid Width="150" Height="150" Margin="0,0,0,20">
+                    <Grid Width="150" Height="150" Margin="0,10,0,15">
                         <!-- Background Circle -->
-                        <Ellipse Fill="#F8FFFE"
-                                Stroke="#F78272"
-                                StrokeThickness="3"/>
+                        <Ellipse Fill="#F5F5F5"/>
+
                         <!-- Avatar Image -->
                         <Ellipse x:Name="AvatarEllipse">
                             <Ellipse.Fill>
@@ -50,274 +69,257 @@
                                            Stretch="UniformToFill"/>
                             </Ellipse.Fill>
                         </Ellipse>
+
                         <!-- Camera Icon Overlay -->
-                        <Border Width="40" Height="40"
-                               Background="#F78272"
-                               CornerRadius="20"
-                               VerticalAlignment="Top"
+                        <Border Width="32" Height="32"
+                               Background="#FF6B6B"
+                               CornerRadius="16"
+                               VerticalAlignment="Bottom"
                                HorizontalAlignment="Right"
-                               Margin="0,105,5,0"
+                               Margin="0,0,0,0"
                                Cursor="Hand"
                                MouseDown="ChangeAvatar_Click">
                             <materialDesign:PackIcon Kind="Camera"
-                                                   Width="24"
-                                                   Height="24"
+                                                   Width="18"
+                                                   Height="18"
                                                    Foreground="White"
                                                    HorizontalAlignment="Center"
-                                                   VerticalAlignment="Bottom" Margin="0,0,0,8"/>
+                                                   VerticalAlignment="Center"/>
                         </Border>
                     </Grid>
+
                     <!-- User Name -->
                     <TextBlock x:Name="UserNameText"
-                              Text="Tên người dùng"
+                              Text="Username"
                               FontSize="22"
-                              FontWeight="Bold"
-                              Foreground="#333333"
+                              FontWeight="SemiBold"
+                              Foreground="#FF6B6B"
                               HorizontalAlignment="Center"
                               TextWrapping="Wrap"
                               TextAlignment="Center"
-                              Margin="0,0,0,10"/>
+                              Margin="0,0,0,8"/>
+
                     <!-- Role Badge -->
-                    <Border Background="#FFCC96"
-                           CornerRadius="15"
-                           Padding="15,8"
-                           Margin="0,0,0,30">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="ShieldAccount"
-                                                   Width="20"
-                                                   Height="20"
-                                                   Foreground="White"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,8,0"/>
-                            <TextBlock x:Name="RoleText"
-                                      Text="Khách hàng"
-                                      FontSize="14"
-                                      FontWeight="SemiBold"
-                                      Foreground="White"
-                                      VerticalAlignment="Center"/>
-                        </StackPanel>
+                    <Border Background="#B6B6B5"
+                           CornerRadius="12"
+                           Padding="12,6"
+                           Margin="0,0,0,30"
+                           HorizontalAlignment="Center" Width="126" Height="30">
+                        <TextBlock x:Name="RoleText"
+                                  Text="Khách hàng"
+                                  FontSize="13"
+                                  FontWeight="Medium"
+                                  TextAlignment="Center"
+                                  Foreground="White"
+                                  VerticalAlignment="Center"/>
+                        
                     </Border>
-                    <!-- Logout Button -->
-                    <Button Content="Đăng xuất"
-                           Background="#FF6B6B"
+
+                    <!-- Change Password Button -->
+                    <Button Content="Đổi mật khẩu"
+                           Background="#FFAD57"
                            Foreground="White"
-                           FontSize="14"
-                           FontWeight="SemiBold"
-                           Height="40"
+                           FontSize="13"
+                           FontWeight="Medium"
+                           Height="30"
+                           Margin="0,0,0,10"
                            BorderThickness="0"
                            Cursor="Hand"
-                           Click="LogoutButton_Click">
+                           Click="ChangePassword_Click" Width="145">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="Button">
                                             <Border Background="{TemplateBinding Background}"
-                                                   CornerRadius="20"
-                                                   Padding="20,0">
-                                                <ContentPresenter HorizontalAlignment="Center"
-                                                                VerticalAlignment="Center"/>
+                                                   CornerRadius="19">
+                                                <StackPanel Orientation="Horizontal" 
+                                                          HorizontalAlignment="Center"
+                                                          VerticalAlignment="Center">
+                                                    <materialDesign:PackIcon Kind="Key"
+                                                                           Width="16"
+                                                                           Height="16"
+                                                                           Foreground="White"
+                                                                           Margin="0,0,8,0"
+                                                                           VerticalAlignment="Center"/>
+                                                    <ContentPresenter VerticalAlignment="Center"/>
+                                                </StackPanel>
                                             </Border>
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#FF5252"/>
+                                        <Setter Property="Background" Value="#FF8547"/>
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
                         </Button.Style>
                     </Button>
+                    <Button Content="Đăng xuất"
+                           Background="#FFA4A4"
+                           Foreground="White"
+                           FontSize="13"
+                           FontWeight="Medium"
+                           Height="30"
+                           BorderThickness="0"
+                           Cursor="Hand"
+                           Click="LogoutButton_Click" Width="145">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border Background="{TemplateBinding Background}"
+                                                   CornerRadius="19">
+                                                <StackPanel Orientation="Horizontal" 
+                                                          HorizontalAlignment="Center"
+                                                          VerticalAlignment="Center">
+                                                    <materialDesign:PackIcon Kind="Logout"
+                                                                           Width="16"
+                                                                           Height="16"
+                                                                           Foreground="White"
+                                                                           Margin="0,0,8,0"
+                                                                           VerticalAlignment="Center"/>
+                                                    <ContentPresenter VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#FF9AA0"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <!-- Logout Button -->
                 </StackPanel>
             </Border>
+
             <!-- Right Panel - User Details -->
-            <Border Grid.Column="1"
-                   Background="White"
-                   CornerRadius="20"
-                   Padding="40">
-                <Border.Effect>
-                    <DropShadowEffect ShadowDepth="0" BlurRadius="20" Opacity="0.1"/>
-                </Border.Effect>
+            <Border Grid.Column="2"
+                    Background="White"
+                    CornerRadius="15"
+                    Padding="30"
+                    BorderBrush="#F0F0F0"
+                    BorderThickness="1" Margin="10,0,0,0">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
-                             HorizontalScrollBarVisibility="Disabled">
+                             HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,0">
                     <StackPanel>
                         <!-- Title -->
-                        <TextBlock Text="THÔNG TIN CHI TIẾT"
-                                  FontSize="24"
-                                  FontWeight="Bold"
-                                  Foreground="#F78272"
-                                  Margin="0,0,0,30"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                            <TextBlock Text="Thông tin liên hệ"
+                                      FontSize="18"
+                                      FontWeight="Bold"
+                                      Foreground="#FFAD57"
+                                      VerticalAlignment="Center"/>
+                            <Button Background="Transparent"
+                                   BorderThickness="0"
+                                   Cursor="Hand"
+                                   Padding="5"
+                                   Margin="10,0,0,0">
+                                <materialDesign:PackIcon Kind="Pencil"
+                                                       Width="18"
+                                                       Height="18"
+                                                       Foreground="#666666"/>
+                            </Button>
+                        </StackPanel>
+
                         <!-- Email -->
-                        <StackPanel Margin="0,0,0,20">
-                            <TextBlock Text="Email"
+                        <StackPanel Margin="0,0,0,0">
+                            <TextBlock Text="Email:"
                                       FontSize="14"
-                                      FontWeight="SemiBold"
-                                      Foreground="#666666"
-                                      Margin="0,0,0,8"/>
-                            <Border Background="#F8FFFE"
-                                   BorderBrush="#E0E0E0"
-                                   BorderThickness="1"
-                                   CornerRadius="10"
-                                   Padding="15">
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="Email"
-                                                           Width="20"
-                                                           Height="20"
-                                                           Foreground="#F78272"
-                                                           VerticalAlignment="Center"
-                                                           Margin="0,0,10,0"/>
-                                    <TextBlock x:Name="EmailText"
-                                              Text="email@example.com"
-                                              FontSize="15"
-                                              Foreground="#333333"
-                                              VerticalAlignment="Center"/>
-                                </StackPanel>
+                                      FontWeight="Medium"
+                                      Foreground="#757575"
+                                      Margin="0,0,0,5"/>
+                            <Border Background="#FFF3E6"
+                                   CornerRadius="8"
+                                   Padding="15,12">
+                                <TextBlock x:Name="EmailText"
+                                          Text="email@example.com"
+                                          FontSize="14"
+                                          Foreground="#333333"/>
                             </Border>
                         </StackPanel>
-                        <!-- Phone -->
-                        <StackPanel Margin="0,0,0,20">
-                            <TextBlock Text="Số điện thoại"
-                                      FontSize="14"
-                                      FontWeight="SemiBold"
-                                      Foreground="#666666"
-                                      Margin="0,0,0,8"/>
-                            <Border Background="#F8FFFE"
-                                   BorderBrush="#E0E0E0"
-                                   BorderThickness="1"
-                                   CornerRadius="10"
-                                   Padding="15">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                        <materialDesign:PackIcon Kind="Phone"
-                                                               Width="20"
-                                                               Height="20"
-                                                               Foreground="#F78272"
-                                                               VerticalAlignment="Center"
-                                                               Margin="0,0,10,0"/>
-                                        <TextBlock x:Name="PhoneText"
-                                                  Text="Chưa cập nhật"
-                                                  FontSize="15"
-                                                  Foreground="#333333"
-                                                  VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                    <Button Grid.Column="1"
-                                           Content="Sửa"
-                                           FontSize="12"
-                                           Foreground="#F78272"
-                                           Background="Transparent"
-                                           BorderThickness="0"
-                                           Cursor="Hand"
-                                           Click="EditPhone_Click"/>
-                                </Grid>
-                            </Border>
-                        </StackPanel>
+
                         <!-- Address -->
-                        <StackPanel Margin="0,0,0,20">
-                            <TextBlock Text="Địa chỉ"
+                        <StackPanel Margin="0,15,0,15">
+                            <TextBlock Text="Địa chỉ:"
                                       FontSize="14"
-                                      FontWeight="SemiBold"
-                                      Foreground="#666666"
-                                      Margin="0,0,0,8"/>
-                            <Border Background="#F8FFFE"
-                                   BorderBrush="#E0E0E0"
-                                   BorderThickness="1"
-                                   CornerRadius="10"
-                                   Padding="15">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                        <materialDesign:PackIcon Kind="MapMarker"
-                                                               Width="20"
-                                                               Height="20"
-                                                               Foreground="#F78272"
-                                                               VerticalAlignment="Center"
-                                                               Margin="0,0,10,0"/>
-                                        <TextBlock x:Name="AddressText"
-                                                  Text="Chưa cập nhật"
-                                                  FontSize="15"
-                                                  Foreground="#333333"
-                                                  VerticalAlignment="Center"
-                                                  TextWrapping="Wrap"/>
-                                    </StackPanel>
-                                    <Button Grid.Column="1"
-                                           Content="Sửa"
-                                           FontSize="12"
-                                           Foreground="#F78272"
-                                           Background="Transparent"
-                                           BorderThickness="0"
-                                           Cursor="Hand"
-                                           Click="EditAddress_Click"/>
-                                </Grid>
+                                      FontWeight="Medium"
+                                      Foreground="#757575"
+                                      Margin="0,0,0,5"/>
+                            <Border Background="#FFF3E6"
+                                   CornerRadius="8"
+                                   Padding="15,12">
+                                <TextBlock x:Name="AddressText"
+                                          Text="Chưa cập nhật"
+                                          FontSize="14"
+                                          Foreground="#999999"
+                                          TextWrapping="Wrap"/>
                             </Border>
                         </StackPanel>
+
+                        <!-- Phone -->
+                        <StackPanel Margin="0,5,0,30">
+                            <TextBlock Text="Số điện thoại:"
+                                      FontSize="14"
+                                      FontWeight="Medium"
+                                      Foreground="#757575"
+                                      Margin="0,0,0,8"/>
+                            <Border Background="#FFF3E6"
+                                   CornerRadius="8"
+                                   Padding="15,12">
+                                <TextBlock x:Name="PhoneText"
+                                          Text="Chưa cập nhật"
+                                          FontSize="14"
+                                          Foreground="#999999"/>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Account Info Section -->
+                        <TextBlock Text="Thông tin tài khoản"
+                                  FontSize="18"
+                                  FontWeight="Bold"
+                                  Foreground="#FFAD57"
+                                  Margin="0,-10,0,5"/>
+
+                        <!-- Full Name -->
+                        <StackPanel Margin="0,0,0,15">
+                            <TextBlock Text="Họ tên:"
+                                      FontSize="14"
+                                      FontWeight="Medium"
+                                      Foreground="#757575"
+                                      Margin="0,0,0,5"/>
+                            <Border Background="#FFF3E6"
+                                   CornerRadius="8"
+                                   Padding="15,12">
+                                <TextBlock Text="Chưa cập nhật"
+                                          FontSize="14"
+                                          Foreground="#999999"/>
+                            </Border>
+                        </StackPanel>
+
                         <!-- Join Date -->
-                        <StackPanel Margin="0,0,0,20">
-                            <TextBlock Text="Ngày tham gia"
+                        <StackPanel Margin="0,5,0,15">
+                            <TextBlock Text="Ngày tham gia:"
                                       FontSize="14"
-                                      FontWeight="SemiBold"
-                                      Foreground="#666666"
-                                      Margin="0,0,0,8"/>
-                            <Border Background="#F8FFFE"
-                                   BorderBrush="#E0E0E0"
-                                   BorderThickness="1"
-                                   CornerRadius="10"
-                                   Padding="15">
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="Calendar"
-                                                           Width="20"
-                                                           Height="20"
-                                                           Foreground="#F78272"
-                                                           VerticalAlignment="Center"
-                                                           Margin="0,0,10,0"/>
-                                    <TextBlock x:Name="JoinDateText"
-                                              Text="01/01/2024"
-                                              FontSize="15"
-                                              Foreground="#333333"
-                                              VerticalAlignment="Center"/>
-                                </StackPanel>
+                                      FontWeight="Medium"
+                                      Foreground="#757575"
+                                      Margin="0,0,0,5"/>
+                            <Border Background="#FFF3E6"
+                                   CornerRadius="8"
+                                   Padding="15,12">
+                                <TextBlock x:Name="JoinDateText"
+                                          Text="01/01/2024"
+                                          FontSize="14"
+                                          Foreground="#333333"/>
                             </Border>
                         </StackPanel>
-                        <!-- Change Password Button -->
-                        <Button Content="Đổi mật khẩu"
-                               Background="#FFCC96"
-                               Foreground="White"
-                               FontSize="14"
-                               FontWeight="SemiBold"
-                               Height="45"
-                               BorderThickness="0"
-                               Cursor="Hand"
-                               Margin="0,10,0,0"
-                               Click="ChangePassword_Click">
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}"
-                                                       CornerRadius="22.5"
-                                                       Padding="20,0">
-                                                    <ContentPresenter HorizontalAlignment="Center"
-                                                                    VerticalAlignment="Center"/>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#FFB366"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                        </Button>
                     </StackPanel>
                 </ScrollViewer>
             </Border>
