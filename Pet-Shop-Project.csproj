@@ -244,14 +244,8 @@
     <Compile Include="Views\CartPage.xaml.cs">
       <DependentUpon>CartPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ChangeAddressDialog.xaml.cs">
-      <DependentUpon>ChangeAddressDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\ChangePasswordDialog.xaml.cs">
       <DependentUpon>ChangePasswordDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ChangePhoneDialog.xaml.cs">
-      <DependentUpon>ChangePhoneDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DashBoard.xaml.cs">
       <DependentUpon>DashBoard.xaml</DependentUpon>
@@ -409,15 +403,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ChangeAddressDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\ChangePasswordDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\ChangePhoneDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -502,7 +488,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <!-- Images and Resources -->
+  <!-- Images and Resources -->
   <ItemGroup>
     <Resource Include="Images\avt.jpg" />
     <Resource Include="Images\bear.jpg" />
@@ -523,7 +509,7 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets')" />
   <Import Project="packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\build\Microsoft.Xaml.Behaviors.Wpf.targets" Condition="Exists('packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\build\Microsoft.Xaml.Behaviors.Wpf.targets')" />

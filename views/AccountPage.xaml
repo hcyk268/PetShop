@@ -6,7 +6,164 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       d:DesignHeight="650" d:DesignWidth="940"
-      Background="White">
+      Background="#F8FFFE">
+    <Page.Resources>
+        <!-- Style cho các nút Edit/Save/Cancel -->
+        <Style x:Key="EditButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FFE8CC"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FFD9B3"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SaveButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#C8E6C9"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#A5D6A7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CancelButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FFCDD2"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#EF9A9A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Style cho TextBox với underline màu cam -->
+        <Style x:Key="EditTextBoxStyle" TargetType="TextBox">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0,0,0,8"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid>
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                        VerticalAlignment="Center"
+                                        Margin="0"/>
+                            <Border x:Name="UnderlineBorder"
+                                    Height="2"
+                                    VerticalAlignment="Bottom"
+                                    Background="#FFAD57"
+                                    Opacity="0">
+                                <Border.RenderTransform>
+                                    <ScaleTransform ScaleX="0" CenterX="0"/>
+                                </Border.RenderTransform>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="UnderlineBorder"
+                                                           Storyboard.TargetProperty="Opacity"
+                                                           To="1"
+                                                           Duration="0:0:0.2"/>
+                                            <DoubleAnimation Storyboard.TargetName="UnderlineBorder"
+                                                           Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)"
+                                                           To="1"
+                                                           Duration="0:0:0.3">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="UnderlineBorder"
+                                                           Storyboard.TargetProperty="Opacity"
+                                                           To="0"
+                                                           Duration="0:0:0.2"/>
+                                            <DoubleAnimation Storyboard.TargetName="UnderlineBorder"
+                                                           Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)"
+                                                           To="0"
+                                                           Duration="0:0:0.3">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseIn"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -14,36 +171,64 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <Border Grid.Row="0" 
-                Background="White" 
-                Padding="20,15"
-                BorderBrush="#E0E0E0"
-                BorderThickness="0,0,0,1">
-            <Grid>
-                <Button HorizontalAlignment="Left"
+        <Grid Grid.Row="0" Background="#F5F5F5" Height="60">
+            <StackPanel Orientation="Horizontal"
                         VerticalAlignment="Center"
-                        Background="Transparent"
+                        Margin="30,0,0,0">
+                <Button x:Name="BackButton"
+                        Width="35" Height="35"
                         BorderThickness="0"
+                        Background="White"
                         Cursor="Hand"
-                        Padding="5">
-                    <materialDesign:PackIcon Kind="ArrowLeft"
-                                           Width="24"
-                                           Height="24"
-                                           Foreground="#FF9966"/>
+                        Click="BackButton_Click"
+                        Margin="0,0,15,0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Width="35" Height="35"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="18">
+                                <materialDesign:PackIcon x:Name="icon"
+                                                         Kind="ArrowLeft"
+                                                         Width="22" Height="22"
+                                                         Foreground="#FFAD57"
+                                                         HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center"/>
+                            </Border>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#FFECECEC"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <GradientStop Color="#FFAD56" Offset="0"/>
+                                                <GradientStop Color="#FFC281" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter TargetName="icon" Property="Foreground" Value="White"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
                 </Button>
+
                 <TextBlock Text="Tài khoản"
-                          FontSize="20"
-                          FontWeight="SemiBold"
-                          Foreground="#FF9966"
-                          HorizontalAlignment="Left"
-                          VerticalAlignment="Center" Margin="48,0,0,0"/>
-            </Grid>
-        </Border>
+                           FontSize="28"
+                           FontWeight="Bold"
+                           Foreground="#FFAD57"
+                           VerticalAlignment="Center"
+                           Margin="5,0,0,0"/>
+            </StackPanel>
+        </Grid>
 
         <!-- Main Content -->
-        <Grid Grid.Row="1" Margin="30">
+        <Grid Grid.Row="1" Margin="30,20,30,30" Background="#F8FFFE">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="280"/>
                 <ColumnDefinition Width="20"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
@@ -51,273 +236,430 @@
             <!-- Left Panel - Avatar & Buttons -->
             <Border Grid.Column="0"
                     Background="White"
-                    CornerRadius="15"
-                    Padding="20"
-                    BorderBrush="#F0F0F0"
-                    BorderThickness="1" Grid.ColumnSpan="2" Margin="0,0,10,0">
-                <StackPanel HorizontalAlignment="Center">
-                    <!-- Avatar -->
-                    <Grid Width="150" Height="150" Margin="0,10,0,15">
-                        <!-- Background Circle -->
-                        <Ellipse Fill="#F5F5F5"/>
+                    CornerRadius="20"
+                    Padding="25"
+                    BorderBrush="Transparent"
+                    BorderThickness="0">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" 
+                                      BlurRadius="20" 
+                                      Opacity="0.2"
+                                      Direction="315"/>
+                </Border.Effect>
 
-                        <!-- Avatar Image -->
-                        <Ellipse x:Name="AvatarEllipse">
-                            <Ellipse.Fill>
-                                <ImageBrush x:Name="AvatarBrush"
-                                           ImageSource="/Images/avt.jpg"
-                                           Stretch="UniformToFill"/>
-                            </Ellipse.Fill>
-                        </Ellipse>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                        <!-- Camera Icon Overlay -->
-                        <Border Width="32" Height="32"
-                               Background="#FF6B6B"
-                               CornerRadius="16"
-                               VerticalAlignment="Bottom"
-                               HorizontalAlignment="Right"
-                               Margin="0,0,0,0"
-                               Cursor="Hand"
-                               MouseDown="ChangeAvatar_Click">
-                            <materialDesign:PackIcon Kind="Camera"
-                                                   Width="18"
-                                                   Height="18"
-                                                   Foreground="White"
-                                                   HorizontalAlignment="Center"
-                                                   VerticalAlignment="Center"/>
+                    <!-- Top Section: Avatar & User Info -->
+                    <StackPanel Grid.Row="0" 
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Top">
+                        <!-- Avatar -->
+                        <Grid Width="180" Height="180" Margin="0,10,0,20">
+                            <Ellipse Fill="#F5F5F5"/>
+                            <Ellipse x:Name="AvatarEllipse">
+                                <Ellipse.Fill>
+                                    <ImageBrush x:Name="AvatarBrush"
+                                                ImageSource="/Images/avt.jpg"
+                                                Stretch="UniformToFill"/>
+                                </Ellipse.Fill>
+                            </Ellipse>
+
+                            <Border Width="40" Height="40"
+                                    Background="#FF6B6B"
+                                    CornerRadius="20"
+                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Right"
+                                    Margin="0,0,5,5"
+                                    Cursor="Hand"
+                                    MouseDown="ChangeAvatar_Click">
+                                <materialDesign:PackIcon Kind="Camera"
+                                                         Width="22"
+                                                         Height="22"
+                                                         Foreground="White"
+                                                         HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+
+                        <TextBlock x:Name="UserNameText"
+                                   Text="Username"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   Foreground="#FF6B6B"
+                                   HorizontalAlignment="Center"
+                                   TextWrapping="Wrap"
+                                   TextAlignment="Center"
+                                   Margin="0,0,0,12"/>
+
+                        <!-- Role Badge với icon -->
+                        <Border Background="#B6B6B5"
+                                CornerRadius="20"
+                                Padding="12,8"
+                                Margin="0,0,0,20"
+                                HorizontalAlignment="Center" 
+                                Width="150" 
+                                Height="35">
+                            <StackPanel Orientation="Horizontal"
+                                       HorizontalAlignment="Center">
+                                <materialDesign:PackIcon Kind="Account"
+                                                        Width="18"
+                                                        Height="18"
+                                                        Foreground="White"
+                                                        VerticalAlignment="Center"
+                                                        Margin="0,0,8,0"/>
+                                <TextBlock x:Name="RoleText"
+                                          Text="Khách hàng"
+                                          FontSize="14"
+                                          FontWeight="Medium"
+                                          Foreground="White"
+                                          VerticalAlignment="Center"/>
+                            </StackPanel>
                         </Border>
-                    </Grid>
+                    </StackPanel>
 
-                    <!-- User Name -->
-                    <TextBlock x:Name="UserNameText"
-                              Text="Username"
-                              FontSize="22"
-                              FontWeight="SemiBold"
-                              Foreground="#FF6B6B"
-                              HorizontalAlignment="Center"
-                              TextWrapping="Wrap"
-                              TextAlignment="Center"
-                              Margin="0,0,0,8"/>
+                    <!-- Bottom Section: Buttons -->
+                    <StackPanel Grid.Row="1"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Center">
+                        <!-- Change Password Button -->
+                        <Button Content="Đổi mật khẩu"
+                                Background="#FFAD57"
+                                Foreground="White"
+                                FontSize="16"
+                                FontWeight="Medium"
+                                Height="40"
+                                Width="160"
+                                Margin="0,0,0,12"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                Click="ChangePassword_Click">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="border"
+                                                        Background="{TemplateBinding Background}"
+                                                        CornerRadius="20">
+                                                    <StackPanel Orientation="Horizontal" 
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center">
+                                                        <materialDesign:PackIcon Kind="Key"
+                                                                                 Width="24"
+                                                                                 Height="24"
+                                                                                 Foreground="White"
+                                                                                 Margin="0,0,10,0"
+                                                                                 VerticalAlignment="Center"/>
+                                                        <ContentPresenter VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="#FF9D46"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="#FF8D36"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Button.Style>
+                        </Button>
 
-                    <!-- Role Badge -->
-                    <Border Background="#B6B6B5"
-                           CornerRadius="12"
-                           Padding="12,6"
-                           Margin="0,0,0,30"
-                           HorizontalAlignment="Center" Width="126" Height="30">
-                        <TextBlock x:Name="RoleText"
-                                  Text="Khách hàng"
-                                  FontSize="13"
-                                  FontWeight="Medium"
-                                  TextAlignment="Center"
-                                  Foreground="White"
-                                  VerticalAlignment="Center"/>
-                        
-                    </Border>
-
-                    <!-- Change Password Button -->
-                    <Button Content="Đổi mật khẩu"
-                           Background="#FFAD57"
-                           Foreground="White"
-                           FontSize="13"
-                           FontWeight="Medium"
-                           Height="30"
-                           Margin="0,0,0,10"
-                           BorderThickness="0"
-                           Cursor="Hand"
-                           Click="ChangePassword_Click" Width="145">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}"
-                                                   CornerRadius="19">
-                                                <StackPanel Orientation="Horizontal" 
-                                                          HorizontalAlignment="Center"
-                                                          VerticalAlignment="Center">
-                                                    <materialDesign:PackIcon Kind="Key"
-                                                                           Width="16"
-                                                                           Height="16"
-                                                                           Foreground="White"
-                                                                           Margin="0,0,8,0"
-                                                                           VerticalAlignment="Center"/>
-                                                    <ContentPresenter VerticalAlignment="Center"/>
-                                                </StackPanel>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#FF8547"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-                    <Button Content="Đăng xuất"
-                           Background="#FFA4A4"
-                           Foreground="White"
-                           FontSize="13"
-                           FontWeight="Medium"
-                           Height="30"
-                           BorderThickness="0"
-                           Cursor="Hand"
-                           Click="LogoutButton_Click" Width="145">
-                        <Button.Style>
-                            <Style TargetType="{x:Type Button}">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="{x:Type Button}">
-                                            <Border Background="{TemplateBinding Background}"
-                                                   CornerRadius="19">
-                                                <StackPanel Orientation="Horizontal" 
-                                                          HorizontalAlignment="Center"
-                                                          VerticalAlignment="Center">
-                                                    <materialDesign:PackIcon Kind="Logout"
-                                                                           Width="16"
-                                                                           Height="16"
-                                                                           Foreground="White"
-                                                                           Margin="0,0,8,0"
-                                                                           VerticalAlignment="Center"/>
-                                                    <ContentPresenter VerticalAlignment="Center"/>
-                                                </StackPanel>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#FF9AA0"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-
-                    <!-- Logout Button -->
-                </StackPanel>
+                        <!-- Logout Button -->
+                        <Button Content="Đăng xuất"
+                                Background="#FFA4A4"
+                                Foreground="White"
+                                FontSize="16"
+                                FontWeight="Medium"
+                                Height="40"
+                                Width="160"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                Click="LogoutButton_Click">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="border"
+                                                        Background="{TemplateBinding Background}"
+                                                        CornerRadius="20">
+                                                    <StackPanel Orientation="Horizontal" 
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center">
+                                                        <materialDesign:PackIcon Kind="Logout"
+                                                                                 Width="24"
+                                                                                 Height="24"
+                                                                                 Foreground="White"
+                                                                                 Margin="0,0,10,0"
+                                                                                 VerticalAlignment="Center"/>
+                                                        <ContentPresenter VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="#FF9090"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="#FF7C7C"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                </Grid>
             </Border>
 
             <!-- Right Panel - User Details -->
             <Border Grid.Column="2"
                     Background="White"
-                    CornerRadius="15"
-                    Padding="30"
-                    BorderBrush="#F0F0F0"
-                    BorderThickness="1" Margin="10,0,0,0">
-                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                             HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,0">
+                    CornerRadius="20"
+                    Padding="35"
+                    BorderBrush="Transparent"
+                    BorderThickness="0">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" 
+                                      BlurRadius="20" 
+                                      Opacity="0.2"
+                                      Direction="315"/>
+                </Border.Effect>
+
+                <ScrollViewer VerticalScrollBarVisibility="Hidden"
+                              HorizontalScrollBarVisibility="Disabled">
                     <StackPanel>
-                        <!-- Title -->
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <!-- Contact Information Section -->
+                        <Grid Margin="0,0,0,25">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
                             <TextBlock Text="Thông tin liên hệ"
-                                      FontSize="18"
-                                      FontWeight="Bold"
-                                      Foreground="#FFAD57"
-                                      VerticalAlignment="Center"/>
-                            <Button Background="Transparent"
-                                   BorderThickness="0"
-                                   Cursor="Hand"
-                                   Padding="5"
-                                   Margin="10,0,0,0">
-                                <materialDesign:PackIcon Kind="Pencil"
-                                                       Width="18"
-                                                       Height="18"
-                                                       Foreground="#666666"/>
-                            </Button>
-                        </StackPanel>
+                                       Grid.Column="0"
+                                       FontSize="22"
+                                       FontWeight="Bold"
+                                       Foreground="#FFAD57"
+                                       VerticalAlignment="Center"/>
+
+                            <StackPanel Grid.Column="1" 
+                                        Orientation="Horizontal"
+                                        x:Name="ContactEditButtons">
+                                <Button x:Name="EditContactButton"
+                                        Style="{StaticResource EditButtonStyle}"
+                                        Click="EditContact_Click"
+                                        ToolTip="Chỉnh sửa">
+                                    <materialDesign:PackIcon Kind="Pencil"
+                                                             Width="22"
+                                                             Height="22"
+                                                             Foreground="#FFAD57"/>
+                                </Button>
+
+                                <Button x:Name="SaveContactButton"
+                                        Style="{StaticResource SaveButtonStyle}"
+                                        Visibility="Collapsed"
+                                        Click="SaveContact_Click"
+                                        ToolTip="Lưu">
+                                    <materialDesign:PackIcon Kind="ContentSave"
+                                                             Width="22"
+                                                             Height="22"
+                                                             Foreground="#4CAF50"/>
+                                </Button>
+
+                                <Button x:Name="CancelContactButton"
+                                        Style="{StaticResource CancelButtonStyle}"
+                                        Visibility="Collapsed"
+                                        Click="CancelContact_Click"
+                                        ToolTip="Hủy">
+                                    <materialDesign:PackIcon Kind="Close"
+                                                             Width="22"
+                                                             Height="22"
+                                                             Foreground="#FF6B6B"/>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
 
                         <!-- Email -->
-                        <StackPanel Margin="0,0,0,0">
+                        <StackPanel Margin="0,0,0,18">
                             <TextBlock Text="Email:"
-                                      FontSize="14"
-                                      FontWeight="Medium"
-                                      Foreground="#757575"
-                                      Margin="0,0,0,5"/>
+                                       FontSize="15"
+                                       FontWeight="Medium"
+                                       Foreground="#757575"
+                                       Margin="0,0,0,8"/>
                             <Border Background="#FFF3E6"
-                                   CornerRadius="8"
-                                   Padding="15,12">
-                                <TextBlock x:Name="EmailText"
-                                          Text="email@example.com"
-                                          FontSize="14"
-                                          Foreground="#333333"/>
-                            </Border>
-                        </StackPanel>
-
-                        <!-- Address -->
-                        <StackPanel Margin="0,15,0,15">
-                            <TextBlock Text="Địa chỉ:"
-                                      FontSize="14"
-                                      FontWeight="Medium"
-                                      Foreground="#757575"
-                                      Margin="0,0,0,5"/>
-                            <Border Background="#FFF3E6"
-                                   CornerRadius="8"
-                                   Padding="15,12">
-                                <TextBlock x:Name="AddressText"
-                                          Text="Chưa cập nhật"
-                                          FontSize="14"
-                                          Foreground="#999999"
-                                          TextWrapping="Wrap"/>
+                                    CornerRadius="12"
+                                    Padding="18,14"
+                                    Height="50">
+                                <Grid>
+                                    <TextBlock x:Name="EmailText"
+                                               Text="email@example.com"
+                                               FontSize="15"
+                                               Foreground="#333333"
+                                               VerticalAlignment="Center"/>
+                                    <TextBox x:Name="EmailEdit"
+                                             Style="{StaticResource EditTextBoxStyle}"
+                                             VerticalAlignment="Center"
+                                             Visibility="Collapsed"/>
+                                </Grid>
                             </Border>
                         </StackPanel>
 
                         <!-- Phone -->
-                        <StackPanel Margin="0,5,0,30">
+                        <StackPanel Margin="0,0,0,18">
                             <TextBlock Text="Số điện thoại:"
-                                      FontSize="14"
-                                      FontWeight="Medium"
-                                      Foreground="#757575"
-                                      Margin="0,0,0,8"/>
+                                       FontSize="15"
+                                       FontWeight="Medium"
+                                       Foreground="#757575"
+                                       Margin="0,0,0,8"/>
                             <Border Background="#FFF3E6"
-                                   CornerRadius="8"
-                                   Padding="15,12">
-                                <TextBlock x:Name="PhoneText"
-                                          Text="Chưa cập nhật"
-                                          FontSize="14"
-                                          Foreground="#999999"/>
+                                    CornerRadius="12"
+                                    Padding="18,14"
+                                    Height="50">
+                                <Grid>
+                                    <TextBlock x:Name="PhoneText"
+                                               Text="Chưa cập nhật"
+                                               FontSize="15"
+                                               Foreground="#999999"
+                                               VerticalAlignment="Center"/>
+                                    <TextBox x:Name="PhoneEdit"
+                                             Style="{StaticResource EditTextBoxStyle}"
+                                             MaxLength="10"
+                                             PreviewTextInput="PhoneEdit_PreviewTextInput"
+                                             VerticalAlignment="Center"
+                                             Visibility="Collapsed"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Address -->
+                        <StackPanel Margin="0,0,0,35">
+                            <TextBlock Text="Địa chỉ:"
+                                       FontSize="15"
+                                       FontWeight="Medium"
+                                       Foreground="#757575"
+                                       Margin="0,0,0,8"/>
+                            <Border Background="#FFF3E6"
+                                    CornerRadius="12"
+                                    Padding="18,14"
+                                    Height="50">
+                                <Grid>
+                                    <TextBlock x:Name="AddressText"
+                                               Text="Chưa cập nhật"
+                                               FontSize="15"
+                                               Foreground="#999999"
+                                               TextWrapping="Wrap"
+                                               VerticalAlignment="Center"/>
+                                    <TextBox x:Name="AddressEdit"
+                                             Style="{StaticResource EditTextBoxStyle}"
+                                             AcceptsReturn="True"
+                                             VerticalAlignment="Center"
+                                             Visibility="Collapsed"/>
+                                </Grid>
                             </Border>
                         </StackPanel>
 
                         <!-- Account Info Section -->
-                        <TextBlock Text="Thông tin tài khoản"
-                                  FontSize="18"
-                                  FontWeight="Bold"
-                                  Foreground="#FFAD57"
-                                  Margin="0,-10,0,5"/>
+                        <Grid Margin="0,0,0,25">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="Thông tin tài khoản"
+                                       Grid.Column="0"
+                                       FontSize="22"
+                                       FontWeight="Bold"
+                                       Foreground="#FFAD57"
+                                       VerticalAlignment="Center"/>
+
+                            <StackPanel Grid.Column="1" 
+                                        Orientation="Horizontal"
+                                        x:Name="AccountEditButtons">
+                                <Button x:Name="EditAccountButton"
+                                        Style="{StaticResource EditButtonStyle}"
+                                        Click="EditAccount_Click"
+                                        ToolTip="Chỉnh sửa">
+                                    <materialDesign:PackIcon Kind="Pencil"
+                                                             Width="22"
+                                                             Height="22"
+                                                             Foreground="#FFAD57"/>
+                                </Button>
+
+                                <Button x:Name="SaveAccountButton"
+                                        Style="{StaticResource SaveButtonStyle}"
+                                        Visibility="Collapsed"
+                                        Click="SaveAccount_Click"
+                                        ToolTip="Lưu">
+                                    <materialDesign:PackIcon Kind="ContentSave"
+                                                             Width="22"
+                                                             Height="22"
+                                                             Foreground="#4CAF50"/>
+                                </Button>
+
+                                <Button x:Name="CancelAccountButton"
+                                        Style="{StaticResource CancelButtonStyle}"
+                                        Visibility="Collapsed"
+                                        Click="CancelAccount_Click"
+                                        ToolTip="Hủy">
+                                    <materialDesign:PackIcon Kind="Close"
+                                                             Width="22"
+                                                             Height="22"
+                                                             Foreground="#FF6B6B"/>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
 
                         <!-- Full Name -->
-                        <StackPanel Margin="0,0,0,15">
+                        <StackPanel Margin="0,0,0,18">
                             <TextBlock Text="Họ tên:"
-                                      FontSize="14"
-                                      FontWeight="Medium"
-                                      Foreground="#757575"
-                                      Margin="0,0,0,5"/>
+                                       FontSize="15"
+                                       FontWeight="Medium"
+                                       Foreground="#757575"
+                                       Margin="0,0,0,8"/>
                             <Border Background="#FFF3E6"
-                                   CornerRadius="8"
-                                   Padding="15,12">
-                                <TextBlock Text="Chưa cập nhật"
-                                          FontSize="14"
-                                          Foreground="#999999"/>
+                                    CornerRadius="12"
+                                    Padding="18,14"
+                                    Height="50">
+                                <Grid>
+                                    <TextBlock x:Name="FullNameText"
+                                               Text="Chưa cập nhật"
+                                               FontSize="15"
+                                               Foreground="#999999"
+                                               VerticalAlignment="Center"/>
+                                    <TextBox x:Name="FullNameEdit"
+                                             Style="{StaticResource EditTextBoxStyle}"
+                                             VerticalAlignment="Center"
+                                             Visibility="Collapsed"/>
+                                </Grid>
                             </Border>
                         </StackPanel>
 
-                        <!-- Join Date -->
-                        <StackPanel Margin="0,5,0,15">
+                        <!-- Join Date (Read-only) -->
+                        <StackPanel Margin="0,0,0,18">
                             <TextBlock Text="Ngày tham gia:"
-                                      FontSize="14"
-                                      FontWeight="Medium"
-                                      Foreground="#757575"
-                                      Margin="0,0,0,5"/>
+                                       FontSize="15"
+                                       FontWeight="Medium"
+                                       Foreground="#757575"
+                                       Margin="0,0,0,8"/>
                             <Border Background="#FFF3E6"
-                                   CornerRadius="8"
-                                   Padding="15,12">
+                                    CornerRadius="12"
+                                    Padding="18,14"
+                                    Height="50">
                                 <TextBlock x:Name="JoinDateText"
-                                          Text="01/01/2024"
-                                          FontSize="14"
-                                          Foreground="#333333"/>
+                                           Text="01/01/2024"
+                                           FontSize="15"
+                                           Foreground="#333333"
+                                           VerticalAlignment="Center"/>
                             </Border>
                         </StackPanel>
                     </StackPanel>
