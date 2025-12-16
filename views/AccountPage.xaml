@@ -512,6 +512,20 @@
                                              Visibility="Collapsed"/>
                                 </Grid>
                             </Border>
+                            <!-- Edit Mode -->
+                            <Border x:Name="EmailEditBorder"
+                                   Background="#FFF3E6"
+                                   CornerRadius="8"
+                                   Padding="10,8"
+                                   Visibility="Collapsed">
+                                <TextBox x:Name="EmailTextBox"
+                                        Text="email@example.com"
+                                        FontSize="14"
+                                        Foreground="#333333"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Padding="5,4"/>
+                            </Border>
                         </StackPanel>
 
                         <!-- Phone -->
@@ -539,6 +553,23 @@
                                              Visibility="Collapsed"/>
                                 </Grid>
                             </Border>
+                            <!-- Edit Mode -->
+                            <Border x:Name="AddressEditBorder"
+                                   Background="#FFF3E6"
+                                   CornerRadius="8"
+                                   Padding="10,8"
+                                   Visibility="Collapsed">
+                                <TextBox x:Name="AddressTextBox"
+                                        Text="Chưa cập nhật"
+                                        FontSize="14"
+                                        Foreground="#333333"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Padding="5,4"
+                                        TextWrapping="Wrap"
+                                        AcceptsReturn="True"
+                                        MinHeight="40"/>
+                            </Border>
                         </StackPanel>
 
                         <!-- Address -->
@@ -565,6 +596,20 @@
                                              VerticalAlignment="Center"
                                              Visibility="Collapsed"/>
                                 </Grid>
+                            </Border>
+                            <!-- Edit Mode -->
+                            <Border x:Name="PhoneEditBorder"
+                                   Background="#FFF3E6"
+                                   CornerRadius="8"
+                                   Padding="10,8"
+                                   Visibility="Collapsed">
+                                <TextBox x:Name="PhoneTextBox"
+                                        Text="Chưa cập nhật"
+                                        FontSize="14"
+                                        Foreground="#333333"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Padding="5,4"/>
                             </Border>
                         </StackPanel>
 
@@ -641,6 +686,20 @@
                                              VerticalAlignment="Center"
                                              Visibility="Collapsed"/>
                                 </Grid>
+                            </Border>
+                            <!-- Edit Mode -->
+                            <Border x:Name="FullNameEditBorder"
+                                   Background="#FFF3E6"
+                                   CornerRadius="8"
+                                   Padding="10,8"
+                                   Visibility="Collapsed">
+                                <TextBox x:Name="FullNameTextBox"
+                                        Text="Chưa cập nhật"
+                                        FontSize="14"
+                                        Foreground="#333333"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Padding="5,4"/>
                             </Border>
                         </StackPanel>
 

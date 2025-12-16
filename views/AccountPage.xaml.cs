@@ -81,6 +81,7 @@ namespace Pet_Shop_Project.Views
                 bitmap.UriSource = new Uri(selectedImagePath);
                 bitmap.CacheOption = BitmapCacheOption.OnLoad;
                 bitmap.EndInit();
+
                 AvatarBrush.ImageSource = bitmap;
             }
         }

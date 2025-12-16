@@ -18,6 +18,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using Pet_Shop_Project.Services;
+using System.Collections.ObjectModel;
 
 namespace Pet_Shop_Project.Views
 {
@@ -28,6 +30,7 @@ namespace Pet_Shop_Project.Views
     {
         private readonly string _conn = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
         private Product _originalProduct;
+        private readonly UploadImageService _uploadImageService = new UploadImageService();
         private bool _isEditMode;
         public Product Product { get; private set; }
 
@@ -36,7 +39,8 @@ namespace Pet_Shop_Project.Views
             InitializeComponent();
             _originalProduct = product;
             _isEditMode = product != null;
-
+            Loaded += async (_, __) => { await LoadCategoriesAsync(); };
+            
             if (_isEditMode)
             {
                 DialogTitle.Text = "Chỉnh sửa sản phẩm";
@@ -75,9 +79,9 @@ namespace Pet_Shop_Project.Views
             }
         }
 
-        private async void LoadCategoriesAsync()
+        private async Task LoadCategoriesAsync()
         {
-            var items = new List<string>();
+            var items = new ObservableCollection<string>();
             const string sql = "SELECT DISTINCT Category FROM PRODUCTS WHERE Category IS NOT NULL AND Category <> '' ORDER BY Category";
             using (var conn = new SqlConnection(_conn))
             {
@@ -92,11 +96,11 @@ namespace Pet_Shop_Project.Views
                 }
             }
             CmbCategory.ItemsSource = items;
-
-            CmbCategory.SelectedItem = _originalProduct.Category; // AdminProductEditDialog
+            if (_originalProduct != null && !string.IsNullOrEmpty(_originalProduct.Category))
+                CmbCategory.SelectedItem = _originalProduct.Category;
         }
 
-        private void BtnSelectImage_Click(object sender, RoutedEventArgs e)
+        private async void BtnSelectImage_Click(object sender, RoutedEventArgs e)
         {
             var openFileDialog = new OpenFileDialog
             {
@@ -106,8 +110,10 @@ namespace Pet_Shop_Project.Views
 
             if (openFileDialog.ShowDialog() == true)
             {
-                TxtPicture.Text = openFileDialog.FileName;
-                LoadImagePreview(openFileDialog.FileName);
+                var selectedFilePath = openFileDialog.FileName;
+                var (secureUrl, publicId) = await _uploadImageService.UploadAsync(selectedFilePath, "products");
+                TxtPicture.Text = secureUrl;
+                LoadImagePreview(secureUrl);
             }
         }
 
@@ -216,13 +222,13 @@ namespace Pet_Shop_Project.Views
                     cmd.Parameters.AddWithValue("@Picture", product.Picture ?? "");
                     cmd.Parameters.AddWithValue("@Category", product.Category ?? "");
 
-                    var result = await cmd.ExecuteNonQueryAsync();
-                    if (result is int newID)
-                    {
-                        product.ProductId = newID.ToString();
-                        MessageBox.Show("Thêm sản phẩm thành công!", "Thành công",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
-                        return true;
+                    var result = await cmd.ExecuteScalarAsync();
+                    if (result != null && result != DBNull.Value)
+                    {                
+                    product.ProductId = result.ToString();
+                    MessageBox.Show("Thêm sản phẩm thành công!", "Thành công",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                    return true;
                     }
                 }
             }
@@ -248,6 +254,7 @@ namespace Pet_Shop_Project.Views
                     await conn.OpenAsync();
                     using (var cmd = new SqlCommand(sql, conn))
                     {
+                        cmd.Parameters.AddWithValue("@ProductId", _originalProduct.ProductId);
                         cmd.Parameters.AddWithValue("@Name", product.Name);
                         cmd.Parameters.AddWithValue("@Description", product.Description);
                         cmd.Parameters.AddWithValue("@UnitPrice", product.UnitPrice);

@@ -8,10 +8,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using LiveCharts;
-using LiveCharts.Wpf;
-using Pet_Shop_Project.Models;
-using Pet_Shop_Project.Services;
 
 
 namespace Pet_Shop_Project.Views
