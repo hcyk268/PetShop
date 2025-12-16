@@ -5,29 +5,50 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d"
-      Height="435"
+      Height="600"
       Width="550"
-      Background="#F5F5F5">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="7*"/>
-            <RowDefinition Height="143*"/>
-        </Grid.RowDefinitions>
-        <!-- Background Decoration -->
-        <Grid.Background>
-            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#F5F5F5" Offset="0"/>
-                <GradientStop Color="#E8F4F8" Offset="1"/>
-            </LinearGradientBrush>
-        </Grid.Background>
+      Background="Transparent">
 
-        <!-- Signup Card with ScrollViewer -->
+    <Page.Resources>
+        <!-- Style cho nút điều khiển -->
+        <Style x:Key="ControlButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="16">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#E0E0E0"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#BDBDBD"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <!-- Signup Card with Clipping -->
         <Border Width="550"
                 MaxHeight="600"
                 Background="White"
                 CornerRadius="20"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Center" Grid.RowSpan="2">
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+                ClipToBounds="True">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="30"
                                   ShadowDepth="0"
@@ -35,212 +56,261 @@
                                   Color="Black"/>
             </Border.Effect>
 
-            <ScrollViewer VerticalScrollBarVisibility="Auto"
-                          HorizontalScrollBarVisibility="Disabled"
-                          Padding="50,30">
-                <Grid Height="916">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+            <Grid>
+                <!-- Background Image - BO GÓC VÀ CLIP -->
+                <Border CornerRadius="20"
+                        Opacity="0.7"
+                        ClipToBounds="True">
+                    <Border.Background>
+                        <ImageBrush ImageSource="/Images/download.jpg"
+                                    Stretch="UniformToFill"/>
+                    </Border.Background>
+                </Border>
 
-                    <!-- Logo and Title -->
-                    <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,25">
-                        <Border Width="70" Height="70" Background="Transparent" CornerRadius="35" Margin="0,10,0,5">
-                            <Image Source="/Images/peach.png" Stretch="Uniform"/>
+                <!-- Nút Back ở góc trên trái -->
+                <Button Style="{StaticResource ControlButtonStyle}"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Margin="15,15,0,0"
+                        Click="BackButton_Click"
+                        Panel.ZIndex="1">
+                    <materialDesign:PackIcon Kind="ArrowLeft"
+                                           Width="18"
+                                           Height="18"
+                                           Foreground="#757575"/>
+                </Button>
+
+                <!-- Nút Close ở góc trên phải -->
+                <Button Style="{StaticResource ControlButtonStyle}"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Margin="0,15,15,0"
+                        Click="CloseButton_Click"
+                        Panel.ZIndex="1">
+                    <materialDesign:PackIcon Kind="Close"
+                                           Width="18"
+                                           Height="18"
+                                           Foreground="#757575"/>
+                </Button>
+
+                <ScrollViewer VerticalScrollBarVisibility="Hidden"
+                              HorizontalScrollBarVisibility="Disabled"
+                              Padding="50,30">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Logo and Title -->
+                        <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,25">
+                            <Border Width="70" Height="70" Background="Transparent" CornerRadius="35" Margin="0,10,0,5">
+                                <Image Source="/Images/peach.png" Stretch="Uniform"/>
+                            </Border>
+                            <TextBlock FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,5">
+                                <TextBlock.Foreground>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Color="#F78272" Offset="0"/>
+                                        <GradientStop Color="#FFCC96" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </TextBlock.Foreground>
+                                <Run Text="FETCH"/>
+                            </TextBlock>
+                            <TextBlock Text="Tạo tài khoản mới" FontSize="17" Foreground="#666" HorizontalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Error/Success Message -->
+                        <!-- Error Message -->
+                        <Border Grid.Row="1" 
+                                x:Name="MessageBorder"
+                                BorderThickness="1" 
+                                CornerRadius="8" 
+                                Padding="10,8" 
+                                Margin="0,0,0,12" 
+                                Width="468"
+                                Visibility="Collapsed">
+                            <TextBlock x:Name="MessageText" 
+                                       FontSize="13" 
+                                       TextWrapping="Wrap" 
+                                       HorizontalAlignment="Center"/>
                         </Border>
-                        <TextBlock FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,5">
-                            <TextBlock.Foreground>
-                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                    <GradientStop Color="#F78272" Offset="0"/>
-                                    <GradientStop Color="#FFCC96" Offset="1"/>
-                                </LinearGradientBrush>
-                            </TextBlock.Foreground>
-                            <Run Text="FETCH"/>
-                        </TextBlock>
-                        <TextBlock Text="Tạo tài khoản mới" FontSize="17" Foreground="#666" HorizontalAlignment="Center"/>
-                    </StackPanel>
 
-                    <!-- Error/Success Message -->
-                    <Border Grid.Row="1" x:Name="MessageBorder" BorderThickness="1" CornerRadius="8" Padding="12,10" Margin="0,0,0,15" Visibility="Collapsed">
-                        <TextBlock x:Name="MessageText" FontSize="13" TextWrapping="Wrap" HorizontalAlignment="Center"/>
-                    </Border>
+                        <!-- Full Name -->
+                        <StackPanel Grid.Row="2" Margin="0,0,0,15">
+                            <TextBlock Text="Họ và tên" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
+                            <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
+                                <Grid Margin="12,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Grid.Column="0" Kind="AccountCircle" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <TextBox Grid.Column="1" x:Name="FullNameTextBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" Foreground="#333" materialDesign:HintAssist.Hint="Nhập họ và tên" materialDesign:HintAssist.Foreground="#999"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
 
-                    <!-- Full Name -->
-                    <StackPanel Grid.Row="2" Margin="0,0,0,15">
-                        <TextBlock Text="Họ và tên" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
-                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
-                            <Grid Margin="12,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <materialDesign:PackIcon Grid.Column="0" Kind="AccountCircle" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                <TextBox Grid.Column="1" x:Name="FullNameTextBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" Foreground="#333" materialDesign:HintAssist.Hint="Nhập họ và tên" materialDesign:HintAssist.Foreground="#999"/>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
+                        <!-- Username -->
+                        <StackPanel Grid.Row="3" Margin="0,0,0,15">
+                            <TextBlock Text="Tên đăng nhập" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
+                            <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
+                                <Grid Margin="12,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Grid.Column="0" Kind="Account" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <TextBox Grid.Column="1" x:Name="UsernameTextBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" Foreground="#333" materialDesign:HintAssist.Hint="Nhập tên đăng nhập" materialDesign:HintAssist.Foreground="#999"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
 
-                    <!-- Username -->
-                    <StackPanel Grid.Row="3" Margin="0,0,0,15">
-                        <TextBlock Text="Tên đăng nhập" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
-                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
-                            <Grid Margin="12,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <materialDesign:PackIcon Grid.Column="0" Kind="Account" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                <TextBox Grid.Column="1" x:Name="UsernameTextBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" Foreground="#333" materialDesign:HintAssist.Hint="Nhập tên đăng nhập" materialDesign:HintAssist.Foreground="#999"/>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
+                        <!-- Email -->
+                        <StackPanel Grid.Row="4" Margin="0,0,0,15">
+                            <TextBlock Text="Email" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
+                            <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
+                                <Grid Margin="12,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Grid.Column="0" Kind="Email" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <TextBox Grid.Column="1" x:Name="EmailTextBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" Foreground="#333" materialDesign:HintAssist.Hint="Nhập email" materialDesign:HintAssist.Foreground="#999"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
 
-                    <!-- Email -->
-                    <StackPanel Grid.Row="4" Margin="0,0,0,15">
-                        <TextBlock Text="Email" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
-                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
-                            <Grid Margin="12,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <materialDesign:PackIcon Grid.Column="0" Kind="Email" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                <TextBox Grid.Column="1" x:Name="EmailTextBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" Foreground="#333" materialDesign:HintAssist.Hint="Nhập email" materialDesign:HintAssist.Foreground="#999"/>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
+                        <!-- Phone -->
+                        <StackPanel Grid.Row="5" Margin="0,0,0,15">
+                            <TextBlock Text="Số điện thoại" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
+                            <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
+                                <Grid Margin="12,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Grid.Column="0" Kind="Phone" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <TextBox Grid.Column="1" x:Name="PhoneTextBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" Foreground="#333" materialDesign:HintAssist.Hint="Nhập số điện thoại" materialDesign:HintAssist.Foreground="#999"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
 
-                    <!-- Phone -->
-                    <StackPanel Grid.Row="5" Margin="0,0,0,15">
-                        <TextBlock Text="Số điện thoại" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
-                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
-                            <Grid Margin="12,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <materialDesign:PackIcon Grid.Column="0" Kind="Phone" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                <TextBox Grid.Column="1" x:Name="PhoneTextBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" Foreground="#333" materialDesign:HintAssist.Hint="Nhập số điện thoại" materialDesign:HintAssist.Foreground="#999"/>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
+                        <!-- Address -->
+                        <StackPanel Grid.Row="6" Margin="0,0,0,15">
+                            <TextBlock Text="Địa chỉ" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
+                            <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
+                                <Grid Margin="12,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Grid.Column="0" Kind="MapMarker" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <TextBox Grid.Column="1" x:Name="AddressTextBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" Foreground="#333" materialDesign:HintAssist.Hint="Nhập địa chỉ" materialDesign:HintAssist.Foreground="#999"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
 
-                    <!-- Address (NEW) -->
-                    <StackPanel Grid.Row="6" Margin="0,0,0,15">
-                        <TextBlock Text="Địa chỉ" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
-                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
-                            <Grid Margin="12,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <materialDesign:PackIcon Grid.Column="0" Kind="MapMarker" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                <TextBox Grid.Column="1" x:Name="AddressTextBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" Foreground="#333" materialDesign:HintAssist.Hint="Nhập địa chỉ" materialDesign:HintAssist.Foreground="#999"/>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
+                        <!-- Password -->
+                        <StackPanel Grid.Row="7" Margin="0,0,0,15">
+                            <TextBlock Text="Mật khẩu" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
+                            <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
+                                <Grid Margin="12,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Grid.Column="0" Kind="Lock" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <PasswordBox Grid.Column="1" x:Name="PasswordBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" materialDesign:HintAssist.Hint="Nhập mật khẩu" materialDesign:HintAssist.Foreground="#999"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
 
-                    <!-- Password -->
-                    <StackPanel Grid.Row="7" Margin="0,0,0,15">
-                        <TextBlock Text="Mật khẩu" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
-                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
-                            <Grid Margin="12,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <materialDesign:PackIcon Grid.Column="0" Kind="Lock" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                <PasswordBox Grid.Column="1" x:Name="PasswordBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" materialDesign:HintAssist.Hint="Nhập mật khẩu" materialDesign:HintAssist.Foreground="#999"/>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
+                        <!-- Confirm Password -->
+                        <StackPanel Grid.Row="8" Margin="0,0,0,15">
+                            <TextBlock Text="Xác nhận mật khẩu" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
+                            <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
+                                <Grid Margin="12,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Grid.Column="0" Kind="LockCheck" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <PasswordBox Grid.Column="1" x:Name="ConfirmPasswordBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" KeyDown="ConfirmPasswordBox_KeyDown" materialDesign:HintAssist.Hint="Nhập lại mật khẩu" materialDesign:HintAssist.Foreground="#999"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
 
-                    <!-- Confirm Password -->
-                    <StackPanel Grid.Row="8" Margin="0,0,0,15">
-                        <TextBlock Text="Xác nhận mật khẩu" FontSize="13" FontWeight="SemiBold" Foreground="#333" Margin="5,0,0,6" Width="468"/>
-                        <Border Background="#F8F9FA" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Height="42" Width="468">
-                            <Grid Margin="12,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <materialDesign:PackIcon Grid.Column="0" Kind="LockCheck" Width="20" Height="20" Foreground="#999" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                <PasswordBox Grid.Column="1" x:Name="ConfirmPasswordBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalAlignment="Center" KeyDown="ConfirmPasswordBox_KeyDown" materialDesign:HintAssist.Hint="Nhập lại mật khẩu" materialDesign:HintAssist.Foreground="#999"/>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
+                        <!-- Terms Checkbox -->
+                        <CheckBox Grid.Row="9" x:Name="TermsCheckBox" Margin="35,0,0,20" FontSize="13" Foreground="#666">
+                            <TextBlock TextWrapping="Wrap">
+                                <Run Text="Tôi đồng ý với "/>
+                                <Hyperlink TextDecorations="None" Foreground="#F78272">
+                                    <Run Text="Điều khoản dịch vụ"/>
+                                </Hyperlink>
+                                <Run Text=" và "/>
+                                <Hyperlink TextDecorations="None" Foreground="#F78272">
+                                    <Run Text="Chính sách bảo mật"/>
+                                </Hyperlink>
+                            </TextBlock>
+                        </CheckBox>
 
-                    <!-- Terms Checkbox -->
-                    <CheckBox Grid.Row="9" x:Name="TermsCheckBox" Margin="35,0,0,20" FontSize="13" Foreground="#666">
-                        <TextBlock TextWrapping="Wrap">
-                            <Run Text="Tôi đồng ý với "/>
-                            <Hyperlink TextDecorations="None" Foreground="#F78272">
-                                <Run Text="Điều khoản dịch vụ"/>
-                            </Hyperlink>
-                            <Run Text=" và "/>
-                            <Hyperlink TextDecorations="None" Foreground="#F78272">
-                                <Run Text="Chính sách bảo mật"/>
-                            </Hyperlink>
-                        </TextBlock>
-                    </CheckBox>
+                        <!-- Signup Button -->
+                        <Button Grid.Row="10" x:Name="SignUpButton" Height="48" Width="468" FontSize="15" FontWeight="Bold" Content="TẠO TÀI KHOẢN" Click="SignUpButton_Click" Cursor="Hand" Margin="5,0,0,18">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <GradientStop Color="#F78272" Offset="0"/>
+                                                <GradientStop Color="#FFCC96" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="12" Padding="{TemplateBinding Padding}">
+                                                    <Border.Effect>
+                                                        <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.3" Color="#F78272"/>
+                                                    </Border.Effect>
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Opacity" Value="0.9"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
 
-                    <!-- Signup Button -->
-                    <Button Grid.Row="10" x:Name="SignUpButton" Height="48" Width="468" FontSize="15" FontWeight="Bold" Content="TẠO TÀI KHOẢN" Click="SignUpButton_Click" Cursor="Hand" Margin="5,0,0,18">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                            <GradientStop Color="#F78272" Offset="0"/>
-                                            <GradientStop Color="#FFCC96" Offset="1"/>
-                                        </LinearGradientBrush>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Foreground" Value="White"/>
-                                <Setter Property="BorderThickness" Value="0"/>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}" CornerRadius="12" Padding="{TemplateBinding Padding}">
-                                                <Border.Effect>
-                                                    <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.3" Color="#F78272"/>
-                                                </Border.Effect>
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Opacity" Value="0.9"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-
-                    <!-- Login Link -->
-                    <StackPanel Grid.Row="11" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
-                        <TextBlock Text="Đã có tài khoản? " FontSize="13" Foreground="#666" VerticalAlignment="Center"/>
-                        <TextBlock VerticalAlignment="Center">
-                            <Hyperlink Click="SignInLink_Click" TextDecorations="None">
-                                <TextBlock Text="Đăng nhập" FontSize="13" FontWeight="SemiBold" Foreground="#F78272"/>
-                            </Hyperlink>
-                        </TextBlock>
-                    </StackPanel>
-                </Grid>
-            </ScrollViewer>
+                        <!-- Login Link -->
+                        <StackPanel Grid.Row="11" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+                            <TextBlock Text="Đã có tài khoản? " FontSize="13" Foreground="#666" VerticalAlignment="Center"/>
+                            <TextBlock VerticalAlignment="Center">
+                                <Hyperlink Click="SignInLink_Click" TextDecorations="None">
+                                    <TextBlock Text="Đăng nhập" FontSize="13" FontWeight="SemiBold" Foreground="#F78272"/>
+                                </Hyperlink>
+                            </TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
         </Border>
     </Grid>
 </Page>
