@@ -2,9 +2,10 @@
 using Pet_Shop_Project.Models;
 using Pet_Shop_Project.Services;
 using System;
-using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace Pet_Shop_Project.Views
@@ -14,13 +15,8 @@ namespace Pet_Shop_Project.Views
         private string currentUserId;
         private UserService userService;
         private User currentUser;
-        private bool isEditMode = false;
-
-        // Lưu giá trị ban đầu để có thể cancel
-        private string originalEmail;
-        private string originalAddress;
-        private string originalPhone;
-        private string originalFullName;
+        private bool isEditingContact = false;
+        private bool isEditingAccount = false;
 
         public AccountPage(string userId)
         {
@@ -38,18 +34,12 @@ namespace Pet_Shop_Project.Views
                 if (currentUser != null)
                 {
                     UserNameText.Text = currentUser.FullName ?? "Người dùng";
-                    EmailText.Text = currentUser.Email ?? "Đang cập nhật...";
-                    PhoneText.Text = currentUser.Phone ?? "Đang cập nhật...";
-                    AddressText.Text = currentUser.Address ?? "Đang cập nhật...";
-                    FullNameText.Text = currentUser.FullName ?? "Đang cập nhật...";
+                    EmailText.Text = currentUser.Email ?? "Chưa cập nhật";
+                    PhoneText.Text = currentUser.Phone ?? "Chưa cập nhật";
+                    AddressText.Text = currentUser.Address ?? "Chưa cập nhật";
+                    FullNameText.Text = currentUser.FullName ?? "Chưa cập nhật";
                     RoleText.Text = GetRoleDisplayName(currentUser.Role);
                     JoinDateText.Text = currentUser.CreatedDate.ToString("dd/MM/yyyy");
-
-                    // Lưu giá trị ban đầu
-                    originalEmail = EmailText.Text;
-                    originalAddress = AddressText.Text;
-                    originalPhone = PhoneText.Text;
-                    originalFullName = FullNameText.Text;
                 }
                 else
                 {
@@ -60,9 +50,7 @@ namespace Pet_Shop_Project.Views
             catch (Exception ex)
             {
                 MessageBox.Show($"Lỗi tải thông tin: {ex.Message}",
-                    "Lỗi",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -79,135 +67,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
-        private void EditButton_Click(object sender, RoutedEventArgs e)
-        {
-            isEditMode = true;
-            SetEditMode(true);
-        }
-
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                // Validate dữ liệu
-                if (string.IsNullOrWhiteSpace(EmailTextBox.Text))
-                {
-                    MessageBox.Show("Email không được để trống!",
-                        "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                if (string.IsNullOrWhiteSpace(FullNameTextBox.Text))
-                {
-                    MessageBox.Show("Họ tên không được để trống!",
-                        "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                // Cập nhật thông tin user
-                currentUser.Email = EmailTextBox.Text.Trim();
-                currentUser.Address = AddressTextBox.Text.Trim();
-                currentUser.Phone = PhoneTextBox.Text.Trim();
-                currentUser.FullName = FullNameTextBox.Text.Trim();
-
-                // Gọi service để cập nhật vào database
-                bool updateSuccess = userService.UpdateUser(currentUser);
-
-                if (updateSuccess)
-                {
-                    // Cập nhật hiển thị
-                    EmailText.Text = currentUser.Email;
-                    AddressText.Text = currentUser.Address;
-                    PhoneText.Text = currentUser.Phone;
-                    FullNameText.Text = currentUser.FullName;
-                    UserNameText.Text = currentUser.FullName;
-
-                    // Cập nhật giá trị ban đầu
-                    originalEmail = EmailText.Text;
-                    originalAddress = AddressText.Text;
-                    originalPhone = PhoneText.Text;
-                    originalFullName = FullNameText.Text;
-
-                    MessageBox.Show("Cập nhật thông tin thành công!",
-                        "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                    isEditMode = false;
-                    SetEditMode(false);
-                }
-                else
-                {
-                    MessageBox.Show("Cập nhật thông tin thất bại!",
-                        "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi lưu thông tin: {ex.Message}",
-                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Khôi phục giá trị ban đầu
-            EmailTextBox.Text = originalEmail;
-            AddressTextBox.Text = originalAddress;
-            PhoneTextBox.Text = originalPhone;
-            FullNameTextBox.Text = originalFullName;
-
-            isEditMode = false;
-            SetEditMode(false);
-        }
-
-        private void SetEditMode(bool isEdit)
-        {
-            if (isEdit)
-            {
-                // Hiện nút Save và Cancel, ẩn nút Edit
-                EditButton.Visibility = Visibility.Collapsed;
-                SaveButton.Visibility = Visibility.Visible;
-                CancelButton.Visibility = Visibility.Visible;
-
-                // Hiện TextBox, ẩn TextBlock
-                EmailDisplayBorder.Visibility = Visibility.Collapsed;
-                EmailEditBorder.Visibility = Visibility.Visible;
-                EmailTextBox.Text = EmailText.Text;
-
-                AddressDisplayBorder.Visibility = Visibility.Collapsed;
-                AddressEditBorder.Visibility = Visibility.Visible;
-                AddressTextBox.Text = AddressText.Text;
-
-                PhoneDisplayBorder.Visibility = Visibility.Collapsed;
-                PhoneEditBorder.Visibility = Visibility.Visible;
-                PhoneTextBox.Text = PhoneText.Text;
-
-                FullNameDisplayBorder.Visibility = Visibility.Collapsed;
-                FullNameEditBorder.Visibility = Visibility.Visible;
-                FullNameTextBox.Text = FullNameText.Text;
-            }
-            else
-            {
-                // Hiện nút Edit, ẩn nút Save và Cancel
-                EditButton.Visibility = Visibility.Visible;
-                SaveButton.Visibility = Visibility.Collapsed;
-                CancelButton.Visibility = Visibility.Collapsed;
-
-                // Hiện TextBlock, ẩn TextBox
-                EmailDisplayBorder.Visibility = Visibility.Visible;
-                EmailEditBorder.Visibility = Visibility.Collapsed;
-
-                AddressDisplayBorder.Visibility = Visibility.Visible;
-                AddressEditBorder.Visibility = Visibility.Collapsed;
-
-                PhoneDisplayBorder.Visibility = Visibility.Visible;
-                PhoneEditBorder.Visibility = Visibility.Collapsed;
-
-                FullNameDisplayBorder.Visibility = Visibility.Visible;
-                FullNameEditBorder.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        private void ChangeAvatar_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void ChangeAvatar_Click(object sender, MouseButtonEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Ảnh (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg";
@@ -216,7 +76,6 @@ namespace Pet_Shop_Project.Views
             if (openFileDialog.ShowDialog() == true)
             {
                 string selectedImagePath = openFileDialog.FileName;
-
                 BitmapImage bitmap = new BitmapImage();
                 bitmap.BeginInit();
                 bitmap.UriSource = new Uri(selectedImagePath);
@@ -227,15 +86,224 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        // Contact Information Edit Functions
+        private void EditContact_Click(object sender, RoutedEventArgs e)
+        {
+            isEditingContact = true;
+
+            // Hide text displays, show text boxes
+            EmailText.Visibility = Visibility.Collapsed;
+            EmailEdit.Visibility = Visibility.Visible;
+            EmailEdit.Text = EmailText.Text == "Chưa cập nhật" ? "" : EmailText.Text;
+
+            PhoneText.Visibility = Visibility.Collapsed;
+            PhoneEdit.Visibility = Visibility.Visible;
+            PhoneEdit.Text = PhoneText.Text == "Chưa cập nhật" ? "" : PhoneText.Text;
+
+            AddressText.Visibility = Visibility.Collapsed;
+            AddressEdit.Visibility = Visibility.Visible;
+            AddressEdit.Text = AddressText.Text == "Chưa cập nhật" ? "" : AddressText.Text;
+
+            // Toggle buttons
+            EditContactButton.Visibility = Visibility.Collapsed;
+            SaveContactButton.Visibility = Visibility.Visible;
+            CancelContactButton.Visibility = Visibility.Visible;
+        }
+
+        private void SaveContact_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Validate inputs
+                string email = EmailEdit.Text.Trim();
+                string phone = PhoneEdit.Text.Trim();
+                string address = AddressEdit.Text.Trim();
+
+                // Validate email
+                if (!string.IsNullOrEmpty(email) && !IsValidEmail(email))
+                {
+                    MessageBox.Show("Email không hợp lệ!", "Lỗi",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Validate phone
+                if (!string.IsNullOrEmpty(phone))
+                {
+                    if (!phone.StartsWith("0") || phone.Length != 10 || !IsNumeric(phone))
+                    {
+                        MessageBox.Show("Số điện thoại phải có 10 số và bắt đầu bằng 0!",
+                            "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+                }
+
+                // Update user object
+                currentUser.Email = string.IsNullOrEmpty(email) ? null : email;
+                currentUser.Phone = string.IsNullOrEmpty(phone) ? null : phone;
+                currentUser.Address = string.IsNullOrEmpty(address) ? null : address;
+
+                // Save to database
+                bool success = userService.UpdateUser(currentUser);
+
+                if (success)
+                {
+                    // Update display
+                    EmailText.Text = currentUser.Email ?? "Chưa cập nhật";
+                    PhoneText.Text = currentUser.Phone ?? "Chưa cập nhật";
+                    AddressText.Text = currentUser.Address ?? "Chưa cập nhật";
+
+                    ExitContactEditMode();
+
+                    MessageBox.Show("Cập nhật thông tin thành công!", "Thành công",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Không thể cập nhật thông tin!", "Lỗi",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void CancelContact_Click(object sender, RoutedEventArgs e)
+        {
+            ExitContactEditMode();
+        }
+
+        private void ExitContactEditMode()
+        {
+            isEditingContact = false;
+
+            // Show text displays, hide text boxes
+            EmailText.Visibility = Visibility.Visible;
+            EmailEdit.Visibility = Visibility.Collapsed;
+
+            PhoneText.Visibility = Visibility.Visible;
+            PhoneEdit.Visibility = Visibility.Collapsed;
+
+            AddressText.Visibility = Visibility.Visible;
+            AddressEdit.Visibility = Visibility.Collapsed;
+
+            // Toggle buttons
+            EditContactButton.Visibility = Visibility.Visible;
+            SaveContactButton.Visibility = Visibility.Collapsed;
+            CancelContactButton.Visibility = Visibility.Collapsed;
+        }
+
+        // Account Information Edit Functions
+        private void EditAccount_Click(object sender, RoutedEventArgs e)
+        {
+            isEditingAccount = true;
+
+            // Hide text display, show text box
+            FullNameText.Visibility = Visibility.Collapsed;
+            FullNameEdit.Visibility = Visibility.Visible;
+            FullNameEdit.Text = FullNameText.Text == "Chưa cập nhật" ? "" : FullNameText.Text;
+
+            // Toggle buttons
+            EditAccountButton.Visibility = Visibility.Collapsed;
+            SaveAccountButton.Visibility = Visibility.Visible;
+            CancelAccountButton.Visibility = Visibility.Visible;
+        }
+
+        private void SaveAccount_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string fullName = FullNameEdit.Text.Trim();
+
+                if (string.IsNullOrEmpty(fullName))
+                {
+                    MessageBox.Show("Họ tên không được để trống!", "Lỗi",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Update user object
+                currentUser.FullName = fullName;
+
+                // Save to database
+                bool success = userService.UpdateUser(currentUser);
+
+                if (success)
+                {
+                    // Update displays
+                    FullNameText.Text = currentUser.FullName;
+                    UserNameText.Text = currentUser.FullName;
+
+                    ExitAccountEditMode();
+
+                    MessageBox.Show("Cập nhật thông tin thành công!", "Thành công",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Không thể cập nhật thông tin!", "Lỗi",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void CancelAccount_Click(object sender, RoutedEventArgs e)
+        {
+            ExitAccountEditMode();
+        }
+
+        private void ExitAccountEditMode()
+        {
+            isEditingAccount = false;
+
+            // Show text display, hide text box
+            FullNameText.Visibility = Visibility.Visible;
+            FullNameEdit.Visibility = Visibility.Collapsed;
+
+            // Toggle buttons
+            EditAccountButton.Visibility = Visibility.Visible;
+            SaveAccountButton.Visibility = Visibility.Collapsed;
+            CancelAccountButton.Visibility = Visibility.Collapsed;
+        }
+
+        // Validation Functions
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var regex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+                return regex.IsMatch(email);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private bool IsNumeric(string text)
+        {
+            Regex regex = new Regex("^[0-9]+$");
+            return regex.IsMatch(text);
+        }
+
+        private void PhoneEdit_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !IsNumeric(e.Text);
+        }
+
+        // Other Functions
         private void ChangePassword_Click(object sender, RoutedEventArgs e)
         {
             ChangePasswordDialog dialog = new ChangePasswordDialog(currentUserId);
-            bool? result = dialog.ShowDialog();
-
-            if (result == true)
-            {
-                // Password đã được đổi thành công
-            }
+            dialog.ShowDialog();
         }
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
@@ -259,6 +327,11 @@ namespace Pet_Shop_Project.Views
 
                 Window.GetWindow(this)?.Close();
             }
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService?.GoBack();
         }
     }
 }
