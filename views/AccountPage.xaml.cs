@@ -17,12 +17,15 @@ namespace Pet_Shop_Project.Views
         private User currentUser;
         private bool isEditingContact = false;
         private bool isEditingAccount = false;
+        private readonly UploadImageService uploadImageService;
+        private const string DefaultAvatarPath = "pack://application:,,,/Images/avt.jpg";
 
         public AccountPage(string userId)
         {
             InitializeComponent();
             currentUserId = userId;
             userService = new UserService();
+            uploadImageService = new UploadImageService();
             LoadUserInfo();
         }
 
@@ -40,6 +43,7 @@ namespace Pet_Shop_Project.Views
                     FullNameText.Text = currentUser.FullName ?? "Chưa cập nhật";
                     RoleText.Text = GetRoleDisplayName(currentUser.Role);
                     JoinDateText.Text = currentUser.CreatedDate.ToString("dd/MM/yyyy");
+                    SetAvatarImage(currentUser.Avatar);
                 }
                 else
                 {
@@ -67,22 +71,74 @@ namespace Pet_Shop_Project.Views
             }
         }
 
-        private void ChangeAvatar_Click(object sender, MouseButtonEventArgs e)
+        private void SetAvatarImage(string avatarPath)
         {
+            var path = string.IsNullOrWhiteSpace(avatarPath) ? DefaultAvatarPath : avatarPath;
+            try
+            {
+                var bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.UriSource = new Uri(path, UriKind.RelativeOrAbsolute);
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.EndInit();
+
+                AvatarBrush.ImageSource = bitmap;
+            }
+            catch
+            {
+                AvatarBrush.ImageSource = new BitmapImage(new Uri(DefaultAvatarPath, UriKind.Absolute));
+            }
+        }
+
+        private async void ChangeAvatar_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (currentUser == null)
+            {
+                return;
+            }
+
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Ảnh (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg";
             openFileDialog.Title = "Chọn ảnh làm avatar";
 
             if (openFileDialog.ShowDialog() == true)
             {
-                string selectedImagePath = openFileDialog.FileName;
-                BitmapImage bitmap = new BitmapImage();
-                bitmap.BeginInit();
-                bitmap.UriSource = new Uri(selectedImagePath);
-                bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                bitmap.EndInit();
+                try
+                {
+                    Mouse.OverrideCursor = Cursors.Wait;
+                    var (secureUrl, _) = await uploadImageService.UploadAsync(openFileDialog.FileName, "avatars");
 
-                AvatarBrush.ImageSource = bitmap;
+                    if (string.IsNullOrWhiteSpace(secureUrl))
+                    {
+                        MessageBox.Show("Tải avatar thất bại", "Lỗi",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    currentUser.Avatar = secureUrl;
+                    bool isSaved = userService.UpdateUserAvatar(currentUser.UserId, secureUrl);
+
+                    if (isSaved)
+                    {
+                        SetAvatarImage(secureUrl);
+                        MessageBox.Show("Cập nhật avatar thành công", "Thành Công",
+                            MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không thể lưu avatar.", "Lỗi",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi khi tải avatar: {ex.Message}", "Lỗi",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    Mouse.OverrideCursor = null;
+                }
             }
         }
 
