@@ -292,6 +292,37 @@ namespace Pet_Shop_Project.Services
 
             return products;
         }
+
+        // Lấy avatar của user
+        public async Task<string> GetUserAvatarAsync(string userId)
+        {
+            string avatar = null;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    await conn.OpenAsync();
+                    string query = "SELECT Avatar FROM dbo.USERS WHERE UserId = @UserId";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserId", userId);
+                        var result = await cmd.ExecuteScalarAsync();
+
+                        if (result != null && result != DBNull.Value)
+                        {
+                            avatar = result.ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Lỗi lấy avatar user: {ex.Message}");
+            }
+
+            return avatar;
+        }
     }
 }
-
