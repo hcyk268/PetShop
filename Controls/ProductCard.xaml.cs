@@ -57,17 +57,8 @@ namespace Pet_Shop_Project.Controls
                 DiscountBadge.Visibility = Visibility.Visible;
                 DiscountText.Text = $"-{(_product.Discount * 100):0}%";
 
-                // 2. Giá có gradient
-                ProductPrice.Foreground = new LinearGradientBrush
-                {
-                    StartPoint = new Point(0, 0),
-                    EndPoint = new Point(1, 0),
-                    GradientStops = new GradientStopCollection
-                    {
-                        new GradientStop(Color.FromRgb(0xFF, 0xC4, 0x76), 0),
-                        new GradientStop(Color.FromRgb(0xFF, 0xA2, 0xA2), 1)
-                    }
-                };
+                // 2. Giá 
+                ProductPrice.Foreground = new SolidColorBrush(Color.FromRgb(0xFF, 0x6B, 0x6B));
 
                 // 3. Hiển thị giá sau giảm
                 ProductPrice.Text = $"{_product.FinalPrice:N0} đ";

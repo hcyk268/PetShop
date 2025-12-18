@@ -7,6 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Pet_Shop_Project.Services;
+using Pet_Shop_Project.Controls;
+using NavService = Pet_Shop_Project.Services.NavigationService;
 
 namespace Pet_Shop_Project.Views
 {
@@ -25,6 +27,11 @@ namespace Pet_Shop_Project.Views
 
         SolidColorBrush defaulttext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#222"));
         SolidColorBrush clickedtext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF6B6B"));
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavService.Instance.GoBack();
+        }
 
         public OrderQueuePage(string userid)
         {
