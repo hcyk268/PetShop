@@ -46,7 +46,10 @@ namespace Pet_Shop_Project.Services
 
         public void NavigateToUser()
         {
-
+            if (mainFrame != null)
+            {
+                mainFrame.Navigate(new UserManagement());
+            }
         }
 
         public void NavigateToOrder()
