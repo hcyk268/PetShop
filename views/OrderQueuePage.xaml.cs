@@ -7,6 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Pet_Shop_Project.Services;
+using Pet_Shop_Project.Controls;
+using NavService = Pet_Shop_Project.Services.NavigationService;
 
 namespace Pet_Shop_Project.Views
 {
@@ -16,15 +18,21 @@ namespace Pet_Shop_Project.Views
     public partial class OrderQueuePage : Page, INotifyPropertyChanged
     {
         private OrderService _orderService = new OrderService();
-        
+
         private ObservableCollection<Order> _allOrders;
 
         private bool _active = false;
 
         private string _userid;
 
-        SolidColorBrush defaulttext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#222")); 
-        SolidColorBrush clickedtext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF6B6B"));
+        SolidColorBrush defaulttext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#222"));
+        SolidColorBrush clickedtext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FFAD57"));
+        
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavService.Instance.GoBack();
+        }
 
         public OrderQueuePage(string userid)
         {
@@ -37,6 +45,7 @@ namespace Pet_Shop_Project.Views
             loadingIndicatorOQP.Visibility = Visibility.Visible;
 
             setForeColorDefault();
+            setOpacityButton();
             odppendingbutton.Foreground = clickedtext;
 
             Loaded += OrderQueuePage_Loaded;
@@ -63,7 +72,7 @@ namespace Pet_Shop_Project.Views
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -72,6 +81,11 @@ namespace Pet_Shop_Project.Views
         protected void setForeColorDefault()
         {
             odppendingbutton.Foreground = odpshippingbutton.Foreground = odpsuccessbutton.Foreground = odpcanceledbutton.Foreground = defaulttext;
+        }
+
+        protected void setOpacityButton()
+        {
+            odppendingbutton.Opacity = odpshippingbutton.Opacity = odpsuccessbutton.Opacity = odpcanceledbutton.Opacity = 0.5;
         }
 
         private async void OrderQueuePage_Loaded(object sender, RoutedEventArgs e)
@@ -115,7 +129,7 @@ namespace Pet_Shop_Project.Views
             setForeColorDefault();
             odpsuccessbutton.Foreground = clickedtext;
 
-            MainScreenOQP.Navigate(new OQPSuccess(AllOrders));
+            MainScreenOQP.Navigate(new OQPSuccess(AllOrders, _userid));
         }
 
         private void odpcanceledbutton_Click(object sender, RoutedEventArgs e)

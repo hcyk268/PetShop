@@ -18,13 +18,13 @@
         </Grid.ColumnDefinitions>
 
         <!-- Admin Navigation Bar (có thể tạo riêng hoặc dùng chung) -->
-        <controls:NavigationBar Grid.Column="0" Margin="0,0,0,0"/>
+        <controls:AdminNavigationBar Grid.Column="0" Margin="0,0,0,0"/>
 
         <!-- Admin Content Frame -->
         <Frame Grid.Column="1" 
                x:Name="AdminScreen" 
                NavigationUIVisibility="Hidden"
-               Source="/views/AdminInventoryPage.xaml">
+               Source="/views/AdminReviewPage.xaml">
         </Frame>
     </Grid>
 </Window>

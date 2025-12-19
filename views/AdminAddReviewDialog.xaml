@@ -1,0 +1,116 @@
+<Window x:Class="Pet_Shop_Project.Views.AdminAddReviewDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Thêm đánh giá ảo"
+        Height="500"
+        Width="360"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None"
+        ResizeMode="NoResize">
+
+    <Grid>
+        <Border Background="#FFF7F0"
+                CornerRadius="12"
+                BorderBrush="Gray"
+                Padding="16"
+                materialDesign:ShadowAssist.ShadowDepth="Depth2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Header -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                    <materialDesign:PackIcon Kind="StarPlus"
+                                             Width="30"
+                                             Height="30"
+                                             Foreground="#FFAD57"
+                                             VerticalAlignment="Center"/>
+                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="Thêm đánh giá ảo"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="#333"/>
+                        <TextBlock Text="Điền nhanh thông tin và số sao cho sản phẩm."
+                                   FontSize="12"
+                                   Foreground="#777"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Form -->
+                <StackPanel Grid.Row="1" Margin="0,4,0,0">
+                    <!-- Product -->
+                    <TextBlock Text="Sản phẩm" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                    <ComboBox x:Name="CmbProduct"
+                              Height="34"
+                              Padding="10,0"
+                              DisplayMemberPath="Name"
+                              SelectedValuePath="ProductId"
+                              Margin="0,0,0,12"
+                              VerticalContentAlignment="Center"/>
+
+                    <!-- User Name -->
+                    <TextBlock Text="Tên người đánh giá" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                    <TextBox x:Name="TxtUserName"
+                             AcceptsTab="True"
+                             Height="34"
+                             Padding="10,6"
+                             Margin="0,0,0,12"/>
+
+                    <!-- Rating -->
+                    <TextBlock Text="Đánh giá" FontWeight="SemiBold" Margin="0,0,0,4" />
+                    <Border Background="#F8F8F8"
+                            BorderBrush="#E8E8E8"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="10"
+                            Margin="0,0,0,12">
+                        <UniformGrid Columns="5" HorizontalAlignment="Stretch">
+                            <RadioButton x:Name="Rb1Star" Content="1★" GroupName="Rating" HorizontalContentAlignment="Center"/>
+                            <RadioButton x:Name="Rb2Star" Content="2★" GroupName="Rating" HorizontalContentAlignment="Center"/>
+                            <RadioButton x:Name="Rb3Star" Content="3★" GroupName="Rating" HorizontalContentAlignment="Center"/>
+                            <RadioButton x:Name="Rb4Star" Content="4★" GroupName="Rating" HorizontalContentAlignment="Center"/>
+                            <RadioButton x:Name="Rb5Star" Content="5★" GroupName="Rating" IsChecked="True" HorizontalContentAlignment="Center"/>
+                        </UniformGrid>
+                    </Border>
+
+                    <!-- Comment -->
+                    <TextBlock Text="Nội dung" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                    <TextBox x:Name="TxtComment"
+                             AcceptsTab="True"
+                             Height="70"
+                             Padding="10"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             VerticalScrollBarVisibility="Auto"/>
+                </StackPanel>
+
+                <!-- Buttons -->
+                <Grid Grid.Row="2" Margin="0,14,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0"
+                            Content="Hủy"
+                            Height="38"
+                            Margin="0,0,8,0"
+                            Click="BtnCancel_Click"
+                            Style="{StaticResource GradientButtonStyle}"/>  
+
+
+                    <Button Grid.Column="1"
+                            Content="Lưu"
+                            Height="38"
+                            Margin="8,0,0,0"
+                            Click="BtnSave_Click"
+                            Style="{StaticResource GradientButtonStyle}"/>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

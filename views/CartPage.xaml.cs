@@ -199,7 +199,7 @@ namespace Pet_Shop_Project.Views
         }
 
         // Xóa nhiều sản phẩm cùng lúc
-        private async Task DeleteMultipleCartItemsFromDatabaseAsync(List<string> cartItemIds)
+        private async Task DeleteMultipleCartItemsFromDatabaseAsync(IEnumerable<string> cartItemIds)
         {
             try
             {
@@ -452,9 +452,9 @@ namespace Pet_Shop_Project.Views
         #endregion
 
         #region Helper Methods
-        private List<OrderDetail> ConvertToOrderDetails(List<CartItem> cartItems)
+        private ObservableCollection<OrderDetail> ConvertToOrderDetails(List<CartItem> cartItems)
         {
-            var orderDetails = new List<OrderDetail>();
+            var orderDetails = new ObservableCollection<OrderDetail>();
 
             foreach (var cartItem in cartItems)
             {
@@ -558,19 +558,6 @@ namespace Pet_Shop_Project.Views
         {
             get
             {
-                if (HasDiscount)
-                {
-                    return new LinearGradientBrush
-                    {
-                        StartPoint = new Point(0, 0),
-                        EndPoint = new Point(1, 0),
-                        GradientStops = new GradientStopCollection
-                        {
-                            new GradientStop(Color.FromRgb(0xFF, 0xC4, 0x76), 0),
-                            new GradientStop(Color.FromRgb(0xFF, 0xA2, 0xA2), 1)
-                        }
-                    };
-                }
                 return new SolidColorBrush(Color.FromRgb(0xFF, 0x6B, 0x6B));
             }
         }

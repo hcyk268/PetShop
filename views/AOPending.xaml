@@ -28,7 +28,7 @@
         </StackPanel>
 
         <ScrollViewer Grid.Row="1"
-          VerticalScrollBarVisibility="Auto" 
+          VerticalScrollBarVisibility="Hidden" 
           Margin="20"
           Background="Transparent">
             <ScrollViewer.Resources>
@@ -154,7 +154,9 @@
                                             Padding="12,8"
                                             Margin="0,0,10,0"
                                             Tag="{Binding}"
-                                            Click="ViewOrderDetail_Click">
+                                            Click="ViewOrderDetail_Click"
+                                            Foreground="White" 
+                                            BorderBrush="#FFE5E5">
                                         <StackPanel Orientation="Horizontal"
                                                     VerticalAlignment="Center">
                                             <materialDesign:PackIcon Kind="EyeOutline"

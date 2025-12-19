@@ -35,6 +35,18 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        // Nút quay về SignIn
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigateToSignIn();
+        }
+
+        // Nút đóng cửa sổ
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Window.GetWindow(this)?.Close();
+        }
+
         // Thực hiện đăng ký
         private void PerformSignUp()
         {
@@ -43,7 +55,7 @@ namespace Pet_Shop_Project.Views
             string username = UsernameTextBox.Text.Trim();
             string email = EmailTextBox.Text.Trim();
             string phone = PhoneTextBox.Text.Trim();
-            string address = AddressTextBox.Text.Trim(); // NEW
+            string address = AddressTextBox.Text.Trim();
             string password = PasswordBox.Password;
             string confirmPassword = ConfirmPasswordBox.Password;
             bool termsAccepted = TermsCheckBox.IsChecked == true;
@@ -79,8 +91,7 @@ namespace Pet_Shop_Project.Views
                     Email = email,
                     Phone = phone,
                     Address = address,
-                    Role = "User", // Mặc định là Customer
-
+                    Role = "User", // Mặc định là User
                     CreatedDate = DateTime.Now
                 };
 

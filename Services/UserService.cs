@@ -1,4 +1,4 @@
-﻿using Pet_Shop_Project.Models;
+using Pet_Shop_Project.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,7 +31,7 @@ namespace Pet_Shop_Project.Services
                     conn.Open();
 
                     // Query lấy thông tin user theo username
-                    string query = @"SELECT UserId, Username, Password, FullName, Email, Phone, Address, Role
+                    string query = @"SELECT UserId, Username, Password, FullName, Email, Phone, Address, Role, Avatar
                             FROM Users 
                             WHERE Username = @Username";
 
@@ -57,7 +57,8 @@ namespace Pet_Shop_Project.Services
                                         Email = reader["Email"]?.ToString(),
                                         Phone = reader["Phone"]?.ToString(),
                                         Address = reader["Address"]?.ToString(),
-                                        Role = reader["Role"].ToString()
+                                        Role = reader["Role"].ToString(),
+                                        Avatar = reader["Avatar"]?.ToString()
                                     };
 
                                     return user;
@@ -87,7 +88,7 @@ namespace Pet_Shop_Project.Services
                 {
                     conn.Open();
 
-                    string query = @"SELECT UserId, Username, FullName, Email, Phone, Address, Role
+                    string query = @"SELECT UserId, Username, FullName, Email, Phone, Address, Role, Avatar
                                     FROM Users 
                                     ORDER BY UserId DESC";
 
@@ -104,7 +105,8 @@ namespace Pet_Shop_Project.Services
                                     Email = reader["Email"]?.ToString(),
                                     Phone = reader["Phone"]?.ToString(),
                                     Address = reader["Address"]?.ToString(),
-                                    Role = reader["Role"].ToString()
+                                    Role = reader["Role"].ToString(),
+                                    Avatar = reader["Avatar"]?.ToString()
                                 });
                             }
                         }
@@ -170,7 +172,7 @@ namespace Pet_Shop_Project.Services
                 {
                     conn.Open();
 
-                    string query = @"SELECT UserId, FullName, Email, Phone, Address, Role, CreatedDate
+                    string query = @"SELECT UserId, FullName, Email, Phone, Address, Role, CreatedDate, Avatar
                                     FROM Users 
                                     WHERE UserId = @UserId";
 
@@ -191,6 +193,7 @@ namespace Pet_Shop_Project.Services
                                     Address = reader["Address"]?.ToString(),
                                     Role = reader["Role"].ToString(),
                                     CreatedDate = (DateTime)reader["CreatedDate"],
+                                    Avatar = reader["Avatar"]?.ToString()
                                 };
                             }
                         }
@@ -268,9 +271,9 @@ namespace Pet_Shop_Project.Services
                     conn.Open();
 
                     string query = @"INSERT INTO Users 
-                                    (Username, FullName, Email, Phone, Address, Password, Role, CreatedDate) 
+                                    (Username, FullName, Email, Phone, Address, Password, Role, CreatedDate, Avatar) 
                                     VALUES 
-                                    (@Username, @FullName, @Email, @Phone, @Address, @Password, @Role, @CreatedDate)";
+                                    (@Username, @FullName, @Email, @Phone, @Address, @Password, @Role, @CreatedDate, @Avatar)";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -282,6 +285,7 @@ namespace Pet_Shop_Project.Services
                         cmd.Parameters.AddWithValue("@Password", password);
                         cmd.Parameters.AddWithValue("@Role", user.Role ?? "User");
                         cmd.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
+                        cmd.Parameters.AddWithValue("@Avatar", user.Avatar ?? "");
 
                         int rowsAffected = cmd.ExecuteNonQuery();
                         return rowsAffected > 0;
@@ -346,7 +350,7 @@ namespace Pet_Shop_Project.Services
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"ChangePassword error: {ex.Message}");
-                throw new Exception($"Lỗi khi đổi mật khẩu: {ex.Message}");
+                throw new Exception(ex.Message);
             }
         }
         // Cập nhật thông tin user
@@ -362,7 +366,8 @@ namespace Pet_Shop_Project.Services
                                     SET FullName = @FullName,
                                         Email = @Email,
                                         Phone = @Phone,
-                                        Address = @Address
+                                        Address = @Address,
+                                        Avatar = @Avatar
                                     WHERE UserId = @UserId";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -372,7 +377,8 @@ namespace Pet_Shop_Project.Services
                         cmd.Parameters.AddWithValue("@Email", user.Email ?? "");
                         cmd.Parameters.AddWithValue("@Phone", user.Phone ?? "");
                         cmd.Parameters.AddWithValue("@Address", user.Address ?? "");
-                        cmd.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
+                        cmd.Parameters.AddWithValue("@Avatar", user.Avatar ?? "");
+
                         int rowsAffected = cmd.ExecuteNonQuery();
                         return rowsAffected > 0;
                     }
@@ -385,7 +391,36 @@ namespace Pet_Shop_Project.Services
             }
         }
 
-        public async Task<ObservableCollection<User>> GetAllUsers()
+        public bool UpdateUserAvatar(string userId, string avatar)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    const string query = @"UPDATE Users 
+                                    SET Avatar = @Avatar 
+                                    WHERE UserId = @UserId";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserId", userId);
+                        cmd.Parameters.AddWithValue("@Avatar", avatar ?? "");
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"UpdateUserAvatar error: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<ObservableCollection<User>> GetAllUsersAsync()
         {
             ObservableCollection<User> allUsers = new ObservableCollection<User>();
 
@@ -413,6 +448,7 @@ namespace Pet_Shop_Project.Services
                                     Address = reader["Address"].ToString(),
                                     Role = reader["Role"].ToString(),
                                     Username = reader["Username"].ToString(),
+                                    Avatar = reader["Avatar"].ToString(),
                                     CreatedDate = (DateTime)reader["CreatedDate"]
                                 };
                                 allUsers.Add(user);
@@ -429,5 +465,88 @@ namespace Pet_Shop_Project.Services
 
             return allUsers;
         }
+
+        public async Task<ObservableCollection<User>> GetAllCustomer()
+        {
+            ObservableCollection<User> allCustomers = new ObservableCollection<User>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    await conn.OpenAsync();
+
+                    var query = " SELECT * FROM USERS WHERE Role = 'User'";
+
+                    using (var cmd = new SqlCommand(query, conn))
+                    {
+                        using (var reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                User user = new User
+                                {
+                                    UserId = reader["UserId"].ToString(),
+                                    FullName = reader["FullName"].ToString(),
+                                    Email = reader["Email"].ToString(),
+                                    Password = reader["Password"].ToString(),
+                                    Phone = reader["Phone"].ToString(),
+                                    Address = reader["Address"].ToString(),
+                                    Role = reader["Role"].ToString(),
+                                    Username = reader["Username"].ToString(),
+                                    Avatar = reader["Avatar"].ToString(),
+                                    CreatedDate = (DateTime)reader["CreatedDate"]
+                                };
+                                allCustomers.Add(user);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                return null;
+            }
+
+            return allCustomers;
+        }
+
+        public async Task<string> AddVirtualUser(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Tên không được để trống", nameof(name));
+            }
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+
+                string query = @"INSERT INTO Users
+                                (Username, FullName, Email, Password, Role, CreatedDate)
+                                OUTPUT INSERTED.UserId
+                                VALUES
+                                (@Username, @FullName, @Email, @Password, @Role, @CreatedDate)";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Username", "Virtual_" + DateTime.Now.ToString("ddMMyyHHmmss"));
+                    cmd.Parameters.AddWithValue("@FullName", name.Trim());
+                    cmd.Parameters.AddWithValue("@Email", "Virtual_" + DateTime.Now.ToString("ddMMyyHHmmss"));
+                    cmd.Parameters.AddWithValue("@Password", "Virtual_" + DateTime.Now.ToString("ddMMyyHHmmss"));
+                    cmd.Parameters.AddWithValue("@Role", "User");
+                    cmd.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
+
+                    object result = await cmd.ExecuteScalarAsync();
+                    if (result == null || result == DBNull.Value)
+                    {
+                        throw new Exception("Không lấy được UserId sau khi insert");
+                    }
+                    return result.ToString();
+                }
+            }
+        }
     }
+
 }

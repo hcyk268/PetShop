@@ -151,8 +151,8 @@
         <Setter Property="Background">
             <Setter.Value>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="White" Offset="0"/>
-                    <GradientStop Color="#FFE5E5" Offset="1"/>
+                    <GradientStop Color="#FFE5E5" Offset="0"/>
+                    <GradientStop Color="#FFAD57 " Offset="1"/>
                 </LinearGradientBrush>
             </Setter.Value>
         </Setter>

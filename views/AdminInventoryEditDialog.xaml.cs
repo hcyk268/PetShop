@@ -16,6 +16,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Pet_Shop_Project.Services;
+using System.Collections.ObjectModel;
 
 namespace Pet_Shop_Project.Views
 {
@@ -30,19 +32,17 @@ namespace Pet_Shop_Project.Views
         private Product _loadedProduct;
 
         public InventoryItem InventoryItem { get; private set; }
+        private readonly UploadImageService _uploadImageService = new UploadImageService();
 
         public AdminInventoryEditDialog()
         {
             InitializeComponent();
             Loaded += AdminInventoryEditDialog_Loaded;
         }
-        public AdminInventoryEditDialog(InventoryItem item)
+        public AdminInventoryEditDialog(InventoryItem item) : this()
         {
-            InitializeComponent();
             _originalItem = item;
             _isEditMode = item != null;
-
-            Loaded += AdminInventoryEditDialog_Loaded;
         }
 
         private async void AdminInventoryEditDialog_Loaded(object sender, RoutedEventArgs e)
@@ -67,7 +67,7 @@ namespace Pet_Shop_Project.Views
         {
             try
             {
-                var products = new List<Product>();
+                var products = new ObservableCollection<Product>();
                 const string sql = "SELECT ProductId, Name FROM PRODUCTS ORDER BY Name";
 
                 using (var conn = new SqlConnection(_conn))
@@ -102,7 +102,7 @@ namespace Pet_Shop_Project.Views
 
         private async Task LoadCategoriesAsycn(string selectedCategory = null)
         {
-            var items = new List<string>();
+            var items = new ObservableCollection<string>();
             const string sql = "SELECT DISTINCT Category FROM PRODUCTS WHERE Category IS NOT NULL AND Category <> '' ORDER BY Category";
             using (var conn = new SqlConnection(_conn))
             {
@@ -176,7 +176,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
-        private void BtnSelectImage_Click(object sender, RoutedEventArgs e)
+        private async void BtnSelectImage_Click(object sender, RoutedEventArgs e)
         {
             var openFileDialog = new OpenFileDialog
             {
@@ -186,8 +186,15 @@ namespace Pet_Shop_Project.Views
 
             if (openFileDialog.ShowDialog() == true)
             {
-                TxtPicture.Text = openFileDialog.FileName;
-                LoadImagePreview(openFileDialog.FileName);
+                var selectedFilePath = openFileDialog.FileName;
+                var (secureUrl, publicId) = await _uploadImageService.UploadAsync(selectedFilePath, "products");
+                TxtPicture.Text = secureUrl;
+
+                if (_loadedProduct == null)
+                _loadedProduct = new Product { ProductId = TxtProductCode.Text };
+                _loadedProduct.Picture = secureUrl;
+
+                LoadImagePreview(secureUrl);
             }
         }
 
@@ -369,7 +376,7 @@ namespace Pet_Shop_Project.Views
                     using (var checkCmd = new SqlCommand("SELECT COUNT(*) FROM PRODUCTS WHERE ProductId = @ProductId", conn))
                     {
                         checkCmd.Parameters.AddWithValue("@ProductId", item.ProductId);
-                        int count = (int)checkCmd.ExecuteScalar();
+                        int count = (int)await checkCmd.ExecuteScalarAsync();
                         if (count == 0)
                         {
                             MessageBox.Show("Sản phẩm không tồn tại trong danh sách!", "Lỗi",
@@ -389,7 +396,7 @@ namespace Pet_Shop_Project.Views
                         cmd.Parameters.AddWithValue("@Picture", item.Product?.Picture ?? "");
                         cmd.Parameters.AddWithValue("@Category", item.Category ?? "");
 
-                        int result = cmd.ExecuteNonQuery();
+                        int result = await cmd.ExecuteNonQueryAsync();
                         if (result > 0)
                         {
                             MessageBox.Show("Thêm sản phẩm vào kho thành công!", "Thành công",
@@ -434,7 +441,7 @@ namespace Pet_Shop_Project.Views
                         cmd.Parameters.AddWithValue("@Picture", item.Product?.Picture ?? "");
                         cmd.Parameters.AddWithValue("@Category", item.Category ?? "");
 
-                        int result = cmd.ExecuteNonQuery();
+                        int result = await cmd.ExecuteNonQueryAsync();
                         if (result > 0)
                         {
                             MessageBox.Show("Cập nhật thông tin kho thành công!", "Thành công",

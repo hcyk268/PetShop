@@ -9,9 +9,9 @@
       Title="OrderQueuePage"
       Height="650" 
       HorizontalAlignment="Stretch"
-      Background="#FFF7F5">
+      Background="#F8FFFE">
 
-    <Grid Margin="16,12,16,16">
+    <Grid Margin="0,0,0,16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -19,8 +19,7 @@
 
         <Border Grid.Row="0"
                 Padding="18"
-                Background="White"
-                CornerRadius="12"
+                Background="#F5F5F5"
                 materialDesign:ShadowAssist.ShadowDepth="Depth2">
             <Grid>
                 <Grid.RowDefinitions>
@@ -29,28 +28,59 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2,0,0,8">
-                    <Border Width="44" Height="44" CornerRadius="10"
-                            Background="#FFF2D6"
-                            VerticalAlignment="Center">
-                        <materialDesign:PackIcon Kind="ClipboardTextClockOutline"
-                                                 Width="26" Height="26"
-                                                 Foreground="#FF6B6B"
-                                                 VerticalAlignment="Center"
-                                                 HorizontalAlignment="Center"/>
-                    </Border>
-                    <StackPanel Margin="12,2,0,0">
+                    <!-- Back Button -->
+                    <Button x:Name="BackButton"
+                            Width="35" Height="35"
+                            BorderThickness="0"
+                            Background="White"
+                            Cursor="Hand"
+                            Click="BackButton_Click"
+                            Margin="0,0,15,0">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="border"
+                                        Width="35" Height="35"
+                                        Background="{TemplateBinding Background}"
+                                        CornerRadius="18">          
+                                      <materialDesign:PackIcon x:Name="icon"
+                                         Kind="ArrowLeft"
+                                         Width="22" Height="22"
+                                         Foreground="#FFAD57"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center"/>
+                                </Border>
+
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="#FFECECEC"/>
+                                    </Trigger>
+
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="border" Property="Background">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                    <GradientStop Color="#FFAD56" Offset="0"/>
+                                                    <GradientStop Color="#FFC281" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter TargetName="icon" Property="Foreground" Value="White"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <!-- Tiêu đề Trang -->
+                        <StackPanel Margin="5,0,0,0">
                         <TextBlock Text="Các Đơn Hàng"
                                    FontSize="26"
                                    FontWeight="SemiBold"
-                                   Foreground="#222"/>
-                        <TextBlock Text="Chọn trạng thái để xem các đơn hàng"
-                                   FontSize="14"
-                                   Foreground="#6A6A6A"
-                                   Margin="0,4,0,0"/>
+                                   Foreground="#FFAD57"/>
                     </StackPanel>
                 </StackPanel>
 
-                <UniformGrid Grid.Row="1" Columns="4" Margin="0,4,0,0">
+                <UniformGrid Grid.Row="1" Columns="4" Margin="0,10,0,0">
 
                     <Button x:Name="odppendingbutton"
                             Margin="6,2"
@@ -125,7 +155,7 @@
         </Border>
 
         <Border Grid.Row="1"
-                Margin="0,16,0,0"
+                Margin="12,16,12,0"
                 Background="White"
                 CornerRadius="12"
                 Padding="4"

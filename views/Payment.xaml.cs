@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Collections.ObjectModel;
 
 namespace Pet_Shop_Project.Views
 {
@@ -24,7 +25,7 @@ namespace Pet_Shop_Project.Views
     public partial class Payment : Page
     {
         // Biến lưu trữ dữ liệu
-        private List<OrderDetail> orderDetails;
+        private ObservableCollection<OrderDetail> orderDetails;
         private User currentUser;
         private decimal subtotal = 0;
         private decimal shippingFee = 0;
@@ -38,7 +39,7 @@ namespace Pet_Shop_Project.Views
         }
 
         // Constructor nhận dữ liệu từ Cart
-        public Payment(List<OrderDetail> cartItems, User user)
+        public Payment(ObservableCollection<OrderDetail> cartItems, User user)
         {
             currentUser = user ?? throw new ArgumentNullException(nameof(user));
             orderDetails = cartItems ?? throw new ArgumentNullException(nameof(cartItems));
@@ -106,7 +107,7 @@ namespace Pet_Shop_Project.Views
                             cmd.Parameters.AddWithValue("@Address", order.Address);
                             cmd.Parameters.AddWithValue("@Note", (object)order.Note ?? DBNull.Value);
 
-                            var generatedId = cmd.ExecuteScalar();
+                            var generatedId = await cmd.ExecuteScalarAsync();
                             order.OrderId = generatedId?.ToString();
                         }
 
@@ -119,21 +120,21 @@ namespace Pet_Shop_Project.Views
                                 cmd.Parameters.AddWithValue("@ProductId", d.ProductId);
                                 cmd.Parameters.AddWithValue("@Quantity", d.Quantity);
                                 cmd.Parameters.AddWithValue("@UnitPrice", d.Product?.UnitPrice ?? 0);
-                                cmd.ExecuteNonQuery();
+                                await cmd.ExecuteNonQueryAsync();
                             }
 
                             using (var cmd = new SqlCommand(updateStock, conn, tx))
                             {
                                 cmd.Parameters.AddWithValue("@ProductId", d.ProductId);
                                 cmd.Parameters.AddWithValue("@Quantity", d.Quantity);
-                                cmd.ExecuteNonQuery();
+                                await cmd.ExecuteNonQueryAsync();
                             }
 
                             using (var cmd = new SqlCommand(deleteCart, conn, tx))
                             {
                                 cmd.Parameters.AddWithValue("@UserId", order.UserId);
                                 cmd.Parameters.AddWithValue("@ProductId", d.ProductId);
-                                cmd.ExecuteNonQuery();
+                                await cmd.ExecuteNonQueryAsync();
                             }
                         }
 

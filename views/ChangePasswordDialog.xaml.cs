@@ -2,6 +2,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Pet_Shop_Project.Views
@@ -10,6 +11,9 @@ namespace Pet_Shop_Project.Views
     {
         private string userId;
         private UserService userService;
+        private bool isOldPasswordVisible = false;
+        private bool isNewPasswordVisible = false;
+        private bool isConfirmPasswordVisible = false;
 
         public ChangePasswordDialog(string userId)
         {
@@ -19,14 +23,109 @@ namespace Pet_Shop_Project.Views
             SaveButton.IsEnabled = false;
         }
 
+        // Toggle Old Password Visibility
+        private void ToggleOldPassword_Click(object sender, MouseButtonEventArgs e)
+        {
+            isOldPasswordVisible = !isOldPasswordVisible;
+
+            if (isOldPasswordVisible)
+            {
+                OldPasswordTextBox.Text = OldPasswordBox.Password;
+                OldPasswordBox.Visibility = Visibility.Collapsed;
+                OldPasswordTextBox.Visibility = Visibility.Visible;
+                OldPasswordIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.Eye;
+                OldPasswordTextBox.Focus();
+                OldPasswordTextBox.CaretIndex = OldPasswordTextBox.Text.Length;
+            }
+            else
+            {
+                OldPasswordBox.Password = OldPasswordTextBox.Text;
+                OldPasswordTextBox.Visibility = Visibility.Collapsed;
+                OldPasswordBox.Visibility = Visibility.Visible;
+                OldPasswordIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.EyeOff;
+                OldPasswordBox.Focus();
+            }
+        }
+
+        // Toggle New Password Visibility
+        private void ToggleNewPassword_Click(object sender, MouseButtonEventArgs e)
+        {
+            isNewPasswordVisible = !isNewPasswordVisible;
+
+            if (isNewPasswordVisible)
+            {
+                NewPasswordTextBox.Text = NewPasswordBox.Password;
+                NewPasswordBox.Visibility = Visibility.Collapsed;
+                NewPasswordTextBox.Visibility = Visibility.Visible;
+                NewPasswordIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.Eye;
+                NewPasswordTextBox.Focus();
+                NewPasswordTextBox.CaretIndex = NewPasswordTextBox.Text.Length;
+            }
+            else
+            {
+                NewPasswordBox.Password = NewPasswordTextBox.Text;
+                NewPasswordTextBox.Visibility = Visibility.Collapsed;
+                NewPasswordBox.Visibility = Visibility.Visible;
+                NewPasswordIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.EyeOff;
+                NewPasswordBox.Focus();
+            }
+        }
+
+        // Toggle Confirm Password Visibility
+        private void ToggleConfirmPassword_Click(object sender, MouseButtonEventArgs e)
+        {
+            isConfirmPasswordVisible = !isConfirmPasswordVisible;
+
+            if (isConfirmPasswordVisible)
+            {
+                ConfirmPasswordTextBox.Text = ConfirmPasswordBox.Password;
+                ConfirmPasswordBox.Visibility = Visibility.Collapsed;
+                ConfirmPasswordTextBox.Visibility = Visibility.Visible;
+                ConfirmPasswordIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.Eye;
+                ConfirmPasswordTextBox.Focus();
+                ConfirmPasswordTextBox.CaretIndex = ConfirmPasswordTextBox.Text.Length;
+            }
+            else
+            {
+                ConfirmPasswordBox.Password = ConfirmPasswordTextBox.Text;
+                ConfirmPasswordTextBox.Visibility = Visibility.Collapsed;
+                ConfirmPasswordBox.Visibility = Visibility.Visible;
+                ConfirmPasswordIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.EyeOff;
+                ConfirmPasswordBox.Focus();
+            }
+        }
+
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             ClearErrors();
 
+            // Get the actual password from visible control
+            string newPassword = isNewPasswordVisible ? NewPasswordTextBox.Text : NewPasswordBox.Password;
+
             // Show password strength if new password has content
-            if (!string.IsNullOrEmpty(NewPasswordBox.Password))
+            if (!string.IsNullOrEmpty(newPassword))
             {
-                CheckPasswordStrength(NewPasswordBox.Password);
+                CheckPasswordStrength(newPassword);
+            }
+            else
+            {
+                PasswordStrengthPanel.Visibility = Visibility.Collapsed;
+            }
+
+            ValidateForm();
+        }
+
+        private void PasswordTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ClearErrors();
+
+            // Get the actual password from visible control
+            string newPassword = isNewPasswordVisible ? NewPasswordTextBox.Text : NewPasswordBox.Password;
+
+            // Show password strength if new password has content
+            if (!string.IsNullOrEmpty(newPassword))
+            {
+                CheckPasswordStrength(newPassword);
             }
             else
             {
@@ -71,23 +170,28 @@ namespace Pet_Shop_Project.Views
         {
             bool isValid = true;
 
-            if (string.IsNullOrWhiteSpace(OldPasswordBox.Password) ||
-                string.IsNullOrWhiteSpace(NewPasswordBox.Password) ||
-                string.IsNullOrWhiteSpace(ConfirmPasswordBox.Password))
+            // Get passwords from visible controls
+            string oldPassword = isOldPasswordVisible ? OldPasswordTextBox.Text : OldPasswordBox.Password;
+            string newPassword = isNewPasswordVisible ? NewPasswordTextBox.Text : NewPasswordBox.Password;
+            string confirmPassword = isConfirmPasswordVisible ? ConfirmPasswordTextBox.Text : ConfirmPasswordBox.Password;
+
+            if (string.IsNullOrWhiteSpace(oldPassword) ||
+                string.IsNullOrWhiteSpace(newPassword) ||
+                string.IsNullOrWhiteSpace(confirmPassword))
             {
                 isValid = false;
             }
-            else if (NewPasswordBox.Password.Length < 6)
+            else if (newPassword.Length < 6)
             {
                 ShowError(NewPasswordError, "Mật khẩu phải có ít nhất 6 ký tự");
                 isValid = false;
             }
-            else if (NewPasswordBox.Password == OldPasswordBox.Password)
+            else if (newPassword == oldPassword)
             {
                 ShowError(NewPasswordError, "Mật khẩu mới phải khác mật khẩu cũ");
                 isValid = false;
             }
-            else if (NewPasswordBox.Password != ConfirmPasswordBox.Password)
+            else if (newPassword != confirmPassword)
             {
                 ShowError(ConfirmPasswordError, "Mật khẩu xác nhận không khớp");
                 isValid = false;
@@ -116,8 +220,9 @@ namespace Pet_Shop_Project.Views
                 SaveButton.IsEnabled = false;
                 SaveButton.Content = "Đang xử lý...";
 
-                string oldPassword = OldPasswordBox.Password;
-                string newPassword = NewPasswordBox.Password;
+                // Get passwords from visible controls
+                string oldPassword = isOldPasswordVisible ? OldPasswordTextBox.Text : OldPasswordBox.Password;
+                string newPassword = isNewPasswordVisible ? NewPasswordTextBox.Text : NewPasswordBox.Password;
 
                 bool success = userService.ChangePassword(userId, oldPassword, newPassword);
 

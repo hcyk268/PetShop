@@ -144,7 +144,7 @@
                                 </ItemsControl>
 
                                 <StackPanel Grid.Row='3' Orientation='Horizontal' HorizontalAlignment='Right'>
-                                    <Button Style="{StaticResource MaterialDesignOutlinedButton}" Padding="12 8" Tag="{Binding OrderId}" Click="buttondeleteorder_Click">
+                                    <Button Style="{StaticResource MaterialDesignOutlinedButton}" Padding="12 8" Tag="{Binding OrderId}" Click="buttondeleteorder_Click" Foreground="White" BorderBrush="#FFE5E5">
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                                             <materialDesign:PackIcon Kind="DeleteOutline" Width="20" Height="20" VerticalAlignment="Center" Margin="0 0 6 0"/>
                                             <TextBlock Text="Hủy đơn" FontWeight="SemiBold" VerticalAlignment="Center"/>

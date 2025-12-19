@@ -9,12 +9,44 @@
       d:DesignWidth="550"
       Background="Transparent">
 
+    <Page.Resources>
+        <!-- Style cho nút điều khiển -->
+        <Style x:Key="ControlButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="16">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#E0E0E0"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#BDBDBD"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
     <Grid>
-        <!-- Login Card - Vừa khít với Frame -->
+        <!-- Login Card - BO GÓC VỚI CLIP -->
         <Border Background="White"
                 CornerRadius="20"
                 VerticalAlignment="Stretch"
-                HorizontalAlignment="Stretch">
+                HorizontalAlignment="Stretch"
+                ClipToBounds="True">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="30" 
                                 ShadowDepth="0" 
@@ -22,221 +54,246 @@
                                 Color="Black"/>
             </Border.Effect>
 
-            <ScrollViewer VerticalScrollBarVisibility="Auto"
-                         HorizontalScrollBarVisibility="Disabled">
-                <Grid Margin="40,30">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+            <Grid>
+                <!-- Background Image - BO GÓC VÀ CLIP -->
+                <Border CornerRadius="20"
+                        ClipToBounds="True"
+                        Opacity="0.7">
+                    <Border.Background>
+                        <ImageBrush ImageSource="/Images/download.jpg"
+                                    Stretch="UniformToFill"/>
+                    </Border.Background>
+                </Border>
+                
+                <!-- Nút Close ở góc trên phải -->
+                <Button Style="{StaticResource ControlButtonStyle}"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Margin="0,15,15,0"
+                        Click="CloseButton_Click"
+                        Panel.ZIndex="1">
+                    <materialDesign:PackIcon Kind="Close"
+                                           Width="18"
+                                           Height="18"
+                                           Foreground="#757575"/>
+                </Button>
 
-                    <!-- Logo and Title -->
-                    <StackPanel Grid.Row="0" 
-                               HorizontalAlignment="Center"
-                               Margin="0,0,0,20">
-                        <!-- Logo -->
-                        <Border Width="60" Height="60" 
-                               Background="Transparent"
-                               CornerRadius="30"
-                               Margin="0,-10,0,10">
-                            <Image Source="/Images/peach.png" 
-                                   Stretch="Uniform"/>
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                             HorizontalScrollBarVisibility="Disabled">
+                    <Grid Margin="40,30">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Logo and Title -->
+                        <StackPanel Grid.Row="0" 
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,20">
+                            <!-- Logo -->
+                            <Border Width="70" Height="70" 
+                                   Background="Transparent"
+                                   CornerRadius="30"
+                                   Margin="0,-10,0,10">
+                                <Image Source="/Images/peach.png" 
+                                       Stretch="Uniform"/>
+                            </Border>
+
+                            <!-- FETCH Text -->
+                            <TextBlock FontSize="32"
+                                      FontWeight="Bold"
+                                      HorizontalAlignment="Center"
+                                      Margin="0,0,0,5">
+                                <TextBlock.Foreground>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Color="#F78272" Offset="0"/>
+                                        <GradientStop Color="#FFCC96" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </TextBlock.Foreground>
+                                <Run Text="FETCH"/>
+                            </TextBlock>
+
+                            <!-- Subtitle -->
+                            <TextBlock Text="Đăng nhập vào tài khoản"
+                                      FontSize="15"
+                                      Foreground="#666"
+                                      HorizontalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Error Message -->
+                        <Border Grid.Row="1"
+                                x:Name="ErrorMessage"
+                                Background="#FFEBEE"
+                                BorderBrush="#EF5350"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="10,8"
+                                Margin="0,0,0,12"
+                                Visibility="Collapsed">
+                            <TextBlock FontSize="13"
+                                      Foreground="#C62828"
+                                      TextWrapping="Wrap"
+                                      HorizontalAlignment="Center"/>
                         </Border>
 
-                        <!-- FETCH Text -->
-                        <TextBlock FontSize="32"
-                                  FontWeight="Bold"
-                                  HorizontalAlignment="Center"
-                                  Margin="0,0,0,5">
-                            <TextBlock.Foreground>
-                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                    <GradientStop Color="#F78272" Offset="0"/>
-                                    <GradientStop Color="#FFCC96" Offset="1"/>
-                                </LinearGradientBrush>
-                            </TextBlock.Foreground>
-                            <Run Text="FETCH"/>
-                        </TextBlock>
+                        <!-- Username -->
+                        <StackPanel Grid.Row="2" Margin="0,0,0,15">
+                            <TextBlock Text="Tên đăng nhập"
+                                      FontSize="13"
+                                      FontWeight="SemiBold"
+                                      Foreground="#333"
+                                      Margin="5,0,0,6"/>
 
-                        <!-- Subtitle -->
-                        <TextBlock Text="Đăng nhập vào tài khoản"
-                                  FontSize="15"
-                                  Foreground="#666"
-                                  HorizontalAlignment="Center"/>
-                    </StackPanel>
+                            <Border Background="#F8F9FA"
+                                   BorderBrush="#DDD"
+                                   BorderThickness="1"
+                                   CornerRadius="10"
+                                   Height="42">
+                                <Grid Margin="12,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
 
-                    <!-- Error Message -->
-                    <Border Grid.Row="1"
-                            x:Name="ErrorMessage"
-                            Background="#FFEBEE"
-                            BorderBrush="#EF5350"
-                            BorderThickness="1"
-                            CornerRadius="8"
-                            Padding="10,8"
-                            Margin="0,0,0,12"
-                            Visibility="Collapsed">
-                        <TextBlock FontSize="13"
-                                  Foreground="#C62828"
-                                  TextWrapping="Wrap"
-                                  HorizontalAlignment="Center"/>
-                    </Border>
+                                    <materialDesign:PackIcon Grid.Column="0"
+                                                           Kind="Account"
+                                                           Width="20" Height="20"
+                                                           Foreground="#999"
+                                                           VerticalAlignment="Center"
+                                                           Margin="0,0,8,0"/>
 
-                    <!-- Username -->
-                    <StackPanel Grid.Row="2" Margin="0,0,0,15">
-                        <TextBlock Text="Tên đăng nhập"
-                                  FontSize="13"
-                                  FontWeight="SemiBold"
-                                  Foreground="#333"
-                                  Margin="5,0,0,6"/>
-
-                        <Border Background="#F8F9FA"
-                               BorderBrush="#DDD"
-                               BorderThickness="1"
-                               CornerRadius="10"
-                               Height="42">
-                            <Grid Margin="12,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <materialDesign:PackIcon Grid.Column="0"
-                                                       Kind="Account"
-                                                       Width="20" Height="20"
-                                                       Foreground="#999"
-                                                       VerticalAlignment="Center"
-                                                       Margin="0,0,8,0"/>
-
-                                <TextBox Grid.Column="1"
-                                        x:Name="UsernameTextBox"
-                                        FontSize="14"
-                                        Background="Transparent"
-                                        BorderThickness="0"
-                                        VerticalAlignment="Center"
-                                        Foreground="#333"
-                                        KeyDown="UsernameTextBox_KeyDown"
-                                        materialDesign:HintAssist.Hint="Nhập tên đăng nhập"
-                                        materialDesign:HintAssist.Foreground="#999" 
-                                        TextChanged="UsernameTextBox_TextChanged"/>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
-
-                    <!-- Password -->
-                    <StackPanel Grid.Row="3" Margin="0,0,0,12">
-                        <TextBlock Text="Mật khẩu"
-                                  FontSize="13"
-                                  FontWeight="SemiBold"
-                                  Foreground="#333"
-                                  Margin="5,0,0,6"/>
-
-                        <Border Background="#F8F9FA"
-                               BorderBrush="#DDD"
-                               BorderThickness="1"
-                               CornerRadius="10"
-                               Height="42">
-                            <Grid Margin="12,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <materialDesign:PackIcon Grid.Column="0"
-                                                       Kind="Lock"
-                                                       Width="20" Height="20"
-                                                       Foreground="#999"
-                                                       VerticalAlignment="Center"
-                                                       Margin="0,0,8,0"/>
-
-                                <PasswordBox Grid.Column="1"
-                                            x:Name="PasswordBox"
+                                    <TextBox Grid.Column="1"
+                                            x:Name="UsernameTextBox"
                                             FontSize="14"
                                             Background="Transparent"
                                             BorderThickness="0"
                                             VerticalAlignment="Center"
-                                            KeyDown="PasswordBox_KeyDown"
-                                            materialDesign:HintAssist.Hint="Nhập mật khẩu"
-                                            materialDesign:HintAssist.Foreground="#999"/>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
+                                            Foreground="#333"
+                                            KeyDown="UsernameTextBox_KeyDown"
+                                            materialDesign:HintAssist.Hint="Nhập tên đăng nhập"
+                                            materialDesign:HintAssist.Foreground="#999" 
+                                            TextChanged="UsernameTextBox_TextChanged"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
 
-                    <!-- Remember Me & Forgot Password -->
-                    <Grid Grid.Row="4" Margin="5,0,5,18">
-                        <TextBlock HorizontalAlignment="Left"
-                                  VerticalAlignment="Center">
-                            <Hyperlink Click="ForgotPasswordLink_Click"
-                                      TextDecorations="None">
-                                <TextBlock Text="Quên mật khẩu?"
-                                          FontSize="13"
-                                          Foreground="#F78272"/>
-                            </Hyperlink>
-                        </TextBlock>
+                        <!-- Password -->
+                        <StackPanel Grid.Row="3" Margin="0,0,0,12">
+                            <TextBlock Text="Mật khẩu"
+                                      FontSize="13"
+                                      FontWeight="SemiBold"
+                                      Foreground="#333"
+                                      Margin="5,0,0,6"/>
 
-                        <TextBlock HorizontalAlignment="Right"
-                                  VerticalAlignment="Center">
-                            <Hyperlink Click="SignUp_Click"
-                                      TextDecorations="None">
-                                <TextBlock Text="Đăng ký?"
-                                          FontSize="13"
-                                          Foreground="#F78272"/>
-                            </Hyperlink>
-                        </TextBlock>
+                            <Border Background="#F8F9FA"
+                                   BorderBrush="#DDD"
+                                   BorderThickness="1"
+                                   CornerRadius="10"
+                                   Height="42">
+                                <Grid Margin="12,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <materialDesign:PackIcon Grid.Column="0"
+                                                           Kind="Lock"
+                                                           Width="20" Height="20"
+                                                           Foreground="#999"
+                                                           VerticalAlignment="Center"
+                                                           Margin="0,0,8,0"/>
+
+                                    <PasswordBox Grid.Column="1"
+                                                x:Name="PasswordBox"
+                                                FontSize="14"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                VerticalAlignment="Center"
+                                                KeyDown="PasswordBox_KeyDown"
+                                                materialDesign:HintAssist.Hint="Nhập mật khẩu"
+                                                materialDesign:HintAssist.Foreground="#999"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Remember Me & Forgot Password -->
+                        <Grid Grid.Row="4" Margin="5,0,5,18">
+                            <TextBlock HorizontalAlignment="Left"
+                                      VerticalAlignment="Center">
+                                <Hyperlink Click="ForgotPasswordLink_Click"
+                                          TextDecorations="None">
+                                    <TextBlock Text="Quên mật khẩu?"
+                                              FontSize="13"
+                                              Foreground="#F78272"/>
+                                </Hyperlink>
+                            </TextBlock>
+
+                            <TextBlock HorizontalAlignment="Right"
+                                      VerticalAlignment="Center">
+                                <Hyperlink Click="SignUp_Click"
+                                          TextDecorations="None">
+                                    <TextBlock Text="Đăng ký?"
+                                              FontSize="13"
+                                              Foreground="#F78272"/>
+                                </Hyperlink>
+                            </TextBlock>
+                        </Grid>
+
+                        <!-- Login Button -->
+                        <Button Grid.Row="5"
+                               x:Name="LoginButton"
+                               Height="48"
+                               FontSize="15"
+                               FontWeight="Bold"
+                               Content="ĐĂNG NHẬP"
+                               Click="LoginButton_Click"
+                               Cursor="Hand"
+                               Margin="5,0,5,0">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <GradientStop Color="#F78272" Offset="0"/>
+                                                <GradientStop Color="#FFCC96" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}"
+                                                       CornerRadius="12"
+                                                       Padding="{TemplateBinding Padding}">
+                                                    <Border.Effect>
+                                                        <DropShadowEffect BlurRadius="15" 
+                                                                        ShadowDepth="0" 
+                                                                        Opacity="0.3"
+                                                                        Color="#F78272"/>
+                                                    </Border.Effect>
+                                                    <ContentPresenter HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Opacity" Value="0.9"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
                     </Grid>
-
-                    <!-- Login Button -->
-                    <Button Grid.Row="5"
-                           x:Name="LoginButton"
-                           Height="48"
-                           FontSize="15"
-                           FontWeight="Bold"
-                           Content="ĐĂNG NHẬP"
-                           Click="LoginButton_Click"
-                           Cursor="Hand"
-                           Margin="5,0,5,0">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                            <GradientStop Color="#F78272" Offset="0"/>
-                                            <GradientStop Color="#FFCC96" Offset="1"/>
-                                        </LinearGradientBrush>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Foreground" Value="White"/>
-                                <Setter Property="BorderThickness" Value="0"/>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}"
-                                                   CornerRadius="12"
-                                                   Padding="{TemplateBinding Padding}">
-                                                <Border.Effect>
-                                                    <DropShadowEffect BlurRadius="15" 
-                                                                    ShadowDepth="0" 
-                                                                    Opacity="0.3"
-                                                                    Color="#F78272"/>
-                                                </Border.Effect>
-                                                <ContentPresenter HorizontalAlignment="Center"
-                                                                VerticalAlignment="Center"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Opacity" Value="0.9"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-                </Grid>
-            </ScrollViewer>
+                </ScrollViewer>
+            </Grid>
         </Border>
     </Grid>
 </Page>

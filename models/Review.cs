@@ -51,6 +51,7 @@ namespace Pet_Shop_Project.Models
             {
                 _rating = value;
                 OnPropertyChanged(nameof(Rating));
+                OnPropertyChanged(nameof(RatingStars));
             }
         }
         public string Comment 
@@ -71,6 +72,8 @@ namespace Pet_Shop_Project.Models
                 OnPropertyChanged(nameof(ReviewDate));
             }
         }
+
+        public IEnumerable<int> RatingStars => Enumerable.Range(1, Math.Max(0, Rating));
 
         public event PropertyChangedEventHandler PropertyChanged;
 

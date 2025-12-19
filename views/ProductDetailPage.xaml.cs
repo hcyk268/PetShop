@@ -81,17 +81,8 @@ namespace Pet_Shop_Project.Views
                 DiscountBadge.Visibility = Visibility.Visible;
                 DiscountText.Text = $"-{(_product.Discount * 100):0}%";
 
-                // 2. Giá có gradient (FFC476 → FFA2A2)
-                ProductPrice.Foreground = new LinearGradientBrush
-                {
-                    StartPoint = new Point(0, 0),
-                    EndPoint = new Point(1, 0),
-                    GradientStops = new GradientStopCollection
-                    {
-                        new GradientStop(Color.FromRgb(0xFF, 0xC4, 0x76), 0),
-                        new GradientStop(Color.FromRgb(0xFF, 0xA2, 0xA2), 1)
-                    }
-                };
+                // 2. Giá 
+                ProductPrice.Foreground = new SolidColorBrush(Color.FromRgb(0xFF, 0x6B, 0x6B));
 
                 // 3. Hiển thị giá sau giảm
                 ProductPrice.Text = $"{_product.FinalPrice:N0}đ";
@@ -244,7 +235,8 @@ namespace Pet_Shop_Project.Views
             foreach (var review in filteredReviews)
             {
                 string userFullName = await _reviewService.GetUserFullNameAsync(review.UserId);
-                var reviewItem = CreateReviewItem(userFullName, review.Rating, review.Comment, review.ReviewDate);
+                string userAvatar = await _reviewService.GetUserAvatarAsync(review.UserId);  // ← THÊM DÒNG NÀY
+                var reviewItem = CreateReviewItem(userFullName, userAvatar, review.Rating, review.Comment, review.ReviewDate);
                 ReviewsPanel.Children.Add(reviewItem);
             }
         }
@@ -255,7 +247,7 @@ namespace Pet_Shop_Project.Views
             await ApplyReviewFilterAsync();
         }
 
-        private Border CreateReviewItem(string userName, int rating, string comment, DateTime reviewDate)
+        private Border CreateReviewItem(string userName, string userAvatar, int rating, string comment, DateTime reviewDate)
         {
             Border reviewBorder = new Border
             {
@@ -276,18 +268,67 @@ namespace Pet_Shop_Project.Views
                 Height = 60,
                 CornerRadius = new CornerRadius(30),
                 Background = new SolidColorBrush(Color.FromRgb(0xE0, 0xE0, 0xE0)),
-                Margin = new Thickness(0, 0, 20, 0)
+                Margin = new Thickness(0, 0, 20, 0),
+                ClipToBounds = true  // ← THÊM ĐỂ CLIP HÌNH TRÒN
             };
 
-            TextBlock avatarText = new TextBlock
+            // Thêm Clip để bo góc tròn hoàn hảo
+            avatarBorder.Loaded += (s, e) =>
             {
-                Text = "👤",
-                FontSize = 28,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
+                var border = s as Border;
+                border.Clip = new RectangleGeometry
+                {
+                    Rect = new Rect(0, 0, 60, 60),
+                    RadiusX = 30,
+                    RadiusY = 30
+                };
             };
 
-            avatarBorder.Child = avatarText;
+            // Kiểm tra và hiển thị avatar
+            if (!string.IsNullOrWhiteSpace(userAvatar))
+            {
+                try
+                {
+                    Image avatarImage = new Image
+                    {
+                        Stretch = Stretch.UniformToFill
+                    };
+
+                    BitmapImage bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.UriSource = new Uri(userAvatar, UriKind.RelativeOrAbsolute);
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.EndInit();
+
+                    avatarImage.Source = bitmap;
+                    avatarBorder.Child = avatarImage;
+                }
+                catch
+                {
+                    // Fallback nếu load ảnh thất bại
+                    TextBlock avatarText = new TextBlock
+                    {
+                        Text = "👤",
+                        FontSize = 28,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Center
+                    };
+                    avatarBorder.Child = avatarText;
+                }
+            }
+            else
+            {
+                // User chưa có avatar - placeholder
+                TextBlock avatarText = new TextBlock
+                {
+                    Text = "👤",
+                    FontSize = 28,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+                avatarBorder.Child = avatarText;
+            }
+
             Grid.SetColumn(avatarBorder, 0);
 
             // Review Content
@@ -579,5 +620,6 @@ namespace Pet_Shop_Project.Views
                     MessageBoxImage.Warning);
             }
         }
+
     }
 }
