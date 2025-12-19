@@ -8,10 +8,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using LiveCharts;
-using LiveCharts.Wpf;
-using Pet_Shop_Project.Models;
-using Pet_Shop_Project.Services;
 
 
 namespace Pet_Shop_Project.Views
@@ -71,17 +67,10 @@ namespace Pet_Shop_Project.Views
             try
             {
                 currentUser = userService.GetUserById(currentUserId);
-
-                if (currentUser == null)
-                {
-                    MessageBox.Show("Không tìm thấy thông tin tài khoản!",
-                        "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi tải thông tin: {ex.Message}",
-                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Diagnostics.Debug.WriteLine($"Lỗi tải thông tin: {ex.Message}");
             }
         }
     }
@@ -128,23 +117,26 @@ public class DashboardViewModel
 
     private void LoadWeeklyChart()
     {
-        // Lấy dữ liệu từ database
-        var weeklyData = dashboardService.GetWeeklyRevenue();
+        // Lấy dữ liệu 30 ngày
+        var monthlyData = dashboardService.GetMonthlyRevenue();
 
         // Sắp xếp theo thứ tự ngày
-        var sortedData = weeklyData.OrderBy(x => x.Key).ToList();
+        var sortedData = monthlyData.OrderBy(x => {
+            var parts = x.Key.Split('/');
+            return new DateTime(DateTime.Now.Year, int.Parse(parts[1]), int.Parse(parts[0]));
+        }).ToList();
 
-        // Chuẩn bị labels (T2, T3, T4...)
+        // Labels: 01/12, 02/12, 03/12...
         WeekLabels = sortedData.Select(x => x.Key).ToList();
 
-        // Chuẩn bị values (doanh thu từng ngày)
+        // Values
         var values = sortedData.Select(x => (double)x.Value).ToList();
 
-        // Tính step cho trục Y (để dễ đọc)
+        // Tính step cho trục Y
         double maxValue = values.Count > 0 ? values.Max() : 0;
         YAxisStep = maxValue > 0 ? Math.Ceiling(maxValue / 5 / 100000) * 100000 : 100000;
 
-        // Tạo series cho biểu đồ với màu sắc rõ ràng
+        // Tạo series với DataLabels hiển thị giá trị
         WeeklyRevenueSeries = new SeriesCollection
         {
             new LineSeries
@@ -152,22 +144,33 @@ public class DashboardViewModel
                 Title = "💰 Doanh thu",
                 Values = new ChartValues<double>(values),
                 PointGeometry = DefaultGeometries.Circle,
-                PointGeometrySize = 12,
-                Fill = new SolidColorBrush(Color.FromArgb(80, 255, 140, 0)),  // Cam trong suốt
-                Stroke = new SolidColorBrush(Color.FromRgb(255, 140, 0)),     // Cam đậm
-                StrokeThickness = 4,
-                LineSmoothness = 0.3,  // Đường cong mượt hơn
-                DataLabels = true,     // Hiển thị số trên mỗi điểm
-                LabelPoint = point => (point.Y / 1000).ToString("N0") + "k"  // Format: 100k, 200k
+                PointGeometrySize = 8,
+                Fill = new SolidColorBrush(Color.FromArgb(80, 255, 140, 0)),
+                Stroke = new SolidColorBrush(Color.FromRgb(255, 140, 0)),
+                StrokeThickness = 3,
+                LineSmoothness = 0.3,
+                DataLabels = true,  // BẬT hiển thị label
+                FontSize = 9,       // Font size nhỏ để gọn
+                LabelPoint = point => {
+                    // Chỉ hiển thị giá trị (ngày đã có ở trục X rồi)
+                    if (point.Y >= 1000000)
+                        return $"{(point.Y / 1000000):N1}M";
+                    else if (point.Y >= 1000)
+                        return $"{(point.Y / 1000):N0}k";
+                    else if (point.Y > 0)
+                        return $"{point.Y:N0}";
+                    else
+                        return ""; // Không hiện gì nếu = 0
+                }
             }
         };
 
-        // Formatter cho trục Y (hiển thị số tiền)
+        // Formatter cho trục Y
         YFormatter = value => {
             if (value >= 1000000)
-                return (value / 1000000).ToString("N1") + "M";  // 1.5M, 2.0M
+                return (value / 1000000).ToString("N1") + "M";
             else if (value >= 1000)
-                return (value / 1000).ToString("N0") + "k";     // 100k, 500k
+                return (value / 1000).ToString("N0") + "k";
             else
                 return value.ToString("N0");
         };
