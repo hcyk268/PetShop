@@ -511,6 +511,9 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\conmeo.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets')" />
   <Import Project="packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\build\Microsoft.Xaml.Behaviors.Wpf.targets" Condition="Exists('packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\build\Microsoft.Xaml.Behaviors.Wpf.targets')" />
