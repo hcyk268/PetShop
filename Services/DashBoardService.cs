@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Configuration;
-
 namespace Pet_Shop_Project.Services
 {
     public class DashboardService
@@ -41,37 +40,37 @@ namespace Pet_Shop_Project.Services
         public List<string> GetBestSellers()
         {
             string query = @"
-                SELECT 
-                    TOP 3 p.Name   
-                FROM 
-                    ORDER_DETAILS od        
-                JOIN 
-                    PRODUCTS p ON od.ProductID = p.ProductID  
-                GROUP BY 
-                    p.Name
-                ORDER BY 
-                    SUM(od.Quantity) DESC";
+        SELECT 
+            TOP 3 p.Name   
+        FROM 
+            ORDER_DETAILS od        
+        JOIN 
+            PRODUCTS p ON od.ProductID = p.ProductID  
+        GROUP BY 
+            p.Name
+        ORDER BY 
+            SUM(od.Quantity) DESC  ";
             return ExecuteList(query);
         }
 
         public List<string> GetWorstSellers()
         {
             string query = @"
-                SELECT 
-                    TOP 3 p.Name   
-                FROM 
-                    ORDER_DETAILS od        
-                JOIN 
-                    PRODUCTS p ON od.ProductID = p.ProductID  
-                GROUP BY 
-                    p.Name
-                ORDER BY 
-                    SUM(od.Quantity) ASC";
+        SELECT 
+            TOP 3 p.Name   
+        FROM 
+            ORDER_DETAILS od        
+        JOIN 
+            PRODUCTS p ON od.ProductID = p.ProductID  
+        GROUP BY 
+            p.Name
+        ORDER BY 
+            SUM(od.Quantity) ASC  ";
             return ExecuteList(query);
         }
 
-        // ===== Lấy doanh thu 30 ngày gần nhất =====
-        public Dictionary<string, decimal> GetMonthlyRevenue()
+        // ===== THÊM MỚI: Lấy doanh thu 7 ngày gần nhất =====
+        public Dictionary<string, decimal> GetWeeklyRevenue()
         {
             var result = new Dictionary<string, decimal>();
 
@@ -81,7 +80,7 @@ namespace Pet_Shop_Project.Services
                     SUM(TotalAmount) as DailyRevenue
                 FROM ORDERS
                 WHERE PaymentStatus = 'Paid' 
-                    AND OrderDate >= DATEADD(day, -29, CAST(GETDATE() AS DATE))
+                    AND OrderDate >= DATEADD(day, -6, CAST(GETDATE() AS DATE))
                 GROUP BY CONVERT(DATE, OrderDate)
                 ORDER BY OrderDay";
 
@@ -96,25 +95,42 @@ namespace Pet_Shop_Project.Services
                     DateTime day = rd.GetDateTime(0);
                     decimal revenue = rd.GetDecimal(1);
 
-                    // Format: "01/12"
-                    string dayLabel = day.ToString("dd/MM");
+                    // Format: "T2\n01/12"
+                    string dayLabel = GetDayLabel(day);
                     result[dayLabel] = revenue;
                 }
             }
 
-            // Đảm bảo có đủ 30 ngày
-            EnsureThirtyDays(result);
+            // Đảm bảo có đủ 7 ngày (nếu ngày nào không có đơn thì revenue = 0)
+            EnsureSevenDays(result);
 
             return result;
         }
 
-        private void EnsureThirtyDays(Dictionary<string, decimal> data)
+        private string GetDayLabel(DateTime date)
         {
-            // Thêm 30 ngày gần nhất, nếu ngày nào không có dữ liệu thì để revenue = 0
-            for (int i = 29; i >= 0; i--)
+            // Trả về label theo định dạng Việt Nam: T2, T3, T4...
+            var dayNames = new Dictionary<DayOfWeek, string>
+            {
+                { DayOfWeek.Monday, "T2" },
+                { DayOfWeek.Tuesday, "T3" },
+                { DayOfWeek.Wednesday, "T4" },
+                { DayOfWeek.Thursday, "T5" },
+                { DayOfWeek.Friday, "T6" },
+                { DayOfWeek.Saturday, "T7" },
+                { DayOfWeek.Sunday, "CN" }
+            };
+
+            return $"{dayNames[date.DayOfWeek]}\n{date:dd/MM}";
+        }
+
+        private void EnsureSevenDays(Dictionary<string, decimal> data)
+        {
+            // Nếu thiếu ngày nào thì thêm vào với revenue = 0
+            for (int i = 6; i >= 0; i--)
             {
                 DateTime day = DateTime.Today.AddDays(-i);
-                string label = day.ToString("dd/MM");
+                string label = GetDayLabel(day);
 
                 if (!data.ContainsKey(label))
                 {
