@@ -67,17 +67,11 @@ namespace Pet_Shop_Project.Views
             try
             {
                 currentUser = userService.GetUserById(currentUserId);
-
-                if (currentUser == null)
-                {
-                    MessageBox.Show("Không tìm thấy thông tin tài khoản!",
-                        "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi tải thông tin: {ex.Message}",
-                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                // Có thể log lỗi ra file nếu cần, nhưng không hiện MessageBox
+                System.Diagnostics.Debug.WriteLine($"Lỗi tải thông tin: {ex.Message}");
             }
         }
     }
