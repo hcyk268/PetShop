@@ -31,7 +31,7 @@ namespace Pet_Shop_Project.Services
                     conn.Open();
 
                     // Query lấy thông tin user theo username
-                    string query = @"SELECT UserId, Username, Password, FullName, Email, Phone, Address, Role
+                    string query = @"SELECT UserId, Username, Password, FullName, Email, Phone, Address, Role, Avatar
                             FROM Users 
                             WHERE Username = @Username";
 
@@ -57,7 +57,8 @@ namespace Pet_Shop_Project.Services
                                         Email = reader["Email"]?.ToString(),
                                         Phone = reader["Phone"]?.ToString(),
                                         Address = reader["Address"]?.ToString(),
-                                        Role = reader["Role"].ToString()
+                                        Role = reader["Role"].ToString(),
+                                        Avatar = reader["Avatar"]?.ToString()
                                     };
 
                                     return user;
@@ -87,7 +88,7 @@ namespace Pet_Shop_Project.Services
                 {
                     conn.Open();
 
-                    string query = @"SELECT UserId, Username, FullName, Email, Phone, Address, Role
+                    string query = @"SELECT UserId, Username, FullName, Email, Phone, Address, Role, Avatar
                                     FROM Users 
                                     ORDER BY UserId DESC";
 
@@ -104,7 +105,8 @@ namespace Pet_Shop_Project.Services
                                     Email = reader["Email"]?.ToString(),
                                     Phone = reader["Phone"]?.ToString(),
                                     Address = reader["Address"]?.ToString(),
-                                    Role = reader["Role"].ToString()
+                                    Role = reader["Role"].ToString(),
+                                    Avatar = reader["Avatar"]?.ToString()
                                 });
                             }
                         }
@@ -170,7 +172,7 @@ namespace Pet_Shop_Project.Services
                 {
                     conn.Open();
 
-                    string query = @"SELECT UserId, FullName, Email, Phone, Address, Role, CreatedDate
+                    string query = @"SELECT UserId, FullName, Email, Phone, Address, Role, CreatedDate, Avatar
                                     FROM Users 
                                     WHERE UserId = @UserId";
 
@@ -191,6 +193,7 @@ namespace Pet_Shop_Project.Services
                                     Address = reader["Address"]?.ToString(),
                                     Role = reader["Role"].ToString(),
                                     CreatedDate = (DateTime)reader["CreatedDate"],
+                                    Avatar = reader["Avatar"]?.ToString()
                                 };
                             }
                         }
@@ -268,9 +271,9 @@ namespace Pet_Shop_Project.Services
                     conn.Open();
 
                     string query = @"INSERT INTO Users 
-                                    (Username, FullName, Email, Phone, Address, Password, Role, CreatedDate) 
+                                    (Username, FullName, Email, Phone, Address, Password, Role, CreatedDate, Avatar) 
                                     VALUES 
-                                    (@Username, @FullName, @Email, @Phone, @Address, @Password, @Role, @CreatedDate)";
+                                    (@Username, @FullName, @Email, @Phone, @Address, @Password, @Role, @CreatedDate, @Avatar)";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -282,6 +285,7 @@ namespace Pet_Shop_Project.Services
                         cmd.Parameters.AddWithValue("@Password", password);
                         cmd.Parameters.AddWithValue("@Role", user.Role ?? "User");
                         cmd.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
+                        cmd.Parameters.AddWithValue("@Avatar", user.Avatar ?? "");
 
                         int rowsAffected = cmd.ExecuteNonQuery();
                         return rowsAffected > 0;
@@ -346,7 +350,7 @@ namespace Pet_Shop_Project.Services
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"ChangePassword error: {ex.Message}");
-                throw new Exception($"LÃƒÆ’Ã‚Â¡Ãƒâ€šÃ‚Â»ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Âi khi ÃƒÆ’Ã¢â‚¬Å¾ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“ÃƒÆ’Ã‚Â¡Ãƒâ€šÃ‚Â»ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢i mÃƒÆ’Ã‚Â¡Ãƒâ€šÃ‚ÂºÃƒâ€šÃ‚Â­t khÃƒÆ’Ã‚Â¡Ãƒâ€šÃ‚ÂºÃƒâ€šÃ‚Â©u: {ex.Message}");
+                throw new Exception(ex.Message);
             }
         }
         // Cập nhật thông tin user
@@ -362,7 +366,8 @@ namespace Pet_Shop_Project.Services
                                     SET FullName = @FullName,
                                         Email = @Email,
                                         Phone = @Phone,
-                                        Address = @Address
+                                        Address = @Address,
+                                        Avatar = @Avatar
                                     WHERE UserId = @UserId";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -372,6 +377,7 @@ namespace Pet_Shop_Project.Services
                         cmd.Parameters.AddWithValue("@Email", user.Email ?? "");
                         cmd.Parameters.AddWithValue("@Phone", user.Phone ?? "");
                         cmd.Parameters.AddWithValue("@Address", user.Address ?? "");
+                        cmd.Parameters.AddWithValue("@Avatar", user.Avatar ?? "");
 
                         int rowsAffected = cmd.ExecuteNonQuery();
                         return rowsAffected > 0;
@@ -381,6 +387,35 @@ namespace Pet_Shop_Project.Services
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"UpdateUser error: {ex.Message}");
+                return false;
+            }
+        }
+
+        public bool UpdateUserAvatar(string userId, string avatar)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    const string query = @"UPDATE Users 
+                                    SET Avatar = @Avatar 
+                                    WHERE UserId = @UserId";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserId", userId);
+                        cmd.Parameters.AddWithValue("@Avatar", avatar ?? "");
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"UpdateUserAvatar error: {ex.Message}");
                 return false;
             }
         }
@@ -413,6 +448,7 @@ namespace Pet_Shop_Project.Services
                                     Address = reader["Address"].ToString(),
                                     Role = reader["Role"].ToString(),
                                     Username = reader["Username"].ToString(),
+                                    Avatar = reader["Avatar"].ToString(),
                                     CreatedDate = (DateTime)reader["CreatedDate"]
                                 };
                                 allUsers.Add(user);
@@ -458,6 +494,7 @@ namespace Pet_Shop_Project.Services
                                     Address = reader["Address"].ToString(),
                                     Role = reader["Role"].ToString(),
                                     Username = reader["Username"].ToString(),
+                                    Avatar = reader["Avatar"].ToString(),
                                     CreatedDate = (DateTime)reader["CreatedDate"]
                                 };
                                 allCustomers.Add(user);

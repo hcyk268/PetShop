@@ -26,7 +26,8 @@ namespace Pet_Shop_Project.Views
         private string _userid;
 
         SolidColorBrush defaulttext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#222"));
-        SolidColorBrush clickedtext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF6B6B"));
+        SolidColorBrush clickedtext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FFAD57"));
+        
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
@@ -44,6 +45,7 @@ namespace Pet_Shop_Project.Views
             loadingIndicatorOQP.Visibility = Visibility.Visible;
 
             setForeColorDefault();
+            setOpacityButton();
             odppendingbutton.Foreground = clickedtext;
 
             Loaded += OrderQueuePage_Loaded;
@@ -79,6 +81,11 @@ namespace Pet_Shop_Project.Views
         protected void setForeColorDefault()
         {
             odppendingbutton.Foreground = odpshippingbutton.Foreground = odpsuccessbutton.Foreground = odpcanceledbutton.Foreground = defaulttext;
+        }
+
+        protected void setOpacityButton()
+        {
+            odppendingbutton.Opacity = odpshippingbutton.Opacity = odpsuccessbutton.Opacity = odpcanceledbutton.Opacity = 0.5;
         }
 
         private async void OrderQueuePage_Loaded(object sender, RoutedEventArgs e)

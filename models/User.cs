@@ -18,6 +18,17 @@ namespace Pet_Shop_Project.Models
         private string _role;
         private string _username;
         private DateTime _createddate;
+        private string _avatar;
+
+        public string Avatar
+        {
+            get => _avatar;
+            set
+            {
+                _avatar = value;
+                OnPropertyChanged(nameof(Avatar));
+            }
+        }
 
         public DateTime CreatedDate
         {
