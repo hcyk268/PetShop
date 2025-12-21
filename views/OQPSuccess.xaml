@@ -204,7 +204,7 @@
                                 </ItemsControl>
 
                                 <StackPanel Grid.Row='3' Orientation='Horizontal' HorizontalAlignment='Right'>
-                                    <Button Style="{StaticResource MaterialDesignOutlinedButton}" Padding="12 8" Tag="{Binding}" Click="reorderbtn_Click">
+                                    <Button Style="{StaticResource MaterialDesignOutlinedButton}" Padding="12 8" Tag="{Binding}" Click="reorderbtn_Click" Foreground="#FFAD57" BorderBrush="#FFAD57 ">
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                                             <materialDesign:PackIcon Kind="Replay" Width="20" Height="20" Margin="0,0,6,0" VerticalAlignment="Center"/>
                                             <TextBlock Text="Đặt lại" FontWeight="SemiBold" VerticalAlignment="Center"/>

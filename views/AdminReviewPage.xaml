@@ -8,7 +8,7 @@
       d:DesignHeight="650" d:DesignWidth="900"
       Title="Quản lý đánh giá">
 
-    <Grid Background="#F5F5F5">
+    <Grid Background="#FFF7F5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -16,9 +16,7 @@
 
         <!-- Header Card -->
         <Border Grid.Row="0" 
-                Background="White" 
-                CornerRadius="12"
-                Margin="20,20,20,10"
+                Background="#F5F5F5" 
                 Padding="20">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -30,14 +28,10 @@
 
                 <!-- Title -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <materialDesign:PackIcon Kind="Star" 
-                                             Width="32" Height="32" 
-                                             Foreground="#FFAD57"
-                                             VerticalAlignment="Center"/>
                     <TextBlock Text="Quản lý đánh giá" 
-                               FontSize="22" 
+                               FontSize="28" 
                                FontWeight="Bold" 
-                               Foreground="#333"
+                               Foreground="#FFAD57"
                                Margin="10,0,0,0"
                                VerticalAlignment="Center"/>
                     <Border Background="#FFAD57" 
@@ -53,58 +47,81 @@
                     </Border>
                 </StackPanel>
 
-                <!-- Star Filter -->
-                <ComboBox x:Name="CmbStarFilter"
-                          Grid.Column="1"
-                          Width="120"
-                          Height="36"
-                          Margin="0,0,15,0"
-                          VerticalContentAlignment="Center"
-                          SelectionChanged="CmbStarFilter_SelectionChanged">
-                    <ComboBoxItem Content="Tất cả" IsSelected="True"/>
-                    <ComboBoxItem Content="5 sao"/>
-                    <ComboBoxItem Content="4 sao"/>
-                    <ComboBoxItem Content="3 sao"/>
-                    <ComboBoxItem Content="2 sao"/>
-                    <ComboBoxItem Content="1 sao"/>
-                </ComboBox>
+                <!-- Star Filter - Styled like HomePage Filter -->
+                <Border Grid.Column="1"
+                        Background="White"
+                        BorderBrush="#FFA500"
+                        BorderThickness="1.5"
+                        CornerRadius="15"
+                        Height="30"
+                        MinWidth="100"
+                        Padding="12,0"
+                        Margin="0,0,15,0">
+                    <ComboBox x:Name="CmbStarFilter"
+                              BorderThickness="0"
+                              Background="Transparent"
+                              FontSize="13"
+                              VerticalContentAlignment="Center"
+                              SelectionChanged="CmbStarFilter_SelectionChanged">
+                        <ComboBoxItem Content="Tất cả" IsSelected="True"/>
+                        <ComboBoxItem Content="5 sao"/>
+                        <ComboBoxItem Content="4 sao"/>
+                        <ComboBoxItem Content="3 sao"/>
+                        <ComboBoxItem Content="2 sao"/>
+                        <ComboBoxItem Content="1 sao"/>
+                    </ComboBox>
+                </Border>
 
-                <!-- Search -->
+                <!-- Search - Styled like HomePage Search -->
                 <Border Grid.Column="2" 
-                        Background="#F0F0F0" 
-                        CornerRadius="8" 
-                        Padding="10,0"
+                        Background="White"
+                        BorderBrush="#FFA500"
+                        BorderThickness="1.5"
+                        CornerRadius="15" 
+                        Height="30"
+                        Padding="12,0"
                         Margin="0,0,15,0"
                         Width="200">
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Magnify" 
-                                                 Foreground="#888"
-                                                 VerticalAlignment="Center"/>
-                        <TextBox x:Name="SearchBox"
-                                 BorderThickness="0"
-                                 Background="Transparent"
-                                 Padding="8"
-                                 Width="160"
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <materialDesign:PackIcon Grid.Column="0"
+                                                 Kind="Magnify"
+                                                 Width="18"
+                                                 Height="18"
+                                                 Foreground="#999999"
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,8,0"/>
+
+                        <TextBox Grid.Column="1"
+                                 x:Name="SearchBox"
                                  FontSize="13"
+                                 Background="Transparent"
+                                 BorderThickness="0"
                                  VerticalAlignment="Center"
+                                 Foreground="#333333"
                                  TextChanged="SearchBox_TextChanged"
-                                 materialDesign:HintAssist.Hint="Tìm kiếm..."/>
-                    </StackPanel>
+                                 materialDesign:HintAssist.Hint="Tìm kiếm..."
+                                 materialDesign:HintAssist.Foreground="#999999"/>
+                    </Grid>
                 </Border>
 
                 <!-- Add Button -->
                 <Button Grid.Column="3"
-                        Style="{StaticResource GradientButtonStyle}"
-                        Height="40"
-                        Padding="20,0"
+                        Style="{StaticResource FakeReviewButtonStyle}"
+                        Height="35"
                         Click="BtnAddVirtualReview_Click">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Plus" 
-                                                 Width="18" Height="18"
+                                                 Width="26" Height="26"
                                                  Margin="4,0,0,0"
                                                  VerticalAlignment="Center"/>
                         <TextBlock Text="Thêm đánh giá ảo" 
                                    Margin="4,0,8,0"
+                                   FontSize="14"
                                    FontWeight="SemiBold"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
@@ -116,7 +133,7 @@
         <Border Grid.Row="1" 
                 Background="White" 
                 CornerRadius="12"
-                Margin="20,10,20,20">
+                Margin="20,20,20,20">
             <Grid>
                 <!-- Scrollable Reviews -->
                 <ScrollViewer x:Name="ReviewScrollViewer"
@@ -250,15 +267,12 @@
 
                                         <!-- Delete Button -->
                                         <Button Grid.Column="1"
-                                                Style="{StaticResource QtyButtonStyle}"
-                                                Width="36" Height="36"
-                                                Background="#FFE5E5"
+                                                Style="{StaticResource DeleteButtonStyle}"
                                                 Click="BtnDelete_Click"
                                                 Tag="{Binding}"
                                                 ToolTip="Xóa đánh giá">
                                             <materialDesign:PackIcon Kind="Delete" 
-                                                                     Width="18" Height="18"
-                                                                     Foreground="#DC3545"/>
+                                                                     Width="18" Height="18"/>
                                         </Button>
                                     </Grid>
                                 </Border>

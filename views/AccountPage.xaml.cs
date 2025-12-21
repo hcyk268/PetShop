@@ -15,8 +15,6 @@ namespace Pet_Shop_Project.Views
         private string currentUserId;
         private UserService userService;
         private User currentUser;
-        private bool isEditingContact = false;
-        private bool isEditingAccount = false;
         private readonly UploadImageService uploadImageService;
         private const string DefaultAvatarPath = "pack://application:,,,/Images/avt.jpg";
 
@@ -145,8 +143,6 @@ namespace Pet_Shop_Project.Views
         // Contact Information Edit Functions
         private void EditContact_Click(object sender, RoutedEventArgs e)
         {
-            isEditingContact = true;
-
             // Hide text displays, show text boxes
             EmailText.Visibility = Visibility.Collapsed;
             EmailEdit.Visibility = Visibility.Visible;
@@ -234,8 +230,6 @@ namespace Pet_Shop_Project.Views
 
         private void ExitContactEditMode()
         {
-            isEditingContact = false;
-
             // Show text displays, hide text boxes
             EmailText.Visibility = Visibility.Visible;
             EmailEdit.Visibility = Visibility.Collapsed;
@@ -255,8 +249,6 @@ namespace Pet_Shop_Project.Views
         // Account Information Edit Functions
         private void EditAccount_Click(object sender, RoutedEventArgs e)
         {
-            isEditingAccount = true;
-
             // Hide text display, show text box
             FullNameText.Visibility = Visibility.Collapsed;
             FullNameEdit.Visibility = Visibility.Visible;
@@ -318,8 +310,6 @@ namespace Pet_Shop_Project.Views
 
         private void ExitAccountEditMode()
         {
-            isEditingAccount = false;
-
             // Show text display, hide text box
             FullNameText.Visibility = Visibility.Visible;
             FullNameEdit.Visibility = Visibility.Collapsed;

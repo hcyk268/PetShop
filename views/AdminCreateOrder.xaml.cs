@@ -18,6 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Pet_Shop_Project.Models;
 using Pet_Shop_Project.Services;
+using NavService = Pet_Shop_Project.Services.AdminNavigationService;
 
 namespace Pet_Shop_Project.Views
 {
@@ -561,6 +562,12 @@ namespace Pet_Shop_Project.Views
             PriceSortCombo.SelectedIndex = 0;
             ApplyProductFiltersAndSort();
         }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavService.Instance.GoBack();
+        }
+
     }
 
 }

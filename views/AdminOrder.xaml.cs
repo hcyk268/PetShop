@@ -29,7 +29,7 @@ namespace Pet_Shop_Project.Views
         private ObservableCollection<Order> _allOrders;
 
         SolidColorBrush defaulttext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#222"));
-        SolidColorBrush clickedtext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF6B6B"));
+        SolidColorBrush clickedtext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FFAD57"));
         public AdminOrder()
         {
             InitializeComponent();

@@ -79,5 +79,17 @@ namespace Pet_Shop_Project.Views
                 FilterOrders();
             }
         }
+
+        private void ImageBorder_Loaded(object sender, RoutedEventArgs e)
+        {
+            var border = sender as Border;
+
+            border.Clip = new RectangleGeometry()
+            {
+                Rect = new Rect(0, 0, border.ActualWidth, border.ActualHeight),
+                RadiusX = border.CornerRadius.TopLeft,
+                RadiusY = border.CornerRadius.TopLeft
+            };
+        }
     }
 }

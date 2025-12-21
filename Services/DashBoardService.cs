@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-
+using System.Configuration;
 namespace Pet_Shop_Project.Services
 {
     public class DashboardService
@@ -10,7 +10,7 @@ namespace Pet_Shop_Project.Services
 
         public DashboardService()
         {
-            connectionString = @"Server=DESKTOP-MEEB046;Database=PETSHOP;Integrated Security=True;";
+            connectionString = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
         }
 
         public int GetTotalUsers()

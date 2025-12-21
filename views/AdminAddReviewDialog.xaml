@@ -3,114 +3,242 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Thêm đánh giá ảo"
-        Height="500"
-        Width="360"
+        Height="560"
+        Width="420"
         WindowStartupLocation="CenterOwner"
         WindowStyle="None"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        Background="Transparent"
+        AllowsTransparency="True">
 
-    <Grid>
-        <Border Background="#FFF7F0"
-                CornerRadius="12"
-                BorderBrush="Gray"
-                Padding="16"
-                materialDesign:ShadowAssist.ShadowDepth="Depth2">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+    <Border Background="White"
+            CornerRadius="16"
+            Padding="30"
+            Margin="10">
+        <Border.Effect>
+            <DropShadowEffect Color="#40000000" 
+                              BlurRadius="20" 
+                              ShadowDepth="0" 
+                              Opacity="0.3"/>
+        </Border.Effect>
 
-                <!-- Header -->
-                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
-                    <materialDesign:PackIcon Kind="StarPlus"
-                                             Width="30"
-                                             Height="30"
-                                             Foreground="#FFAD57"
-                                             VerticalAlignment="Center"/>
-                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
-                        <TextBlock Text="Thêm đánh giá ảo"
-                                   FontSize="18"
-                                   FontWeight="Bold"
-                                   Foreground="#333"/>
-                        <TextBlock Text="Điền nhanh thông tin và số sao cho sản phẩm."
-                                   FontSize="12"
-                                   Foreground="#777"/>
-                    </StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,8">
+                    <TextBlock Text="Thêm đánh giá ảo"
+                               FontSize="26"
+                               FontWeight="Bold"
+                               Foreground="#FFAD57"
+                               Margin="12,0,0,0"
+                               VerticalAlignment="Center"/>
                 </StackPanel>
+                <TextBlock Text="Điền thông tin và chọn số sao cho sản phẩm"
+                           FontSize="13"
+                           Foreground="#888"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
 
-                <!-- Form -->
-                <StackPanel Grid.Row="1" Margin="0,4,0,0">
+            <!-- Form -->
+            <ScrollViewer Grid.Row="1" 
+                          VerticalScrollBarVisibility="Hidden"
+                          HorizontalScrollBarVisibility="Disabled">
+                <StackPanel Margin="0,0,0,0">
                     <!-- Product -->
-                    <TextBlock Text="Sản phẩm" FontWeight="SemiBold" Margin="0,0,0,4"/>
-                    <ComboBox x:Name="CmbProduct"
-                              Height="34"
-                              Padding="10,0"
-                              DisplayMemberPath="Name"
-                              SelectedValuePath="ProductId"
-                              Margin="0,0,0,12"
-                              VerticalContentAlignment="Center"/>
-
-                    <!-- User Name -->
-                    <TextBlock Text="Tên người đánh giá" FontWeight="SemiBold" Margin="0,0,0,4"/>
-                    <TextBox x:Name="TxtUserName"
-                             AcceptsTab="True"
-                             Height="34"
-                             Padding="10,6"
-                             Margin="0,0,0,12"/>
-
-                    <!-- Rating -->
-                    <TextBlock Text="Đánh giá" FontWeight="SemiBold" Margin="0,0,0,4" />
-                    <Border Background="#F8F8F8"
-                            BorderBrush="#E8E8E8"
-                            BorderThickness="1"
-                            CornerRadius="8"
-                            Padding="10"
-                            Margin="0,0,0,12">
-                        <UniformGrid Columns="5" HorizontalAlignment="Stretch">
-                            <RadioButton x:Name="Rb1Star" Content="1★" GroupName="Rating" HorizontalContentAlignment="Center"/>
-                            <RadioButton x:Name="Rb2Star" Content="2★" GroupName="Rating" HorizontalContentAlignment="Center"/>
-                            <RadioButton x:Name="Rb3Star" Content="3★" GroupName="Rating" HorizontalContentAlignment="Center"/>
-                            <RadioButton x:Name="Rb4Star" Content="4★" GroupName="Rating" HorizontalContentAlignment="Center"/>
-                            <RadioButton x:Name="Rb5Star" Content="5★" GroupName="Rating" IsChecked="True" HorizontalContentAlignment="Center"/>
-                        </UniformGrid>
+                    <TextBlock Text="Sản phẩm" 
+                               FontSize="15"
+                               FontWeight="SemiBold" 
+                               Foreground="#FFAD57"
+                               Margin="0,0,0,8"/>
+                    <Border Background="White"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            Margin="0,0,0,20">
+                        <ComboBox x:Name="ProductComboBox"
+                                  Height="42"
+                                  Padding="12,0"
+                                  DisplayMemberPath="Name"
+                                  SelectedValuePath="ProductId"
+                                  BorderThickness="0"
+                                  Background="Transparent"
+                                  VerticalContentAlignment="Center"
+                                  FontSize="14"/>
                     </Border>
 
+                    <!-- User Name -->
+                    <TextBlock Text="Tên người đánh giá" 
+                               FontSize="15"
+                               FontWeight="SemiBold"
+                               Foreground="#FFAD57"
+                               Margin="0,0,0,8"/>
+                    <Border Background="White"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            Margin="0,0,0,20">
+                        <TextBox x:Name="UserNameTextBox"
+                                 Height="42"
+                                 Padding="12,0"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 VerticalContentAlignment="Center"
+                                 FontSize="14"
+                                 materialDesign:HintAssist.Hint="Nhập tên người đánh giá"/>
+                    </Border>
+
+                    <!-- Rating -->
+                    <TextBlock Text="Xếp hạng" 
+                               FontSize="15"
+                               FontWeight="SemiBold"
+                               Foreground="#FFAD57"
+                               Margin="0,0,0,12"/>
+                    <StackPanel x:Name="StarStackPanel"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Margin="0,0,0,20">
+                        <!-- Stars will be added dynamically in code-behind -->
+                    </StackPanel>
+
                     <!-- Comment -->
-                    <TextBlock Text="Nội dung" FontWeight="SemiBold" Margin="0,0,0,4"/>
-                    <TextBox x:Name="TxtComment"
-                             AcceptsTab="True"
-                             Height="70"
-                             Padding="10"
-                             TextWrapping="Wrap"
-                             AcceptsReturn="True"
-                             VerticalScrollBarVisibility="Auto"/>
+                    <TextBlock Text="Nội dung" 
+                               FontSize="15"
+                               FontWeight="SemiBold"
+                               Foreground="#FFAD57"
+                               Margin="0,0,0,8"/>
+                    <Border Background="White"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            Padding="12">
+                        <Grid>
+                            <TextBlock x:Name="CommentPlaceholder"
+                                       Text="Nhập nội dung đánh giá..."
+                                       FontSize="14"
+                                       Foreground="#999999"
+                                       IsHitTestVisible="False"
+                                       VerticalAlignment="Top"
+                                       Margin="2"/>
+
+                            <TextBox x:Name="CommentTextBox"
+                                     TextWrapping="Wrap"
+                                     AcceptsReturn="True"
+                                     VerticalScrollBarVisibility="Auto"
+                                     Height="100"
+                                     BorderThickness="0"
+                                     FontSize="14"
+                                     Foreground="#333333"
+                                     Background="Transparent"
+                                     TextChanged="CommentTextBox_TextChanged"/>
+                        </Grid>
+                    </Border>
                 </StackPanel>
+            </ScrollViewer>
 
-                <!-- Buttons -->
-                <Grid Grid.Row="2" Margin="0,14,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+            <!-- Buttons -->
+            <Grid Grid.Row="2" Margin="0,24,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="0"
-                            Content="Hủy"
-                            Height="38"
-                            Margin="0,0,8,0"
-                            Click="BtnCancel_Click"
-                            Style="{StaticResource GradientButtonStyle}"/>  
+                <!-- Cancel Button -->
+                <Button Grid.Column="0"
+                        Content="Hủy"
+                        Height="44"
+                        FontSize="15"
+                        FontWeight="SemiBold"
+                        Foreground="#666666"
+                        Background="White"
+                        BorderBrush="#E0E0E0"
+                        BorderThickness="2"
+                        Cursor="Hand"
+                        Margin="0,0,8,0"
+                        Click="BtnCancel_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="12">
+                                <TextBlock Text="{TemplateBinding Content}"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           FontWeight="{TemplateBinding FontWeight}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#F5F5F5"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#E0E0E0"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
 
-
-                    <Button Grid.Column="1"
-                            Content="Lưu"
-                            Height="38"
-                            Margin="8,0,0,0"
-                            Click="BtnSave_Click"
-                            Style="{StaticResource GradientButtonStyle}"/>
-                </Grid>
+                <!-- Save Button -->
+                <Button Grid.Column="1"
+                        x:Name="SaveButton"
+                        Height="44"
+                        FontSize="15"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Margin="8,0,0,0"
+                        Click="BtnSave_Click">
+                    <Button.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#FFAD56" Offset="0"/>
+                            <GradientStop Color="#FFC281" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="12">
+                                <TextBlock Text="Hoàn tất"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           FontWeight="{TemplateBinding FontWeight}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Effect">
+                                        <Setter.Value>
+                                            <DropShadowEffect ShadowDepth="0" BlurRadius="15" Opacity="0.3"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <GradientStop Color="#FF9D46" Offset="0"/>
+                                                <GradientStop Color="#FFB271" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
             </Grid>
-        </Border>
-    </Grid>
+        </Grid>
+    </Border>
 </Window>

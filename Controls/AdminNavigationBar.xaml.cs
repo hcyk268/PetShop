@@ -26,7 +26,7 @@ namespace Pet_Shop_Project.Controls
 
         private void DashboardButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            Services.AdminNavigationService.Instance.NavigateToDashBoard();
         }
 
         private void InventoryButton_Click(object sender, RoutedEventArgs e)
@@ -36,7 +36,7 @@ namespace Pet_Shop_Project.Controls
 
         private void UserButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            Services.AdminNavigationService.Instance.NavigateToUser();
         }
 
         private void OrderButton_Click(object sender, RoutedEventArgs e)

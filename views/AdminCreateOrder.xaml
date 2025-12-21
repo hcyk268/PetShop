@@ -10,7 +10,7 @@
       Background="#FFF7F5"
       Title="AdminCreateOrder">
 
-    <Grid Margin="16,12,16,16">
+    <Grid Margin="0,0,0,16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -19,34 +19,61 @@
             <!-- Header -->
             <Border Grid.Row="0"
                     Padding="18"
-                    Background="White"
-                    CornerRadius="12"
+                    Background="#F5F5F5"
                     materialDesign:ShadowAssist.ShadowDepth="Depth2">
-                <StackPanel Orientation="Horizontal" Margin="2,0,0,0">
-                    <Border Width="44" Height="44" CornerRadius="10"
-                            Background="#FFF2D6"
-                            VerticalAlignment="Center">
-                        <materialDesign:PackIcon Kind="CartPlus"
-                                                 Width="26" Height="26"
-                                                 Foreground="#FF6B6B"
-                                                 VerticalAlignment="Center"
-                                                 HorizontalAlignment="Center"/>
-                    </Border>
-                    <StackPanel Margin="12,2,0,0">
-                        <TextBlock Text="Tạo Đơn Hàng Mới"
+            <StackPanel Orientation="Horizontal" Margin="2,0,0,0" VerticalAlignment="Center">
+                <Button x:Name="BackButton"
+                        Width="35" Height="35"
+                        BorderThickness="0"
+                        Background="White"
+                        Cursor="Hand"
+                        Click="BackButton_Click"
+                        Margin="0,0,10,0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Width="35" Height="35"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="18">
+                                <materialDesign:PackIcon x:Name="icon"
+                                                         Kind="ArrowLeft"
+                                                         Width="22" Height="22"
+                                                         Foreground="#FFAD57"
+                                                         HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center"/>
+                            </Border>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#FFECECEC"/>
+                                </Trigger>
+
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <GradientStop Color="#FFAD56" Offset="0"/>
+                                                <GradientStop Color="#FFC281" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter TargetName="icon" Property="Foreground" Value="White"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <StackPanel Margin="12,2,0,0">
+                    <TextBlock Text="Tạo Đơn Hàng Mới"
                                    FontSize="26"
-                                   FontWeight="SemiBold"
-                                   Foreground="#222"/>
-                        <TextBlock Text="Tạo đơn hàng cho khách hàng với đầy đủ thông tin"
-                                   FontSize="14"
-                                   Foreground="#6A6A6A"
-                                   Margin="0,4,0,0"/>
-                    </StackPanel>
+                                   FontWeight="Bold"
+                                   Foreground="#FFAD57"/>
+                </StackPanel>
                 </StackPanel>
             </Border>
 
             <!-- Main Content - 3 Columns -->
-            <Grid Grid.Row="1" Margin="0,16,0,0">
+            <Grid Grid.Row="1" Margin="12,16,12,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="260"/>
                     <ColumnDefinition Width="2*"/>
@@ -59,7 +86,7 @@
                         CornerRadius="12"
                         Padding="16"
                         Margin="0,0,8,0"
-                        materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                        materialDesign:ShadowAssist.ShadowDepth="Depth4">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>

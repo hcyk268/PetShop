@@ -64,7 +64,7 @@
                                     Stretch="UniformToFill"/>
                     </Border.Background>
                 </Border>
-                
+
                 <!-- Nút Close ở góc trên phải -->
                 <Button Style="{StaticResource ControlButtonStyle}"
                         HorizontalAlignment="Right"
@@ -134,7 +134,8 @@
                                 Padding="10,8"
                                 Margin="0,0,0,12"
                                 Visibility="Collapsed">
-                            <TextBlock FontSize="13"
+                            <TextBlock x:Name="ErrorMessageText"
+                                      FontSize="13"
                                       Foreground="#C62828"
                                       TextWrapping="Wrap"
                                       HorizontalAlignment="Center"/>
@@ -194,7 +195,7 @@
                                    BorderThickness="1"
                                    CornerRadius="10"
                                    Height="42">
-                                <Grid Margin="12,0">
+                                <Grid Margin="12,0,50,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
@@ -207,6 +208,7 @@
                                                            VerticalAlignment="Center"
                                                            Margin="0,0,8,0"/>
 
+                                    <!-- PasswordBox -->
                                     <PasswordBox Grid.Column="1"
                                                 x:Name="PasswordBox"
                                                 FontSize="14"
@@ -214,8 +216,42 @@
                                                 BorderThickness="0"
                                                 VerticalAlignment="Center"
                                                 KeyDown="PasswordBox_KeyDown"
+                                                PasswordChanged="PasswordBox_PasswordChanged"
                                                 materialDesign:HintAssist.Hint="Nhập mật khẩu"
                                                 materialDesign:HintAssist.Foreground="#999"/>
+
+                                    <!-- TextBox (hidden by default) -->
+                                    <TextBox Grid.Column="1"
+                                            x:Name="PasswordTextBox"
+                                            FontSize="14"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            VerticalAlignment="Center"
+                                            Visibility="Collapsed"
+                                            KeyDown="PasswordBox_KeyDown"
+                                            TextChanged="PasswordTextBox_TextChanged"
+                                            materialDesign:HintAssist.Hint="Nhập mật khẩu"
+                                            materialDesign:HintAssist.Foreground="#999"/>
+
+                                    <!-- Toggle Password Button - Position: Absolute Right -->
+                                    <Border Grid.Column="1"
+                                            Width="38"
+                                            Height="38"
+                                            Background="Transparent"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Margin="0,0,-38,0"
+                                            Cursor="Hand"
+                                            MouseDown="TogglePassword_Click"
+                                            Panel.ZIndex="100">
+                                        <materialDesign:PackIcon x:Name="PasswordIcon"
+                                                               Kind="EyeOff"
+                                                               Width="20"
+                                                               Height="20"
+                                                               Foreground="#F78272"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"/>
+                                    </Border>
                                 </Grid>
                             </Border>
                         </StackPanel>
@@ -228,6 +264,7 @@
                                           TextDecorations="None">
                                     <TextBlock Text="Quên mật khẩu?"
                                               FontSize="13"
+                                              FontWeight="Bold"
                                               Foreground="#F78272"/>
                                 </Hyperlink>
                             </TextBlock>
@@ -238,7 +275,8 @@
                                           TextDecorations="None">
                                     <TextBlock Text="Đăng ký?"
                                               FontSize="13"
-                                              Foreground="#F78272"/>
+                                              Foreground="#F78272"
+                                              FontWeight="Bold"/>
                                 </Hyperlink>
                             </TextBlock>
                         </Grid>
