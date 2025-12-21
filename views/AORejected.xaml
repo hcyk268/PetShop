@@ -120,7 +120,9 @@
                                         <DataTemplate>
                                             <Border BorderBrush="#FFE2B6" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,6" Background="#FFFDF8">
                                                 <DockPanel>
-                                                    <Image Source="{Binding Product.Picture}" Width="60" Height="60" Stretch="UniformToFill" Margin="0 0 10 0"/>
+                                                    <Border Width="60" Height="60" CornerRadius="10" BorderBrush="Transparent" BorderThickness="1" Margin="0 0 10 0" Background="White" Loaded="ImageBorder_Loaded">
+                                                        <Image Source='{Binding Product.Picture}' Stretch='UniformToFill'/>
+                                                    </Border>
                                                     <StackPanel>
                                                         <TextBlock Text="{Binding Product.Name}" FontWeight="SemiBold"/>
                                                         <TextBlock Text="{Binding Product.Description}" FontStyle="Italic" Foreground="Gray" TextWrapping="Wrap" MaxWidth="600"/>

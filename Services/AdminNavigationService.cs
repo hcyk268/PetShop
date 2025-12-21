@@ -28,6 +28,14 @@ namespace Pet_Shop_Project.Services
             mainFrame = frame;
         }
 
+        public void GoBack()
+        {
+            if (mainFrame != null && mainFrame.CanGoBack)
+            {
+                mainFrame.GoBack();
+            }
+        }
+
         public void NavigateToDashBoard()
         {
             if (mainFrame != null)
