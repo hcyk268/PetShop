@@ -25,11 +25,11 @@
                 HorizontalAlignment="Center"
                 Effect="{DynamicResource MaterialDesignShadowDepth3}" Height="580" Width="500">
 
-            <ScrollViewer VerticalScrollBarVisibility="Auto"
+            <ScrollViewer VerticalScrollBarVisibility="Hidden"
                          Padding="30" Width="457" Height="560">
                 <StackPanel>
                     <!-- Header with Avatar -->
-                    <Border Background="#FF6B6B"
+                    <Border Background="#ffad57"
                             CornerRadius="15"
                             Padding="20"
                             Margin="0,0,0,25">
@@ -44,7 +44,7 @@
                                           Text="U"
                                           FontSize="36"
                                           FontWeight="Bold"
-                                          Foreground="#FF6B6B"
+                                          Foreground="#ffad57"
                                           HorizontalAlignment="Center"
                                           VerticalAlignment="Center"/>
                             </Border>
@@ -61,7 +61,7 @@
 
                             <!-- Role Badge -->
                             <Border x:Name="RoleBadge"
-                                   Background="#FFCC96"
+                                   Background="White"
                                    CornerRadius="12"
                                    Padding="15,6"
                                    HorizontalAlignment="Center"
@@ -70,7 +70,7 @@
                                           Text="Khách hàng"
                                           FontSize="13"
                                           FontWeight="SemiBold"
-                                          Foreground="White"/>
+                                          Foreground="#ffad57"/>
                             </Border>
                         </StackPanel>
                     </Border>
@@ -82,16 +82,15 @@
                             Margin="0,0,0,15">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" MinWidth="32"/>
+                                <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <materialDesign:PackIcon Grid.Column="0"
+                            <materialDesign:PackIcon
                                                    Kind="Identifier"
-                                                   Width="22" Height="22"
-                                                   Foreground="#FF6B6B"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,12,0"/>
+                                                   Width="30" Height="30"
+                                                   Foreground="#ffad57"
+                                                   VerticalAlignment="Center" Margin="-3,0,0,0"/>
 
                             <StackPanel Grid.Column="1">
                                 <TextBlock Text="ID Người dùng"
@@ -121,7 +120,7 @@
                             <materialDesign:PackIcon Grid.Column="0"
                                                    Kind="Email"
                                                    Width="22" Height="22"
-                                                   Foreground="#FF6B6B"
+                                                   Foreground="#ffad57"
                                                    VerticalAlignment="Center"
                                                    Margin="0,0,12,0"/>
 
@@ -154,7 +153,7 @@
                             <materialDesign:PackIcon Grid.Column="0"
                                                    Kind="Phone"
                                                    Width="22" Height="22"
-                                                   Foreground="#FF6B6B"
+                                                   Foreground="#ffad57"
                                                    VerticalAlignment="Center"
                                                    Margin="0,0,12,0"/>
 
@@ -186,7 +185,7 @@
                             <materialDesign:PackIcon Grid.Column="0"
                                                    Kind="MapMarker"
                                                    Width="22" Height="22"
-                                                   Foreground="#FF6B6B"
+                                                   Foreground="#ffad57"
                                                    VerticalAlignment="Top"
                                                    Margin="0,0,12,0"/>
 
@@ -215,35 +214,20 @@
 
                         <!-- Edit Button -->
                         <Button Grid.Column="0"
+                               Style="{StaticResource GradientButtonStyle}"
                                Content="Chỉnh sửa"
                                Height="45"
                                FontSize="14"
                                FontWeight="SemiBold"
-                               Background="#2196F3"
                                Foreground="White"
                                BorderThickness="0"
                                Cursor="Hand"
                                Click="EditButton_Click">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Background="{TemplateBinding Background}"
-                                           CornerRadius="22">
-                                        <StackPanel Orientation="Horizontal" 
-                                                   HorizontalAlignment="Center">
-                                            <materialDesign:PackIcon Kind="Pencil"
-                                                                   Width="18" Height="18"
-                                                                   Foreground="White"
-                                                                   VerticalAlignment="Center"
-                                                                   Margin="0,0,8,0"/>
-                                            <ContentPresenter VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                    </Border>
-                                </ControlTemplate>
-                            </Button.Template>
                         </Button>
 
                         <!-- Close Button -->
                         <Button Grid.Column="2"
+                               Style="{StaticResource GradientButtonStyle}"
                                Content="Đóng"
                                Height="45"
                                FontSize="14"
@@ -253,15 +237,6 @@
                                BorderThickness="0"
                                Cursor="Hand"
                                Click="CloseButton_Click">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Background="{TemplateBinding Background}"
-                                           CornerRadius="22">
-                                        <ContentPresenter HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Button.Template>
                         </Button>
                     </Grid>
                 </StackPanel>

@@ -45,7 +45,7 @@ namespace Pet_Shop_Project.Views
         {
             if (users == null || users.Count == 0)
             {
-                UserListItemsControl.ItemsSource = null;
+                UserDataGrid.ItemsSource = null;
                 EmptyStatePanel.Visibility = Visibility.Visible;
                 return;
             }
@@ -64,7 +64,7 @@ namespace Pet_Shop_Project.Views
                 RoleColor = GetRoleColor(u.Role)
             }).ToList();
 
-            UserListItemsControl.ItemsSource = displayUsers;
+            UserDataGrid.ItemsSource = displayUsers;
         }
 
         // Chuyển đổi Role gốc (DB) sang hiển thị (UI)
@@ -94,8 +94,8 @@ namespace Pet_Shop_Project.Views
         {
             switch (role?.ToLower())
             {
-                case "admin": return "#FF6B6B";    // Đỏ
-                case "user": return "#FFCC96"; 
+                case "admin": return "#DC3545";    // Đỏ
+                case "user": return "#FFAD57"; 
                 default: return "#FFCC96";
             }
         }
