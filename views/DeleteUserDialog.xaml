@@ -32,7 +32,7 @@
                         Margin="0,0,0,5">
                     <materialDesign:PackIcon Kind="AlertCircle"
                                              Width="20" Height="20"
-                                             Foreground="#FF9800"
+                                             Foreground="#FFAD57"
                                              HorizontalAlignment="Center"
                                              VerticalAlignment="Center"/>
                 </Border>
@@ -54,7 +54,7 @@
                            Margin="0,0,0,15"/>
 
                 <!-- User info -->
-                <Border Background="#FFF3E0"
+                <Border Background="#fff6ee"
                         CornerRadius="8"
                         Padding="12"
                         Margin="0,0,0,15">
@@ -71,9 +71,9 @@
                 </Border>
 
                 <!-- Warning -->
-                <TextBlock Text="⚠️ Hành động này không thể hoàn tác!"
+                <TextBlock Text="LƯU Ý: Hành động này không thể hoàn tác!"
                            FontSize="13"
-                           Foreground="#F44336"
+                           Foreground="#FFAD57"
                            FontWeight="SemiBold"
                            HorizontalAlignment="Center"
                            Margin="0,0,0,11"/>
@@ -87,7 +87,8 @@
                         <ColumnDefinition Width="138*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="0"
+                    <Button Style="{StaticResource GradientButtonStyle}"
+                            Grid.Column="0"
                             Content="Hủy"
                             Height="35"
                             Background="#E0E0E0"
@@ -97,36 +98,18 @@
                             BorderThickness="0"
                             Cursor="Hand"
                             Click="CancelButton_Click">
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}"
-                                        CornerRadius="20">
-                                    <ContentPresenter HorizontalAlignment="Center"
-                                                      VerticalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
                     </Button>
 
                     <Button Grid.Column="1"
+                            Style="{StaticResource GradientButtonStyle}"
                             Content="Xóa"
                             Height="35"
-                            Background="#FF6B6B"
                             Foreground="White"
                             FontSize="14"
                             FontWeight="SemiBold"
                             BorderThickness="0"
                             Cursor="Hand"
                             Click="DeleteButton_Click" Grid.ColumnSpan="3" Margin="15,0,0,0">
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}"
-                                        CornerRadius="20">
-                                    <ContentPresenter HorizontalAlignment="Center"
-                                                      VerticalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
                     </Button>
                 </Grid>
 
