@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Pet_Shop_Project.Views
 {
@@ -132,6 +133,18 @@ namespace Pet_Shop_Project.Views
             {
                 FilterOrders();
             }
+        }
+
+        private void ImageBorder_Loaded(object sender, RoutedEventArgs e)
+        {
+            var border = sender as Border;
+
+            border.Clip = new RectangleGeometry()
+            {
+                Rect = new Rect(0, 0, border.ActualWidth, border.ActualHeight),
+                RadiusX = border.CornerRadius.TopLeft,
+                RadiusY = border.CornerRadius.TopLeft
+            };
         }
     }
 }

@@ -7,7 +7,8 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       Title="OrderQueuePage"
-      Height="650" 
+      d:DesignHeight="650" 
+      d:DesignWidth="940"
       HorizontalAlignment="Stretch"
       Background="#F8FFFE">
 
@@ -35,7 +36,7 @@
                             Background="White"
                             Cursor="Hand"
                             Click="BackButton_Click"
-                            Margin="0,0,15,0">
+                            Margin="12,0,15,0">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border x:Name="border"
@@ -75,7 +76,7 @@
                         <StackPanel Margin="5,0,0,0">
                         <TextBlock Text="Các Đơn Hàng"
                                    FontSize="26"
-                                   FontWeight="SemiBold"
+                                   FontWeight="Bold"
                                    Foreground="#FFAD57"/>
                     </StackPanel>
                 </StackPanel>

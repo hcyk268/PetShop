@@ -13,11 +13,95 @@ namespace Pet_Shop_Project.Views
     public partial class SignUp : Page
     {
         private UserService userService;
+        private bool isPasswordVisible = false;
+        private bool isConfirmPasswordVisible = false;
 
         public SignUp()
         {
             InitializeComponent();
             userService = new UserService();
+        }
+
+        // Toggle Password Visibility
+        private void TogglePassword_Click(object sender, MouseButtonEventArgs e)
+        {
+            isPasswordVisible = !isPasswordVisible;
+
+            if (isPasswordVisible)
+            {
+                // Show password as text
+                PasswordTextBox.Text = PasswordBox.Password;
+                PasswordBox.Visibility = Visibility.Collapsed;
+                PasswordTextBox.Visibility = Visibility.Visible;
+                PasswordIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.Eye;
+                PasswordTextBox.Focus();
+                PasswordTextBox.CaretIndex = PasswordTextBox.Text.Length;
+            }
+            else
+            {
+                // Hide password
+                PasswordBox.Password = PasswordTextBox.Text;
+                PasswordTextBox.Visibility = Visibility.Collapsed;
+                PasswordBox.Visibility = Visibility.Visible;
+                PasswordIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.EyeOff;
+                PasswordBox.Focus();
+            }
+        }
+
+        // Toggle Confirm Password Visibility
+        private void ToggleConfirmPassword_Click(object sender, MouseButtonEventArgs e)
+        {
+            isConfirmPasswordVisible = !isConfirmPasswordVisible;
+
+            if (isConfirmPasswordVisible)
+            {
+                // Show password as text
+                ConfirmPasswordTextBox.Text = ConfirmPasswordBox.Password;
+                ConfirmPasswordBox.Visibility = Visibility.Collapsed;
+                ConfirmPasswordTextBox.Visibility = Visibility.Visible;
+                ConfirmPasswordIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.Eye;
+                ConfirmPasswordTextBox.Focus();
+                ConfirmPasswordTextBox.CaretIndex = ConfirmPasswordTextBox.Text.Length;
+            }
+            else
+            {
+                // Hide password
+                ConfirmPasswordBox.Password = ConfirmPasswordTextBox.Text;
+                ConfirmPasswordTextBox.Visibility = Visibility.Collapsed;
+                ConfirmPasswordBox.Visibility = Visibility.Visible;
+                ConfirmPasswordIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.EyeOff;
+                ConfirmPasswordBox.Focus();
+            }
+        }
+
+        // Password changed handlers - Hide error when user types
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            HideMessage();
+        }
+
+        private void PasswordTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            HideMessage();
+        }
+
+        private void ConfirmPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            HideMessage();
+        }
+
+        private void ConfirmPasswordTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            HideMessage();
+        }
+
+        // Helper method to hide message
+        private void HideMessage()
+        {
+            if (MessageBorder.Visibility == Visibility.Visible)
+            {
+                MessageBorder.Visibility = Visibility.Collapsed;
+            }
         }
 
         // Xử lý đăng ký
@@ -50,14 +134,17 @@ namespace Pet_Shop_Project.Views
         // Thực hiện đăng ký
         private void PerformSignUp()
         {
+            // Ẩn message cũ
+            MessageBorder.Visibility = Visibility.Collapsed;
+
             // Lấy dữ liệu từ form
             string fullName = FullNameTextBox.Text.Trim();
             string username = UsernameTextBox.Text.Trim();
             string email = EmailTextBox.Text.Trim();
             string phone = PhoneTextBox.Text.Trim();
             string address = AddressTextBox.Text.Trim();
-            string password = PasswordBox.Password;
-            string confirmPassword = ConfirmPasswordBox.Password;
+            string password = isPasswordVisible ? PasswordTextBox.Text : PasswordBox.Password;
+            string confirmPassword = isConfirmPasswordVisible ? ConfirmPasswordTextBox.Text : ConfirmPasswordBox.Password;
             bool termsAccepted = TermsCheckBox.IsChecked == true;
 
             // Validate tất cả các trường
@@ -200,14 +287,20 @@ namespace Pet_Shop_Project.Views
             if (string.IsNullOrWhiteSpace(password))
             {
                 ShowError("Vui lòng nhập mật khẩu");
-                PasswordBox.Focus();
+                if (isPasswordVisible)
+                    PasswordTextBox.Focus();
+                else
+                    PasswordBox.Focus();
                 return false;
             }
 
             if (password.Length < 6)
             {
                 ShowError("Mật khẩu phải có ít nhất 6 ký tự");
-                PasswordBox.Focus();
+                if (isPasswordVisible)
+                    PasswordTextBox.Focus();
+                else
+                    PasswordBox.Focus();
                 return false;
             }
 
@@ -215,14 +308,20 @@ namespace Pet_Shop_Project.Views
             if (string.IsNullOrWhiteSpace(confirmPassword))
             {
                 ShowError("Vui lòng xác nhận mật khẩu");
-                ConfirmPasswordBox.Focus();
+                if (isConfirmPasswordVisible)
+                    ConfirmPasswordTextBox.Focus();
+                else
+                    ConfirmPasswordBox.Focus();
                 return false;
             }
 
             if (password != confirmPassword)
             {
                 ShowError("Mật khẩu xác nhận không khớp");
-                ConfirmPasswordBox.Focus();
+                if (isConfirmPasswordVisible)
+                    ConfirmPasswordTextBox.Focus();
+                else
+                    ConfirmPasswordBox.Focus();
                 return false;
             }
 

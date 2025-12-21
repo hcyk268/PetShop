@@ -67,8 +67,8 @@
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Foreground" Value="#222"/>
     </Style>
-    
-    <SolidColorBrush x:Key="QP.TextBrush" Color="#222" />
+
+    <SolidColorBrush x:Key="QP.TextBrush" Color="Black" />
     <SolidColorBrush x:Key="QP.TextHoverBrush" Color="#111" />
     <SolidColorBrush x:Key="QP.TextDisabledBrush" Color="#9E9E9E" />
     <SolidColorBrush x:Key="QP.BgHoverBrush" Color="#11000000"/>
@@ -115,7 +115,7 @@
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Bg" Property="Background" Value="{StaticResource QP.BgHoverBrush}"/>
                             <Setter Property="Foreground" Value="{StaticResource QP.TextHoverBrush}"/>
-                            
+
                         </Trigger>
 
                         <!-- Pressed -->
@@ -140,10 +140,10 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <!--DataTemplate-->
     <Style x:Key="TemplateODQ" TargetType="Border">
-        <Setter Property="BorderBrush" Value="#FFA2A2"/>
+        <Setter Property="BorderBrush" Value="#fce1c5"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="8"/>
         <Setter Property="Margin" Value="0 0 30 15"/>
@@ -151,12 +151,13 @@
         <Setter Property="Background">
             <Setter.Value>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="#FFE5E5" Offset="0"/>
-                    <GradientStop Color="#FFAD57 " Offset="1"/>
+                    <GradientStop Color="White" Offset="0"/>
+                    <GradientStop Color="#fce1c5" Offset="1"/>
                 </LinearGradientBrush>
             </Setter.Value>
         </Setter>
     </Style>
     <!--QueuePage-->
+
 
 </ResourceDictionary>

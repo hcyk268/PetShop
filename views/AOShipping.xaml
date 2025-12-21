@@ -120,7 +120,9 @@
                                         <DataTemplate>
                                             <Border BorderBrush="#FFE2B6" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,6" Background="#FFFDF8">
                                                 <DockPanel>
-                                                    <Image Source="{Binding Product.Picture}" Width="60" Height="60" Stretch="UniformToFill" Margin="0 0 10 0"/>
+                                                    <Border Width="60" Height="60" CornerRadius="10" BorderBrush="Transparent" BorderThickness="1" Margin="0 0 10 0" Background="White" Loaded="ImageBorder_Loaded">
+                                                        <Image Source='{Binding Product.Picture}' Stretch='UniformToFill'/>
+                                                    </Border>
                                                     <StackPanel>
                                                         <TextBlock Text="{Binding Product.Name}" FontWeight="SemiBold"/>
                                                         <TextBlock Text="{Binding Product.Description}" FontStyle="Italic" Foreground="Gray" TextWrapping="Wrap" MaxWidth="600"/>
@@ -140,32 +142,20 @@
                                 </ItemsControl>
 
                                 <Grid Grid.Row="3" Margin="0,10,0,0">
-                                    <Button HorizontalAlignment="Right"
-                                            Padding="8 2 8 2"
-                                            Cursor="Hand"
-                                            FontWeight="SemiBold"
-                                            Foreground="#C62828"
-                                            Background="#FFF5F5"
-                                            BorderBrush="#C62828"
-                                            BorderThickness="1"
-                                            materialDesign:ButtonAssist.CornerRadius="6"
-                                            Style="{StaticResource MaterialDesignOutlinedButton}"
-                                            materialDesign:RippleAssist.Feedback="#C62828"
-                                            ToolTip="Huỷ đơn hàng này"
-                                            Click="removeorderbtn_Click"
-                                            Tag="{Binding}">
-                                        
+
+                                    <Button Style="{StaticResource RejectButtonStyle}"
+                                            Width="115"
+                                            Height="35"
+                                            HorizontalAlignment="Right"
+                                            Tag="{Binding}"
+                                            Click="removeorderbtn_Click">
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <materialDesign:PackIcon Kind="CloseCircleOutline" 
-                                                                    Width="18" Height="18" 
-                                                                    Foreground="#C62828" 
-                                                                    Margin="0 0 5 0"/>
-                                            <TextBlock Text="Huỷ bỏ đơn" VerticalAlignment="Center"/>
+                                                                    Width="20" Height="20" 
+                                                                    Margin="0,0,8,0"
+                                                                    VerticalAlignment="Center"/>
+                                            <TextBlock Text="Hủy đơn" VerticalAlignment="Center"/>
                                         </StackPanel>
-                                        
-                                        <Button.Effect>
-                                            <DropShadowEffect Color="#B00020" BlurRadius="10" ShadowDepth="0" Opacity="0.25"/>
-                                        </Button.Effect>
                                     </Button>
                                 </Grid>
                             </Grid>
