@@ -18,7 +18,7 @@
 
         <!-- Left Sidebar - Filters -->
         <Border Grid.Column="0" 
-                Background="#F8F9FA" 
+                Background="#FFF8F8" 
                 BorderBrush="#E0E0E0" 
                 BorderThickness="0,0,1,0"
                 Padding="15">

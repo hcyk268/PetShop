@@ -6,7 +6,7 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       d:DesignHeight="650" d:DesignWidth="940"
-      Background="#F5F5F5">
+      Background="#FFF8F8">
 
     <Grid Margin="25">
         <Grid.RowDefinitions>
@@ -31,7 +31,7 @@
             </StackPanel>
 
             <!-- Add User Button -->
-            <StackPanel Margin="843,0,0,0">
+            <StackPanel Margin="840,0,0,0">
                 <Button Style="{StaticResource MaterialDesignIconButton}" 
                     ToolTip="Thêm người dùng"
                     Click="AddUserButton_Click" 
