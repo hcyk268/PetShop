@@ -222,16 +222,32 @@
                                                            Foreground="#FFAD57" 
                                                            FontWeight="SemiBold"
                                                            FontSize="12"
-                                                           Margin="5,0,15,0"/>
+                                                           Margin="5,0,6,0"
+                                                           MaxWidth="120"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Text="{Binding ProductName}"
+                                                           Foreground="#666"
+                                                           FontSize="12"
+                                                           Margin="0,0,15,0"
+                                                           MaxWidth="180"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           ToolTip="{Binding ProductName}"/>
                                                 <TextBlock Text="Người đánh giá:" 
                                                            Foreground="#888" 
                                                            FontSize="12"/>
                                                 <TextBlock Text="{Binding UserId}" 
                                                            Foreground="#666"
                                                            FontSize="12"
-                                                           Margin="5,0,0,0"
-                                                           MaxWidth="150"
+                                                           Margin="5,0,6,0"
+                                                           MaxWidth="100"
                                                            TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Text="{Binding UserName}"
+                                                           Foreground="#666"
+                                                           FontSize="12"
+                                                           Margin="0,0,0,0"
+                                                           MaxWidth="160"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           ToolTip="{Binding UserName}"/>
                                             </StackPanel>
 
                                             <!-- Rating -->
