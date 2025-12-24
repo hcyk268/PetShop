@@ -293,7 +293,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center">
                                     <!-- Edit Button -->
-                                    <Button Style="{StaticResource GradientButtonStyle}" 
+                                    <Button Style="{StaticResource GradientButtonStyle}"
                                                 Width="32" 
                                                 Height="32"
                                                 Background="#FFAD57"
@@ -312,7 +312,7 @@
                                     </Button>
 
                                     <!-- Delete Button -->
-                                    <Button Style="{StaticResource GradientButtonStyle}" 
+                                    <Button
                                 Width="32" 
                                 Height="32"
                                 Background="#DC3545"
@@ -322,6 +322,16 @@
                                 ToolTip="Xóa"
                                 Click="DeleteUserButton_Click"
                                 Tag="{Binding UserId}">
+                                        <Button.Style>
+                                            <Style TargetType="Button" BasedOn="{StaticResource GradientButtonStyle}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsAdmin}" Value="True">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
                                         <materialDesign:PackIcon Kind="Delete" 
                                                      Width="16" 
                                                      Height="16"

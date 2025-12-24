@@ -1,6 +1,7 @@
 using Pet_Shop_Project.Models;
 using Pet_Shop_Project.Services;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -16,14 +17,15 @@ namespace Pet_Shop_Project.Views
     public partial class AdminReviewPage : Page, INotifyPropertyChanged
     {
         private readonly ReviewService _reviewService = new ReviewService();
-        private ObservableCollection<Review> _allReviews;
-        private ObservableCollection<Review> _filteredReviews;
+        private readonly UserService _userService = new UserService();
+        private ObservableCollection<ReviewDisplayItem> _allReviews;
+        private ObservableCollection<ReviewDisplayItem> _filteredReviews;
         private int _totalReviews;
 
         public AdminReviewPage()
         {
             InitializeComponent();
-            FilteredReviews = new ObservableCollection<Review>();
+            FilteredReviews = new ObservableCollection<ReviewDisplayItem>();
             DataContext = this;
             Loaded += AdminReviewPage_Loaded;
         }
@@ -38,7 +40,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
-        public ObservableCollection<Review> AllReviews
+        public ObservableCollection<ReviewDisplayItem> AllReviews
         {
             get => _allReviews;
             set
@@ -48,7 +50,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
-        public ObservableCollection<Review> FilteredReviews
+        public ObservableCollection<ReviewDisplayItem> FilteredReviews
         {
             get => _filteredReviews;
             set
@@ -74,7 +76,23 @@ namespace Pet_Shop_Project.Views
             try
             {
                 var reviews = await _reviewService.GetAllReviewsAsync();
-                AllReviews = new ObservableCollection<Review>(reviews.OrderByDescending(r => r.ReviewDate));
+                var productsTask = _reviewService.GetAllProductsForSelectionAsync();
+                var usersTask = _userService.GetAllUsersAsync();
+
+                await Task.WhenAll(productsTask, usersTask);
+
+                var productLookup = BuildProductLookup(productsTask.Result);
+                var userLookup = BuildUserLookup(usersTask.Result);
+
+                var reviewItems = (reviews ?? new List<Review>())
+                    .OrderByDescending(r => r.ReviewDate)
+                    .Select(r => new ReviewDisplayItem(
+                        r,
+                        GetLookupValue(productLookup, r.ProductId),
+                        GetLookupValue(userLookup, r.UserId)))
+                    .ToList();
+
+                AllReviews = new ObservableCollection<ReviewDisplayItem>(reviewItems);
                 ApplyFilter();
             }
             catch (Exception ex)
@@ -126,10 +144,13 @@ namespace Pet_Shop_Project.Views
             string searchText = SearchBox?.Text?.Trim();
             if (!string.IsNullOrWhiteSpace(searchText))
             {
+                string searchTextLower = searchText.ToLower();
                 result = result.Where(r =>
-                    (r.ProductId?.ToLower().Contains(searchText.ToLower()) ?? false) ||
-                    (r.UserId?.ToLower().Contains(searchText.ToLower()) ?? false) ||
-                    (r.Comment?.ToLower().Contains(searchText.ToLower()) ?? false)
+                    (r.ProductId?.ToLower().Contains(searchTextLower) ?? false) ||
+                    (r.ProductName?.ToLower().Contains(searchTextLower) ?? false) ||
+                    (r.UserId?.ToLower().Contains(searchTextLower) ?? false) ||
+                    (r.UserName?.ToLower().Contains(searchTextLower) ?? false) ||
+                    (r.Comment?.ToLower().Contains(searchTextLower) ?? false)
                 );
             }
 
@@ -164,7 +185,7 @@ namespace Pet_Shop_Project.Views
         private async void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            var review = button?.Tag as Review;
+            var review = button?.Tag as ReviewDisplayItem;
 
             if (review == null) return;
 
@@ -187,5 +208,74 @@ namespace Pet_Shop_Project.Views
                 }
             }
         }
+
+        private static Dictionary<string, string> BuildProductLookup(List<Product> products)
+        {
+            var lookup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+            if (products == null) return lookup;
+
+            foreach (var product in products)
+            {
+                if (product == null || string.IsNullOrWhiteSpace(product.ProductId)) continue;
+                if (!lookup.ContainsKey(product.ProductId))
+                {
+                    lookup[product.ProductId] = product.Name ?? string.Empty;
+                }
+            }
+
+            return lookup;
+        }
+
+        private static Dictionary<string, string> BuildUserLookup(ObservableCollection<User> users)
+        {
+            var lookup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+            if (users == null) return lookup;
+
+            foreach (var user in users)
+            {
+                if (user == null || string.IsNullOrWhiteSpace(user.UserId)) continue;
+                if (!lookup.ContainsKey(user.UserId))
+                {
+                    lookup[user.UserId] = user.FullName ?? string.Empty;
+                }
+            }
+
+            return lookup;
+        }
+
+        private static string GetLookupValue(Dictionary<string, string> lookup, string key)
+        {
+            if (lookup == null || string.IsNullOrWhiteSpace(key)) return string.Empty;
+            return lookup.TryGetValue(key, out var value) ? value ?? string.Empty : string.Empty;
+        }
+    }
+
+    public class ReviewDisplayItem
+    {
+        public ReviewDisplayItem(Review review, string productName, string userName)
+        {
+            if (review == null) throw new ArgumentNullException(nameof(review));
+
+            ReviewId = review.ReviewId;
+            ProductId = review.ProductId;
+            UserId = review.UserId;
+            Rating = review.Rating;
+            Comment = review.Comment;
+            ReviewDate = review.ReviewDate;
+            ProductName = productName ?? string.Empty;
+            UserName = userName ?? string.Empty;
+        }
+
+        public string ReviewId { get; }
+        public string ProductId { get; }
+        public string ProductName { get; }
+        public string UserId { get; }
+        public string UserName { get; }
+        public int Rating { get; }
+        public string Comment { get; }
+        public DateTime ReviewDate { get; }
+        public IEnumerable<int> RatingStars => Enumerable.Range(1, Math.Max(0, Rating));
     }
 }

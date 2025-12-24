@@ -61,7 +61,8 @@ namespace Pet_Shop_Project.Views
                 Phone = u.Phone,
                 Role = u.Role,
                 RoleDisplay = GetRoleDisplay(u.Role),
-                RoleColor = GetRoleColor(u.Role)
+                RoleColor = GetRoleColor(u.Role),
+                IsAdmin = string.Equals(u.Role, "Admin", StringComparison.OrdinalIgnoreCase)
             }).ToList();
 
             UserDataGrid.ItemsSource = displayUsers;
@@ -149,6 +150,10 @@ namespace Pet_Shop_Project.Views
 
                 if (user != null)
                 {
+                    if (string.Equals(user.Role, "Admin", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return;
+                    }
                     // Giả định DeleteUserDialog tồn tại
                     var confirmDialog = new DeleteUserDialog(user);
                     confirmDialog.Owner = Window.GetWindow(this);
@@ -232,6 +237,7 @@ namespace Pet_Shop_Project.Views
         public string FullName { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
+        public bool IsAdmin { get; set; }
         public string Role { get; set; } // Giữ lại Role DB để dễ thao tác
         public string RoleDisplay { get; set; } // Role hiển thị trên UI
         public string RoleColor { get; set; } // Màu sắc cho Role Badge
