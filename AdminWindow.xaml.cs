@@ -10,7 +10,7 @@ namespace Pet_Shop_Project
         {
             InitializeComponent();
             Services.AdminNavigationService.Instance.Initialize(AdminScreen);
-            Services.AdminNavigationService.Instance.NavigateToReview();
+            Services.AdminNavigationService.Instance.NavigateToDashBoard();
         }
     }
 }
