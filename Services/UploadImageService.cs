@@ -109,5 +109,31 @@ namespace Pet_Shop_Project.Services
                 url = url.Version(version.Value.ToString());
             return url.BuildUrl(publicId);
         }
+
+        public async Task<string> EnsureCloudinaryUrlAsync(string input, string folder = "products")
+        {
+            if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+            if (input.IndexOf("res.cloudinary.com", StringComparison.OrdinalIgnoreCase) >= 0) return input;
+
+            if (Uri.TryCreate(input, UriKind.Absolute, out var uri) &&
+                (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
+            {
+                var uploadParams = new ImageUploadParams
+                {
+                    File = new FileDescription(input),
+                    Folder = folder,
+                    UseFilename = true,
+                    UniqueFilename = true,
+                    Overwrite = false
+                };
+                var result = await _cloudinary.UploadAsync(uploadParams);
+                if (result.StatusCode != HttpStatusCode.OK || result.Error != null)
+                    throw new InvalidOperationException($"Upload failed: {result.Error?.Message}");
+                return result.SecureUrl?.ToString() ?? string.Empty;
+            }
+
+            var (secureUrl, _) = await UploadAsync(input, folder);
+            return secureUrl;
+        }
     }
 }
