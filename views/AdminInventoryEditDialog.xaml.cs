@@ -102,7 +102,9 @@ namespace Pet_Shop_Project.Views
 
         private async Task LoadCategoriesAsycn(string selectedCategory = null)
         {
-            var items = new ObservableCollection<string>();
+            var defaultCategories = new[] { "Thức ăn", "Đồ chơi", "Dụng cụ", "Thiết bị" };
+            var items = new ObservableCollection<string>(defaultCategories);
+
             const string sql = "SELECT DISTINCT Category FROM PRODUCTS WHERE Category IS NOT NULL AND Category <> '' ORDER BY Category";
             using (var conn = new SqlConnection(_conn))
             {
@@ -112,7 +114,9 @@ namespace Pet_Shop_Project.Views
                 {
                     while (reader.Read())
                     {
-                        items.Add(reader["Category"].ToString());
+                        var cat = reader["Category"].ToString();
+                        if (!items.Any(c => c.Equals(cat, StringComparison.OrdinalIgnoreCase)))
+                        items.Add(cat);
                     }
                 }
             }
@@ -263,6 +267,8 @@ namespace Pet_Shop_Project.Views
 
             try
             {
+                var rawPicture = TxtPicture.Text.Trim();
+                var cloudUrl = await _uploadImageService.EnsureCloudinaryUrlAsync(rawPicture);
                 var category = CmbCategory.SelectedItem as string ?? CmbCategory.Text;
                 double.TryParse(TxtDiscount.Text, out var discount);
                 var product = new Product
@@ -272,11 +278,11 @@ namespace Pet_Shop_Project.Views
                     Description = TxtDescription.Text.Trim(),
                     UnitPrice = decimal.Parse(TxtUnitPrice.Text),
                     UnitInStock = int.Parse(TxtStockQuantity.Text),
-                    Picture = TxtPicture.Text.Trim(),
+                    Picture = cloudUrl,
                     Category = CmbCategory.SelectedItem as string ?? CmbCategory.Text,
-                    Discount = discount
+                    Discount = discount,
                 };
-
+                TxtPicture.Text = cloudUrl;
                 InventoryItem = new InventoryItem
                 {
                     InventoryId = _isEditMode ? _originalItem.InventoryId : product.ProductId,

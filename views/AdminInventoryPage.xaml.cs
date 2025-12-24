@@ -81,6 +81,11 @@ namespace Pet_Shop_Project.Views
             ApplyFilters();
         }
 
+        private void CateFilter_Changed(object sender, RoutedEventArgs e)
+        {
+            ApplyFilters();
+        }
+
         private void ApplyFilters()
         {
             if (allItems == null) return;
@@ -105,6 +110,21 @@ namespace Pet_Shop_Project.Views
             else if (RbOutOfStock?.IsChecked == true)
             {
                 filtered = filtered.Where(i => i.StockQuantity == 0);
+            }
+
+            // Category filter
+            string selectedCategory = null;
+            if (AllCategory?.IsChecked == true)       selectedCategory = null;
+            else if (FoodCategory?.IsChecked == true)      selectedCategory = "Thức ăn";
+            else if (ToyCategory?.IsChecked == true)   selectedCategory = "Đồ chơi";
+            else if (DeviceCategory?.IsChecked == true) selectedCategory = "Thiết bị";
+            else if (ToolCategory?.IsChecked == true)   selectedCategory = "Dụng cụ";
+
+            if (!string.IsNullOrEmpty(selectedCategory))
+            {
+                filtered = filtered.Where(i =>
+                    string.Equals(i.Category, selectedCategory, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(i.Product?.Category, selectedCategory, StringComparison.OrdinalIgnoreCase));
             }
 
             filteredItems = new ObservableCollection<InventoryItem>(filtered);

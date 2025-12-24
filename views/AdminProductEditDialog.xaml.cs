@@ -81,7 +81,8 @@ namespace Pet_Shop_Project.Views
 
         private async Task LoadCategoriesAsync()
         {
-            var items = new ObservableCollection<string>();
+            var defaultCategories = new[] { "Thức ăn", "Đồ chơi", "Dụng cụ", "Thiết bị" };
+            var items = new ObservableCollection<string>(defaultCategories);
             const string sql = "SELECT DISTINCT Category FROM PRODUCTS WHERE Category IS NOT NULL AND Category <> '' ORDER BY Category";
             using (var conn = new SqlConnection(_conn))
             {
@@ -91,13 +92,16 @@ namespace Pet_Shop_Project.Views
                 {
                     while (await reader.ReadAsync())
                     {
-                        items.Add(reader["Category"].ToString());
+                         var cat = reader["Category"].ToString();
+                    if (!items.Any(c => c.Equals(cat, StringComparison.OrdinalIgnoreCase)))
+                        items.Add(cat);
                     }
                 }
             }
             CmbCategory.ItemsSource = items;
             if (_originalProduct != null && !string.IsNullOrEmpty(_originalProduct.Category))
-                CmbCategory.SelectedItem = _originalProduct.Category;
+                CmbCategory.SelectedItem = items.FirstOrDefault(c =>
+                c.Equals(_originalProduct.Category, StringComparison.OrdinalIgnoreCase));
         }
 
         private async void BtnSelectImage_Click(object sender, RoutedEventArgs e)
@@ -154,9 +158,10 @@ namespace Pet_Shop_Project.Views
         {
             if (!ValidateInput())
                 return;
-            
             try
             {
+                var rawPicture = TxtPicture.Text.Trim();
+                var cloudUrl = await _uploadImageService.EnsureCloudinaryUrlAsync(rawPicture);
                 var selectedCategory = CmbCategory.SelectedItem as string ?? CmbCategory.Text;
                 if (_isEditMode)
                 {
@@ -168,7 +173,7 @@ namespace Pet_Shop_Project.Views
                         UnitPrice = decimal.Parse(TxtUnitPrice.Text),
                         Discount = double.Parse(TxtDiscount.Text),
                         UnitInStock = int.Parse(TxtUnitInStock.Text),
-                        Picture = TxtPicture.Text.Trim(),
+                        Picture = cloudUrl,
                         Category = selectedCategory
                     };
                     if (await UpdateProductAsync(Product))
@@ -186,7 +191,7 @@ namespace Pet_Shop_Project.Views
                         UnitPrice = decimal.Parse(TxtUnitPrice.Text),
                         Discount = double.Parse(TxtDiscount.Text),
                         UnitInStock = int.Parse(TxtUnitInStock.Text),
-                        Picture = TxtPicture.Text.Trim(),
+                        Picture = cloudUrl,
                         Category = selectedCategory
                     };
 

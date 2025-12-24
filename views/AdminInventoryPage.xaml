@@ -22,7 +22,6 @@
                 BorderBrush="#E0E0E0" 
                 BorderThickness="0,0,1,0"
                 Padding="15">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel>
                     <!-- Search Section -->
                     <TextBlock Text="Tìm kiếm" 
@@ -70,8 +69,42 @@
                                      Margin="0,0,0,8"
                                      Checked="StockFilter_Changed"/>
                     </StackPanel>
+
+                <!-- Category Filter -->
+                    <TextBlock Text="Danh mục" 
+                               FontSize="16" 
+                               FontWeight="Bold" 
+                               Foreground="#FFAD57"
+                               Margin="0,0,0,10"/>
+                    <StackPanel>
+                        <RadioButton x:Name="AllCategory" 
+                                     Content="Tất cả" 
+                                     IsChecked="True"
+                                     GroupName="Category"
+                                     Margin="0,0,0,8"
+                                     Checked="CateFilter_Changed"/>
+                        <RadioButton x:Name="FoodCategory" 
+                                     Content="Thức ăn" 
+                                     GroupName="Category"
+                                     Margin="0,0,0,8"
+                                     Checked="CateFilter_Changed"/>
+                        <RadioButton x:Name="ToyCategory" 
+                                     Content="Đò chơi" 
+                                     GroupName="Category"
+                                     Margin="0,0,0,8"
+                                     Checked="CateFilter_Changed"/>
+                        <RadioButton x:Name="DeviceCategory" 
+                                     Content="Thiết bị" 
+                                     GroupName="Category"
+                                     Margin="0,0,0,8"
+                                     Checked="CateFilter_Changed"/>
+                        <RadioButton x:Name="ToolCategory" 
+                                     Content="Dụng cụ" 
+                                     GroupName="Category"
+                                     Margin="0,0,0,8"
+                                     Checked="CateFilter_Changed"/>
                 </StackPanel>
-            </ScrollViewer>
+            </StackPanel>
         </Border>
 
         <!-- Main Content Area -->
@@ -158,6 +191,9 @@
                       BorderThickness="0"
                       CanUserResizeRows="False"
                       CanUserAddRows="False"
+                      ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                      ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                      ScrollViewer.CanContentScroll="True"
                       MouseDoubleClick="InventoryDataGrid_MouseDoubleClick">
 
                 <DataGrid.ColumnHeaderStyle>
