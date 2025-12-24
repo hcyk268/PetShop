@@ -554,17 +554,14 @@ namespace Pet_Shop_Project.Views
             }
 
             // Nếu chưa có, tạo cart mới
-            string newCartId = Guid.NewGuid().ToString();
-            string insertCartSql = "INSERT INTO CART (CartId, UserId) VALUES (@CartId, @UserId)";
+            string insertCartSql = "INSERT INTO CART (UserId) OUTPUT INSERTED.CartId VALUES (@UserId)";
 
             using (var cmd = new SqlCommand(insertCartSql, conn))
             {
-                cmd.Parameters.AddWithValue("@CartId", newCartId);
                 cmd.Parameters.AddWithValue("@UserId", userId);
-                await cmd.ExecuteNonQueryAsync();
+                var newCartId = await cmd.ExecuteScalarAsync(); // ✅ Lấy CartId thực sự từ DB
+                return newCartId.ToString();
             }
-
-            return newCartId;
         }
 
         /// Cập nhật số lượng của CartItem
