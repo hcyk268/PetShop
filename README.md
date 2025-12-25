@@ -1,76 +1,77 @@
-# 🐾 PETSHOP – HỆ THỐNG QUẢN LÝ & BÁN ĐỒ TIỆN ÍCH CHO THÚ CƯNG
-
-<div align="center">
-  <img alt="WPF" src="https://img.shields.io/badge/WPF-ff6f61?style=for-the-badge&logo=windows&logoColor=white" />
-  <img alt=".NET Framework" src="https://img.shields.io/badge/.NET%20Framework-ffb703?style=for-the-badge&logo=dotnet&logoColor=white" />
-  <img alt="SQL Server" src="https://img.shields.io/badge/SQL%20Server-2a9d8f?style=for-the-badge&logo=microsoftsqlserver&logoColor=white" />
-  <img alt="Windows" src="https://img.shields.io/badge/Windows-577590?style=for-the-badge&logo=windows&logoColor=white" />
-</div>
-
-<p align="center">🟥🟧🟨🟩🟦🟪 · 🐶🐱🐰🦜 · 🛒🧴🦴 · 💳📦</p>
+# 🐾FETCH – HỆ THỐNG QUẢN LÝ VÀ BÁN HÀNG TIỆN ÍCH CHO THÚ CƯNG🐾
 
 ## 🐶 1. Giới thiệu
 
-**PetShop** là dự án phục vụ đồ án môn học lập trình trực quan IT008.Q12, mô phỏng một hệ thống quản lý và bán đồ dùng/thú cưng. Hệ thống hỗ trợ người dùng xem sản phẩm, đặt hàng, quản lý giỏ hàng và hỗ trợ quản trị viên quản lý sản phẩm, đơn hàng và khách hàng.
+**Fetch** là ứng dụng được phát triển trong khuôn khổ đồ án môn học **Lập trình trực quan (IT008.Q12)** của nhóm 9.
+Dự án mô phỏng một hệ thống quản lý và bán các sản phẩm dành cho thú cưng, hướng tới việc hỗ trợ người dùng mua sắm và quản trị viên quản lý hệ thống một cách hiệu quả.
+
+Hệ thống bao gồm hai nhóm người dùng chính:
+
+* **Khách hàng:** có thể đăng ký, đăng nhập, xem và mua sản phẩm, theo dõi đơn hàng.
+* **Quản trị viên:** có thể quản lý sản phẩm, đơn hàng, người dùng và thống kê doanh thu.
 
 ---
 
 ## ✨ 2. Chức năng chính
 
->### 👤 2.1. Đối với người dùng (Khách hàng)
-- 🔑 Đăng ký / Đăng nhập tài khoản
-- 🛍️ Xem danh sách các sản phẩm
-- 🔎 Tìm kiếm và lọc sản phẩm theo loại, giá
-- 📞 Xem chi tiết sản phẩm
-- 🧺 Thêm sản phẩm vào giỏ hàng
-- 💳 Đặt hàng và thanh toán (mô phỏng)
-- 📜 Xem lịch sử đơn hàng
-- 🔧 Chỉnh sửa thông tin tài khoản
+### 2.1. Dành cho người dùng (Khách hàng)
 
->### 🛡️ 2.2. Đối với quản trị viên (Admin)
-- 🗄️ Đăng nhập hệ thống quản trị
-- 📎 Quản lý kho hàng, sản phẩm
-- 🧾 Quản lý đơn hàng
-- 👥 Quản lý người dùng
-- ⭐ Quản lý đánh giá
-- 📊 Thống kê doanh thu
+* Đăng ký và đăng nhập tài khoản
+* Xem danh sách và chi tiết sản phẩm
+* Tìm kiếm và lọc sản phẩm theo loại, giá
+* Thêm sản phẩm vào giỏ hàng
+* Đặt hàng và thanh toán (mô phỏng)
+* Xem lịch sử đơn hàng
+* Cập nhật thông tin tài khoản
+
+### 2.2. Dành cho quản trị viên (Admin)
+
+* Đăng nhập vào hệ thống quản lý
+* Quản lý danh mục và kho sản phẩm
+* Quản lý đơn hàng
+* Quản lý thông tin người dùng
+* Quản lý đánh giá sản phẩm
+* Thống kê doanh thu và tình hình kinh doanh
 
 ---
 
 ## 🧰 3. Công nghệ sử dụng
-- 🖥️ WPF .NET Framework
-- 🗄️ Cơ sở dữ liệu: SQL Server
-- 🪟 Môi trường: Windows
-- 🛠️ Công cụ hỗ trợ: Visual Studio, Git & GitHub, ChatGPT, Claude
+
+| Thành phần            | Mô tả                                        |
+| --------------------- | -------------------------------------------- |
+| Ngôn ngữ và nền tảng  | WPF (.NET Framework)                         |
+| Cơ sở dữ liệu         | SQL Server                                   |
+| Môi trường phát triển | Windows                                      |
+| Công cụ hỗ trợ        | Visual Studio, Git & GitHub, ChatGPT, Claude |
 
 ---
 
 ## ⚙️ 4. Hướng dẫn cài đặt và chạy dự án
-> Cập nhật sau
+
+Nội dung chi tiết sẽ được cập nhật sau.
 
 ---
 
 ## 🔑 5. Tài khoản mẫu
-- 👑 **Admin**
-  - Username: `adminpetshop`
-  - Password: `admin123`
-- 🙋 **User**
-  - Username: `usertest`
-  - Password: `user12345`
+
+| Vai trò       | Tên đăng nhập  | Mật khẩu    |
+| ------------- | -------------- | ----------- |
+| Quản trị viên | `adminpetshop` | `admin123`  |
+| Người dùng    | `usertest`     | `user12345` |
 
 ---
 
 ## 👥 6. Thành viên thực hiện
-| MSSV     | Họ và Tên          | Vai Trò        |
-|----------|--------------------|----------------|
-| 24520443 | Võ Văn Hải         | Team Lead, Dev |
-| 24520065 | Nguyễn Quốc An     | Dev, UX/UI     |
-| 24520474 | Ngô Phương Hiền    | Dev, Data      |
-| 24520063 | Nguyễn Ngọc Thu An | Dev            |
+
+| MSSV     | Họ và tên          | Vai trò                            |
+| -------- | ------------------ | ---------------------------------- |
+| 24520443 | Võ Văn Hải         | Trưởng nhóm, Lập trình viên        |
+| 24520065 | Nguyễn Quốc An     | Lập trình viên, Thiết kế giao diện |
+| 24520474 | Ngô Phương Hiền    | Lập trình viên, Quản lý dữ liệu    |
+| 24520063 | Nguyễn Ngọc Thu An | Lập trình viên                     |
 
 ---
 
 ## 🎓 7. Giảng viên hướng dẫn
-- Thầy **Võ Tuấn Kiệt**
 
-<p align="center">🌈 Ảnh Demo Sản Phẩm</p>
+* Ths. **Võ Tuấn Kiệt**
