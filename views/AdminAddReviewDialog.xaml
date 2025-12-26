@@ -1,4 +1,4 @@
-<Window x:Class="Pet_Shop_Project.Views.AdminAddReviewDialog"
+﻿<Window x:Class="Pet_Shop_Project.Views.AdminAddReviewDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -29,7 +29,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Header -->
+            
             <StackPanel Grid.Row="0" Margin="0,0,0,20">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,8">
                     <TextBlock Text="Thêm đánh giá ảo"
@@ -45,12 +45,12 @@
                            HorizontalAlignment="Center"/>
             </StackPanel>
 
-            <!-- Form -->
+            
             <ScrollViewer Grid.Row="1" 
                           VerticalScrollBarVisibility="Hidden"
                           HorizontalScrollBarVisibility="Disabled">
                 <StackPanel Margin="0,0,0,0">
-                    <!-- Product -->
+                    
                     <TextBlock Text="Sản phẩm" 
                                FontSize="15"
                                FontWeight="SemiBold" 
@@ -72,7 +72,7 @@
                                   FontSize="14"/>
                     </Border>
 
-                    <!-- User Name -->
+                    
                     <TextBlock Text="Tên người đánh giá" 
                                FontSize="15"
                                FontWeight="SemiBold"
@@ -93,7 +93,7 @@
                                  materialDesign:HintAssist.Hint="Nhập tên người đánh giá"/>
                     </Border>
 
-                    <!-- Rating -->
+                    
                     <TextBlock Text="Xếp hạng" 
                                FontSize="15"
                                FontWeight="SemiBold"
@@ -103,10 +103,10 @@
                                 Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 Margin="0,0,0,20">
-                        <!-- Stars will be added dynamically in code-behind -->
+                        
                     </StackPanel>
 
-                    <!-- Comment -->
+                    
                     <TextBlock Text="Nội dung" 
                                FontSize="15"
                                FontWeight="SemiBold"
@@ -141,14 +141,14 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <!-- Buttons -->
+            
             <Grid Grid.Row="2" Margin="0,24,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Cancel Button -->
+                
                 <Button Grid.Column="0"
                         Content="Hủy"
                         Height="44"
@@ -187,7 +187,7 @@
                     </Button.Template>
                 </Button>
 
-                <!-- Save Button -->
+                
                 <Button Grid.Column="1"
                         x:Name="SaveButton"
                         Height="44"

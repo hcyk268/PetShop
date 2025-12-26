@@ -14,9 +14,9 @@ using System.Windows.Shapes;
 
 namespace Pet_Shop_Project.Views
 {
-    /// <summary>
-    /// Interaction logic for OQPPendingApproval.xaml
-    /// </summary>
+
+
+
     public partial class OQPPendingApproval : Page, INotifyPropertyChanged
     {
         private ObservableCollection<Order> _orderPendings;
@@ -42,6 +42,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        // Loc danh sach don dang cho duyet
         protected void FilterOrders()
         {
             OrderPendings.Clear();
@@ -58,6 +59,7 @@ namespace Pet_Shop_Project.Views
         protected void OnPropertyChanged(string nameProperty)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameProperty));
 
+        // Xac nhan truoc khi chuyen don sang trang thai huy
         private async void buttondeleteorder_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult messageBoxResult = MessageBox.Show(
@@ -128,6 +130,7 @@ namespace Pet_Shop_Project.Views
                 AttachOrder(order);
         }
 
+        // Theo doi thay doi danh sach de gan/bo event va loc lai
         private void AllOrders_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.OldItems != null)

@@ -1,4 +1,4 @@
-using Pet_Shop_Project.Models;
+﻿using Pet_Shop_Project.Models;
 using Pet_Shop_Project.Services;
 using System;
 using System.Collections.Generic;
@@ -11,9 +11,9 @@ using System.Windows.Controls;
 
 namespace Pet_Shop_Project.Views
 {
-    /// <summary>
-    /// Trang quản lý đánh giá cho Admin
-    /// </summary>
+
+
+
     public partial class AdminReviewPage : Page, INotifyPropertyChanged
     {
         private readonly ReviewService _reviewService = new ReviewService();
@@ -71,6 +71,7 @@ namespace Pet_Shop_Project.Views
             await LoadReviewsAsync();
         }
 
+        // Tai review va map ten san pham/nguoi dung de hien thi
         private async Task LoadReviewsAsync()
         {
             try
@@ -127,20 +128,21 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        // Loc theo so sao va tu khoa tim kiem
         private void ApplyFilter()
         {
             if (AllReviews == null) return;
 
             var result = AllReviews.AsEnumerable();
 
-            // Lọc theo số sao
+
             int? starFilter = GetSelectedStarFilter();
             if (starFilter.HasValue)
             {
                 result = result.Where(r => r.Rating == starFilter.Value);
             }
 
-            // Lọc theo search text
+
             string searchText = SearchBox?.Text?.Trim();
             if (!string.IsNullOrWhiteSpace(searchText))
             {
@@ -154,7 +156,7 @@ namespace Pet_Shop_Project.Views
                 );
             }
 
-            // Cập nhật ObservableCollection
+
             FilteredReviews.Clear();
             foreach (var item in result)
             {
@@ -163,7 +165,7 @@ namespace Pet_Shop_Project.Views
 
             TotalReviews = FilteredReviews.Count;
 
-            // Cập nhật UI
+
             EmptyState.Visibility = FilteredReviews.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
@@ -182,6 +184,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        // Xac nhan va xoa review da chon
         private async void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
@@ -209,6 +212,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        // Tao lookup ProductId -> ProductName de hien thi nhanh
         private static Dictionary<string, string> BuildProductLookup(List<Product> products)
         {
             var lookup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -227,6 +231,7 @@ namespace Pet_Shop_Project.Views
             return lookup;
         }
 
+        // Tao lookup UserId -> UserName de hien thi nhanh
         private static Dictionary<string, string> BuildUserLookup(ObservableCollection<User> users)
         {
             var lookup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);

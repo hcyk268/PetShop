@@ -187,7 +187,6 @@
     <Compile Include="Models\OrderDetail.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Review.cs" />
-    <Compile Include="Models\Shipment.cs" />
     <Compile Include="Models\User.cs" />
     <!-- Services -->
     <Compile Include="Services\AdminNavigationService.cs" />

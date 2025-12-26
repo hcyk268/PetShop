@@ -18,9 +18,9 @@ using System.Windows.Shapes;
 
 namespace Pet_Shop_Project.Views
 {
-    /// <summary>
-    /// Interaction logic for AORejected.xaml
-    /// </summary>
+
+
+
     public partial class AORejected : Page, INotifyPropertyChanged
     {
         private ObservableCollection<Order> _orderRejected;
@@ -35,6 +35,7 @@ namespace Pet_Shop_Project.Views
             _allOrders.CollectionChanged += (s, e) => { SubscribeOrders(); FilterOrders(); };
             DataContext = this;
         }
+        // Loc danh sach don da bi huy/tu choi
         protected void FilterOrders()
         {
             OrderRejected.Clear();

@@ -1,4 +1,4 @@
-using MaterialDesignThemes.Wpf;
+﻿using MaterialDesignThemes.Wpf;
 using Pet_Shop_Project.Models;
 using Pet_Shop_Project.Services;
 using System;
@@ -9,11 +9,12 @@ using System.Windows.Media;
 
 namespace Pet_Shop_Project.Views
 {
-    public partial class AdminAddReviewDialog : Window
+        public partial class AdminAddReviewDialog : Window
     {
         private readonly ReviewService _reviewService = new ReviewService();
         private readonly UserService _userService = new UserService();
-        private int _selectedRating = 5; // Default to 5 stars
+        // Mac dinh chon 5 sao
+        private int _selectedRating = 5;
         private Button[] _starButtons;
 
         public AdminAddReviewDialog()
@@ -24,7 +25,7 @@ namespace Pet_Shop_Project.Views
 
         private async void Dialog_Loaded(object sender, RoutedEventArgs e)
         {
-            // Initialize stars after window is loaded
+
             InitializeStars();
 
             try
@@ -39,13 +40,14 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        // Khoi tao cac nut sao va gan su kien tuong tac
         private void InitializeStars()
         {
             _starButtons = new Button[5];
 
             for (int i = 0; i < 5; i++)
             {
-                int starIndex = i + 1; // 1-based index for rating
+                int starIndex = i + 1;
 
                 var button = new Button
                 {
@@ -63,7 +65,7 @@ namespace Pet_Shop_Project.Views
 
                 var icon = new PackIcon
                 {
-                    Kind = PackIconKind.Star, // Start with all stars filled (default 5)
+                    Kind = PackIconKind.Star,
                     Width = 28,
                     Height = 28,
                     Foreground = new SolidColorBrush(Color.FromRgb(0xF9, 0xD9, 0x78)),
@@ -80,7 +82,7 @@ namespace Pet_Shop_Project.Views
                 _starButtons[i] = button;
             }
 
-            // Set initial display to 5 stars
+
             UpdateStarDisplay(_selectedRating);
         }
 
@@ -103,6 +105,7 @@ namespace Pet_Shop_Project.Views
             UpdateStarDisplay(_selectedRating);
         }
 
+        // Cap nhat hien thi sao theo rating hien tai/dang hover
         private void UpdateStarDisplay(int rating, bool isHover = false)
         {
             for (int i = 0; i < 5; i++)
@@ -123,17 +126,19 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        // An/hien placeholder theo noi dung comment
         private void CommentTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // Show/hide placeholder based on text content
+
             CommentPlaceholder.Visibility = string.IsNullOrEmpty(CommentTextBox.Text)
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         }
 
+        // Kiem tra du lieu va luu danh gia
         private async void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            // Validate product selection
+
             if (ProductComboBox.SelectedItem == null)
             {
                 MessageBox.Show("Vui lòng chọn sản phẩm!", "Thông báo",
@@ -141,7 +146,7 @@ namespace Pet_Shop_Project.Views
                 return;
             }
 
-            // Validate user name
+
             if (string.IsNullOrWhiteSpace(UserNameTextBox.Text))
             {
                 MessageBox.Show("Vui lòng nhập tên người đánh giá!", "Thông báo",
@@ -149,7 +154,7 @@ namespace Pet_Shop_Project.Views
                 return;
             }
 
-            // Validate comment
+
             if (string.IsNullOrWhiteSpace(CommentTextBox.Text))
             {
                 MessageBox.Show("Vui lòng nhập nội dung đánh giá!", "Thông báo",
@@ -157,7 +162,7 @@ namespace Pet_Shop_Project.Views
                 return;
             }
 
-            // Validate rating (should always be valid due to default, but good to check)
+
             if (_selectedRating == 0)
             {
                 MessageBox.Show("Vui lòng chọn số sao đánh giá!", "Thông báo",
@@ -169,15 +174,16 @@ namespace Pet_Shop_Project.Views
             string displayName = UserNameTextBox.Text.Trim();
             string userId;
 
-            // Disable button to prevent double submission
+
+            // Tranh submit nhieu lan
             SaveButton.IsEnabled = false;
 
             try
             {
-                // Create virtual user
+
                 userId = await _userService.AddVirtualUser(displayName);
 
-                // Add review
+
                 bool success = await _reviewService.AddReviewAsync(
                     product.ProductId,
                     userId,
