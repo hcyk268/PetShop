@@ -157,27 +157,19 @@ namespace Pet_Shop_Project.Services
                         )";
                             ExecuteNonQuery(conn, transaction, deleteCartItems, userId);
 
-                            // 3. Xóa SHIPMENTS (vận chuyển - nếu có OrderId)
-                            string deleteShipments = @"
-                        DELETE FROM SHIPMENTS 
-                        WHERE OrderId IN (
-                            SELECT OrderId FROM ORDERS WHERE UserId = @UserId
-                        )";
-                            ExecuteNonQuery(conn, transaction, deleteShipments, userId);
-
-                            // 4. Xóa ORDERS (đơn hàng)
+                            // 3. Xóa ORDERS (đơn hàng)
                             string deleteOrders = "DELETE FROM ORDERS WHERE UserId = @UserId";
                             ExecuteNonQuery(conn, transaction, deleteOrders, userId);
 
-                            // 5. Xóa CART (giỏ hàng)
+                            // 4. Xóa CART (giỏ hàng)
                             string deleteCart = "DELETE FROM CART WHERE UserId = @UserId";
                             ExecuteNonQuery(conn, transaction, deleteCart, userId);
 
-                            // 6. Xóa REVIEWS (đánh giá)
+                            // 5. Xóa REVIEWS (đánh giá)
                             string deleteReviews = "DELETE FROM REVIEWS WHERE UserId = @UserId";
                             ExecuteNonQuery(conn, transaction, deleteReviews, userId);
 
-                            // 7. Cuối cùng mới xóa USERS
+                            // 6. Cuối cùng mới xóa USERS
                             string deleteUser = "DELETE FROM USERS WHERE UserId = @UserId";
                             int rowsAffected = ExecuteNonQuery(conn, transaction, deleteUser, userId);
 
