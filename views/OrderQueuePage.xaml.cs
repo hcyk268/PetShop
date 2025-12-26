@@ -12,9 +12,9 @@ using NavService = Pet_Shop_Project.Services.NavigationService;
 
 namespace Pet_Shop_Project.Views
 {
-    /// <summary>
-    /// Interaction logic for OrderQueuePage.xaml
-    /// </summary>
+
+
+
     public partial class OrderQueuePage : Page, INotifyPropertyChanged
     {
         private OrderService _orderService = new OrderService();
@@ -25,13 +25,15 @@ namespace Pet_Shop_Project.Views
 
         private string _userid;
 
-        // Cache các page để tránh tạo mới liên tục
+
+        // Cache cac trang con de chuyen tab nhanh, tranh tao lai nhieu lan
         private OQPPendingApproval _pendingPage;
         private OQPShipping _shippingPage;
         private OQPSuccess _successPage;
         private OQPCanceled _canceledPage;
 
-        // Track trang hiện tại
+
+        // Luu loai trang hien tai de giu dung trang thai khi refresh
         private string _currentPageType = "Pending";
 
         SolidColorBrush defaulttext = (SolidColorBrush)(new BrushConverter().ConvertFrom("#222"));
@@ -56,23 +58,24 @@ namespace Pet_Shop_Project.Views
             setForeColorDefault();
             setOpacityButton();
             odppendingbutton.Foreground = clickedtext;
-            odppendingbutton.Opacity = 1.0;
 
-            // Subscribe to Navigated event
+
             MainScreenOQP.Navigated += MainScreenOQP_Navigated;
 
-            // Load data asynchronously
+
             Loaded += OrderQueuePage_Loaded;
         }
 
-        // Event handler khi MainScreenOQP navigate
+
+        // Khi frame dieu huong, cap nhat trang thai nut theo trang hien tai
         private void MainScreenOQP_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
         {
-            // Cập nhật UI button dựa trên page hiện tại
+
             UpdateButtonStates();
         }
 
-        // Method để cập nhật trạng thái button dựa trên page hiện tại
+
+        // Doi mau va opacity cho cac nut theo loai trang dang hien thi
         private void UpdateButtonStates()
         {
             if (MainScreenOQP.Content == null) return;
@@ -85,25 +88,21 @@ namespace Pet_Shop_Project.Views
             if (currentPage is OQPPendingApproval)
             {
                 odppendingbutton.Foreground = clickedtext;
-                odppendingbutton.Opacity = 1.0;
                 _currentPageType = "Pending";
             }
             else if (currentPage is OQPShipping)
             {
                 odpshippingbutton.Foreground = clickedtext;
-                odpshippingbutton.Opacity = 1.0;
                 _currentPageType = "Shipping";
             }
             else if (currentPage is OQPSuccess)
             {
                 odpsuccessbutton.Foreground = clickedtext;
-                odpsuccessbutton.Opacity = 1.0;
                 _currentPageType = "Success";
             }
             else if (currentPage is OQPCanceled)
             {
                 odpcanceledbutton.Foreground = clickedtext;
-                odpcanceledbutton.Opacity = 1.0;
                 _currentPageType = "Canceled";
             }
         }
@@ -155,10 +154,11 @@ namespace Pet_Shop_Project.Views
         {
             try
             {
-                // Load orders asynchronously
+
+                // Tai danh sach don va khoi tao cac trang con
                 AllOrders = await _orderService.GetOrdersByUser(_userid);
 
-                // Initialize cached pages with loaded data
+
                 await Dispatcher.InvokeAsync(() =>
                 {
                     _pendingPage = new OQPPendingApproval(AllOrders);
@@ -166,7 +166,7 @@ namespace Pet_Shop_Project.Views
                     _successPage = new OQPSuccess(AllOrders, _userid);
                     _canceledPage = new OQPCanceled(AllOrders);
 
-                    // Navigate to default page (Pending)
+
                     MainScreenOQP.Navigate(_pendingPage);
                 });
             }
@@ -184,7 +184,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
-        // Method để refresh data khi cần
+
         public async Task RefreshOrdersAsync()
         {
             try
@@ -192,10 +192,11 @@ namespace Pet_Shop_Project.Views
                 MainScreenOQP.Visibility = Visibility.Collapsed;
                 loadingIndicatorOQP.Visibility = Visibility.Visible;
 
-                // Reload orders
+
+                // Refresh du lieu va dung lai cache trang
                 AllOrders = await _orderService.GetOrdersByUser(_userid);
 
-                // Recreate cached pages with new data
+
                 await Dispatcher.InvokeAsync(() =>
                 {
                     _pendingPage = new OQPPendingApproval(AllOrders);
@@ -203,7 +204,7 @@ namespace Pet_Shop_Project.Views
                     _successPage = new OQPSuccess(AllOrders, _userid);
                     _canceledPage = new OQPCanceled(AllOrders);
 
-                    // Navigate to current page type
+
                     switch (_currentPageType)
                     {
                         case "Pending":
@@ -230,14 +231,13 @@ namespace Pet_Shop_Project.Views
 
         private async void odppendingbutton_Click(object sender, RoutedEventArgs e)
         {
-            if (_currentPageType == "Pending") return; // Already on this page
+            if (_currentPageType == "Pending") return;
 
             setForeColorDefault();
             setOpacityButton();
             odppendingbutton.Foreground = clickedtext;
-            odppendingbutton.Opacity = 1.0;
 
-            // Use cached page
+
             await Dispatcher.InvokeAsync(() =>
             {
                 if (_pendingPage == null)
@@ -254,7 +254,6 @@ namespace Pet_Shop_Project.Views
             setForeColorDefault();
             setOpacityButton();
             odpshippingbutton.Foreground = clickedtext;
-            odpshippingbutton.Opacity = 1.0;
 
             await Dispatcher.InvokeAsync(() =>
             {
@@ -272,7 +271,6 @@ namespace Pet_Shop_Project.Views
             setForeColorDefault();
             setOpacityButton();
             odpsuccessbutton.Foreground = clickedtext;
-            odpsuccessbutton.Opacity = 1.0;
 
             await Dispatcher.InvokeAsync(() =>
             {
@@ -290,7 +288,6 @@ namespace Pet_Shop_Project.Views
             setForeColorDefault();
             setOpacityButton();
             odpcanceledbutton.Foreground = clickedtext;
-            odpcanceledbutton.Opacity = 1.0;
 
             await Dispatcher.InvokeAsync(() =>
             {

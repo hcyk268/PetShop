@@ -114,7 +114,7 @@
                                     </StackPanel>
                                 </Grid>
 
-                                <!-- Danh sách sản phẩm -->
+                                
                                 <ItemsControl Grid.Row="2" ItemsSource="{Binding Details}" Margin="0,0,0,10">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>

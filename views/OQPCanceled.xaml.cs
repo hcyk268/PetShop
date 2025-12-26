@@ -19,9 +19,9 @@ using System.Windows.Shapes;
 
 namespace Pet_Shop_Project.Views
 {
-    /// <summary>
-    /// Interaction logic for OQPCanceled.xaml
-    /// </summary>
+
+
+
     public partial class OQPCanceled : Page, INotifyPropertyChanged
     {
         private ObservableCollection<Order> _orderCanceled;
@@ -47,6 +47,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        // Loc cac don da bi huy de hien thi
         protected void FilterOrders()
         {
             OrderCanceled.Clear();
@@ -81,6 +82,7 @@ namespace Pet_Shop_Project.Views
                 AttachOrder(order);
         }
 
+        // Theo doi thay doi danh sach de gan/bo event va loc lai
         private void AllOrders_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.OldItems != null)

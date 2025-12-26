@@ -11,9 +11,9 @@ using System.Windows.Media;
 
 namespace Pet_Shop_Project.Views
 {
-    /// <summary>
-    /// Interaction logic for AOPending.xaml
-    /// </summary>
+
+
+
     public partial class AOPending : Page, INotifyPropertyChanged
     {
         private ObservableCollection<Order> _orderPendings;
@@ -31,6 +31,7 @@ namespace Pet_Shop_Project.Views
             DataContext = this;
         }
 
+        // Loc danh sach don dang cho duyet
         protected void FilterOrders()
         {
             OrderPendings.Clear();
@@ -52,6 +53,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        // Hien thi chi tiet san pham trong don
         private void ViewOrderDetail_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
@@ -94,6 +96,7 @@ namespace Pet_Shop_Project.Views
             await UpdateOrder(order, "Rejected", "Hủy bỏ đơn hàng", "Đơn hàng đã được hủy bỏ", "Pending");
         }
 
+        // Cap nhat trang thai don trong DB va dong bo lai UI
         private async Task UpdateOrder(Order order, string newStatus, string confirmMessage, string successMessage, string shipStatus)
         {
             if (order == null) return;
@@ -146,6 +149,7 @@ namespace Pet_Shop_Project.Views
                 o.PropertyChanged += Order_PropertyChanged;
         }
 
+        // Khi trang thai don thay doi thi loc lai danh sach
         private void Order_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(Order.ApprovalStatus) ||

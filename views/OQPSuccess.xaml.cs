@@ -15,14 +15,15 @@ using System.Windows.Shapes;
 
 namespace Pet_Shop_Project.Views
 {
-    /// <summary>
-    /// Interaction logic for OQPSuccess.xaml
-    /// </summary>
+
+
+
     public partial class OQPSuccess : Page, INotifyPropertyChanged
     {
         private ObservableCollection<Order> _orderSuccesses;
         private ObservableCollection<Order> _allOrders;
         private readonly string _connectionDB = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
+        // Luu userId de mo cua so danh gia cho don da nhan
         private string _userId;
 
         public OQPSuccess(ObservableCollection<Order> allOrders, string userId)
@@ -47,6 +48,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        // Loc cac don da giao thanh cong de hien thi
         protected void FilterOrders()
         {
             OrderSuccesses.Clear();
@@ -75,6 +77,7 @@ namespace Pet_Shop_Project.Views
             };
         }
 
+        // Mo cua so danh gia cho san pham trong don da giao
         private void ReviewButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -96,7 +99,7 @@ namespace Pet_Shop_Project.Views
                     return;
                 }
 
-                // Mở ReviewWindow
+
                 var reviewWindow = new ReviewWindow(orderDetail, _userId)
                 {
                     Owner = Window.GetWindow(this),
@@ -107,8 +110,8 @@ namespace Pet_Shop_Project.Views
 
                 if (result == true)
                 {
-                    // Đánh giá thành công
-                    // Có thể refresh UI hoặc cập nhật trạng thái nếu cần
+
+
                 }
             }
             catch (Exception ex)
@@ -118,6 +121,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        // Tao lai don tu don cu, kiem tra ton kho roi luu DB
         private async void reorderbtn_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
@@ -142,6 +146,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        // Tao don moi dua tren don cu
         private Order BuildReorder(Order oldOrder)
         {
             var details = new ObservableCollection<OrderDetail>();
@@ -175,6 +180,7 @@ namespace Pet_Shop_Project.Views
             return order;
         }
 
+        // Kiem tra ton kho thuc te tu DB cho tung san pham
         private async Task<bool> CheckStock(IEnumerable<OrderDetail> details)
         {
             const string sql = "SELECT UnitInStock FROM PRODUCTS WHERE ProductId=@ProductId";
@@ -209,6 +215,7 @@ namespace Pet_Shop_Project.Views
             return true;
         }
 
+        // Luu don va chi tiet trong mot transaction, dong thoi tru ton kho
         private async Task<bool> SaveReorderToDatabase(Order order)
         {
             const string insertOrder = @"INSERT INTO ORDERS (UserId, OrderDate, TotalAmount, ApprovalStatus,

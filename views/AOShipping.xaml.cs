@@ -1,4 +1,4 @@
-using Pet_Shop_Project.Models;
+﻿using Pet_Shop_Project.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
@@ -10,9 +10,9 @@ using System.Windows.Media;
 
 namespace Pet_Shop_Project.Views
 {
-    /// <summary>
-    /// Interaction logic for AOShipping.xaml
-    /// </summary>
+
+
+
     public partial class AOShipping : Page, INotifyPropertyChanged
     {
         private ObservableCollection<Order> _orderShipping;
@@ -29,6 +29,7 @@ namespace Pet_Shop_Project.Views
             _allOrders.CollectionChanged += (s, e) => { SubscribeOrders(); FilterOrders(); };
             DataContext = this;
         }
+        // Loc danh sach don dang van chuyen
         protected void FilterOrders()
         {
             OrderShipping.Clear();
@@ -56,6 +57,7 @@ namespace Pet_Shop_Project.Views
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        // Huy don: chuyen trang thai ve Rejected/Pending trong DB
         private async void removeorderbtn_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
@@ -125,6 +127,7 @@ namespace Pet_Shop_Project.Views
                 o.PropertyChanged += Order_PropertyChanged;
         }
 
+        // Khi trang thai don thay doi thi loc lai danh sach
         private void Order_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(Order.ApprovalStatus) ||

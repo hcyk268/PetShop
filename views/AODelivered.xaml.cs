@@ -18,9 +18,9 @@ using System.Windows.Shapes;
 
 namespace Pet_Shop_Project.Views
 {
-    /// <summary>
-    /// Interaction logic for AOShipped.xaml
-    /// </summary>
+
+
+
     public partial class AODelivered : Page, INotifyPropertyChanged
     {
         private ObservableCollection<Order> _orderDelivered;
@@ -36,6 +36,7 @@ namespace Pet_Shop_Project.Views
             DataContext = this;
         }
 
+        // Loc danh sach don da giao thanh cong
         protected void FilterOrders()
         {
             OrderDelivered.Clear();

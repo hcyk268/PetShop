@@ -29,7 +29,7 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2,0,0,8">
-                    <!-- Back Button -->
+                    
                     <Button x:Name="BackButton"
                             Width="35" Height="35"
                             BorderThickness="0"
@@ -72,7 +72,7 @@
                         </Button.Template>
                     </Button>
 
-                    <!-- Tiêu đề Trang -->
+                    
                         <StackPanel Margin="5,0,0,0">
                         <TextBlock Text="Các Đơn Hàng"
                                    FontSize="26"

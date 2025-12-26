@@ -22,6 +22,7 @@ using NavService = Pet_Shop_Project.Services.AdminNavigationService;
 
 namespace Pet_Shop_Project.Views
 {
+    // Mo hinh item dang duoc them vao don tao moi
     public class ItemInOrder : INotifyPropertyChanged
     {
         private Product _product;
@@ -86,9 +87,11 @@ namespace Pet_Shop_Project.Views
             ProductListControl.ItemsSource = _filteredProducts;
             OrderItemsControl.ItemsSource = _itemsInOrder;
 
+            // Load du lieu ban dau tu DB
             _ = LoadDataFromDB();
         }
 
+        // Tai danh sach user va san pham de phuc vu tim kiem/loc
         private async Task LoadDataFromDB()
         {
             AllUsers = await _userService.GetAllUsersAsync() ?? new ObservableCollection<User>();
@@ -249,6 +252,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        // Them san pham vao don, co kiem tra ton kho
         private void AddToOrder_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
@@ -289,6 +293,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        // Kiem tra du lieu, tao don va luu xuong DB
         private async void CreateOrder_Click(object sender, RoutedEventArgs e)
         {
             if (SelectedUser == null)
@@ -329,6 +334,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        // Loc danh sach khach hang theo tu khoa tim kiem
         private void UpdateCustomerSearchResults()
         {
             if (AllUsers == null) return;
@@ -383,6 +389,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        // Ap dung loc va sap xep san pham theo tieu chi UI
         private void ApplyProductFiltersAndSort()
         {
             if (AllProducts == null) return;
@@ -430,6 +437,7 @@ namespace Pet_Shop_Project.Views
             TotalAmountText.Text = $"{TotalAmount:N0} VND";
         }
 
+        // Kiem tra ton kho thuc te tren DB truoc khi tao don
         private async Task<bool> HasSufficientStock()
         {
             const string sql = "SELECT UnitInStock FROM PRODUCTS WHERE ProductId=@ProductId";
@@ -456,6 +464,7 @@ namespace Pet_Shop_Project.Views
             return true;
         }
 
+        // Luu don va chi tiet trong mot transaction
         private async Task<bool> SaveOrderToDatabase(Order order)
         {
             const string insertOrder = @"INSERT INTO ORDERS (UserId, OrderDate, TotalAmount, ApprovalStatus,
@@ -521,6 +530,7 @@ namespace Pet_Shop_Project.Views
             }
         }
 
+        // Tao doi tuong Order tu du lieu tren UI
         private Order BuildOrder(string address, string approvalStatus, string paymentStatus, string shippingStatus)
         {
             var details = new ObservableCollection<OrderDetail>(ItemsInOrder.Select(i => new OrderDetail
@@ -544,6 +554,7 @@ namespace Pet_Shop_Project.Views
             };
         }
 
+        // Reset form sau khi tao don thanh cong
         private void ResetForm()
         {
             if (ShippingAddressBox == null) return;
