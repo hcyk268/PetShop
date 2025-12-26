@@ -122,7 +122,8 @@ public class DashboardViewModel
         var weeklyData = dashboardService.GetWeeklyRevenue();
 
         // Sắp xếp theo thứ tự ngày
-        var sortedData = weeklyData.OrderBy(x => x.Key).ToList();
+        // ✅ Thay bằng dòng này
+        var sortedData = weeklyData.ToList();
 
         // Chuẩn bị labels (T2, T3, T4...)
         WeekLabels = sortedData.Select(x => x.Key).ToList();
