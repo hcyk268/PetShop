@@ -426,6 +426,7 @@ namespace Pet_Shop_Project.Views
 
                     await ClearPurchasedItemsFromDbAsync(orderDetails);
                     CartService.RemoveByProductIds(orderDetails.Select(d => d.ProductId));
+                    Services.NavigationService.Instance.RefreshOrderPage();
                 }
                 else
                 {
