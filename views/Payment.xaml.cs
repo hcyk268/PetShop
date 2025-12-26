@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Collections.ObjectModel;
+using Pet_Shop_Project.Services;
 
 namespace Pet_Shop_Project.Views
 {
@@ -426,6 +427,7 @@ namespace Pet_Shop_Project.Views
 
                     await ClearPurchasedItemsFromDbAsync(orderDetails);
                     CartService.RemoveByProductIds(orderDetails.Select(d => d.ProductId));
+                    Services.NavigationService.Instance.RefreshOrderPage();
                 }
                 else
                 {
