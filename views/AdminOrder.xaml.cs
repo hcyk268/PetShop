@@ -19,9 +19,9 @@ using System.Windows.Shapes;
 
 namespace Pet_Shop_Project.Views
 {
-    /// <summary>
-    /// Interaction logic for AdminOrder.xaml
-    /// </summary>
+
+
+
     public partial class AdminOrder : Page, INotifyPropertyChanged
     {
         private OrderService _orderService = new OrderService();
@@ -65,6 +65,7 @@ namespace Pet_Shop_Project.Views
             await LoadOrders();
         }
 
+        // Tai danh sach don va hien thi tab mac dinh
         private async Task LoadOrders()
         {
             try

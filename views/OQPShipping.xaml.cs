@@ -13,9 +13,9 @@ using System.Windows.Shapes;
 
 namespace Pet_Shop_Project.Views
 {
-    /// <summary>
-    /// Interaction logic for OQPShipping.xaml
-    /// </summary>
+
+
+
     public partial class OQPShipping : Page, INotifyPropertyChanged
     {
         private ObservableCollection<Order> _ordersShippings;
@@ -33,6 +33,7 @@ namespace Pet_Shop_Project.Views
             DataContext = this;
         }
 
+        // Loc danh sach don dang giao
         protected void FilterOrders()
         {
             OrderShippings.Clear();
@@ -71,6 +72,7 @@ namespace Pet_Shop_Project.Views
             };
         }
 
+        // Xac nhan da nhan hang va cap nhat trang thai trong DB
         private async void receivedbtn_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
@@ -138,6 +140,7 @@ namespace Pet_Shop_Project.Views
                 AttachOrder(order);
         }
 
+        // Theo doi thay doi danh sach de gan/bo event va loc lai
         private void AllOrders_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.OldItems != null)

@@ -16,7 +16,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-            <!-- Header -->
+            
             <Border Grid.Row="0"
                     Padding="18"
                     Background="#F5F5F5"
@@ -72,7 +72,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- Main Content - 3 Columns -->
+            
             <Grid Grid.Row="1" Margin="12,16,12,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="260"/>
@@ -80,7 +80,7 @@
                     <ColumnDefinition Width="290"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Column 1: Customer Information -->
+                
                 <Border Grid.Column="0"
                         Background="White"
                         CornerRadius="12"
@@ -96,13 +96,13 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <!-- Section Title -->
+                        
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
                             <materialDesign:PackIcon Kind="AccountOutline" Width="22" Height="22" Foreground="#FF6B6B" VerticalAlignment="Center"/>
                             <TextBlock Text="Thông Tin Khách Hàng" FontSize="16" FontWeight="SemiBold" Foreground="#222" Margin="8,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
 
-                        <!-- Customer Search -->
+                        
                         <Border Grid.Row="1" Background="#F8F8F8" CornerRadius="8" Padding="10,8" Margin="0,0,0,12">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -121,7 +121,7 @@
                             </Grid>
                         </Border>
 
-                        <!-- Customer Search Results -->
+                        
                         <Border Grid.Row="2" 
                                 x:Name="CustomerSearchResults"
                                 Background="#FAFAFA" 
@@ -170,7 +170,7 @@
                             </ScrollViewer>
                         </Border>
 
-                        <!-- Selected Customer Info -->
+                        
                         <Border Grid.Row="3" 
                                 x:Name="SelectedCustomerPanel"
                                 Background="#FFFDF8" 
@@ -216,7 +216,7 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- Shipping Address -->
+                        
                         <StackPanel Grid.Row="4">
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                 <materialDesign:PackIcon Kind="MapMarkerOutline" Width="18" Height="18" Foreground="#FF6B6B" VerticalAlignment="Center"/>
@@ -246,7 +246,7 @@
                     </Grid>
                 </Border>
 
-                <!-- Column 2: Product Selection -->
+                
                 <Border Grid.Column="1"
                         Background="White"
                         CornerRadius="12"
@@ -261,13 +261,13 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <!-- Section Title -->
+                        
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
                             <materialDesign:PackIcon Kind="PackageVariant" Width="22" Height="22" Foreground="#FF6B6B" VerticalAlignment="Center"/>
                             <TextBlock Text="Chọn Sản Phẩm" FontSize="16" FontWeight="SemiBold" Foreground="#222" Margin="8,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
 
-                        <!-- Product Search -->
+                        
                         <Border Grid.Row="1" Background="#F8F8F8" CornerRadius="8" Padding="10,8" Margin="0,0,0,12">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -286,7 +286,7 @@
                             </Grid>
                         </Border>
 
-                        <!-- Filter & Sort -->
+                        
                         <Grid Grid.Row="2" Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -318,7 +318,7 @@
                             </ComboBox>
                         </Grid>
 
-                        <!-- Product List -->
+                        
                         <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Hidden">
                             <ItemsControl x:Name="ProductListControl">
                                 <ItemsControl.ItemTemplate>
@@ -336,7 +336,7 @@
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <!-- Product Image -->
+                                                
                                                 <Border Grid.Column="0" 
                                                         Width="30" Height="30" 
                                                         CornerRadius="6" 
@@ -345,7 +345,7 @@
                                                     <Image Source="{Binding Picture}" Stretch="UniformToFill"/>
                                                 </Border>
 
-                                                <!-- Product Info -->
+                                                
                                                 <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
                                                     <TextBlock Text="{Binding Name}" 
                                                                FontWeight="SemiBold" 
@@ -364,7 +364,7 @@
                                                     </StackPanel>
                                                 </StackPanel>
 
-                                                <!-- Add to Order Controls -->
+                                                
                                             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                                                 <Button Style="{StaticResource GradientButtonStyle}"
                                                             Padding="10,6"
@@ -383,7 +383,7 @@
                     </Grid>
                 </Border>
 
-                <!-- Column 3: Order Details & Status -->
+                
                 <Border Grid.Column="2"
                         Background="White"
                         CornerRadius="12"
@@ -399,13 +399,13 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <!-- Section Title -->
+                        
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
                             <materialDesign:PackIcon Kind="ClipboardListOutline" Width="22" Height="22" Foreground="#FF6B6B" VerticalAlignment="Center"/>
                             <TextBlock Text="Chi Tiết Đơn Hàng" FontSize="16" FontWeight="SemiBold" Foreground="#222" Margin="8,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
 
-                        <!-- Order Items List -->
+                        
                         <Border Grid.Row="1" 
                                 Background="#FAFAFA" 
                                 CornerRadius="8" 
@@ -430,12 +430,12 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
 
-                                                    <!-- Product Image -->
+                                                    
                                                     <Border Grid.Column="0" Width="26" Height="26" CornerRadius="4" Background="#F5F5F5" Loaded="ImageBorder_Loaded">
                                                         <Image Source="{Binding Product.Picture}" Stretch="UniformToFill"/>
                                                     </Border>
 
-                                                    <!-- Product Info -->
+                                                    
                                                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0">
                                                         <TextBlock Text="{Binding Product.Name}" 
                                                                    FontWeight="Medium" 
@@ -448,7 +448,7 @@
                                                         </TextBlock>
                                                     </StackPanel>
 
-                                                    <!-- Item Total -->
+                                                    
                                                     <TextBlock Grid.Column="2" 
                                                                Text="{Binding TotalPrice, StringFormat='{}{0:N0}₫'}"
                                                                FontWeight="SemiBold"
@@ -457,7 +457,7 @@
                                                                VerticalAlignment="Center"
                                                                Margin="0,0,8,0"/>
 
-                                                    <!-- Remove Button -->
+                                                    
                                                     <Button Grid.Column="3"
                                                             Style="{StaticResource MaterialDesignIconButton}"
                                                             Width="26" Height="26"
@@ -474,7 +474,7 @@
                             </ScrollViewer>
                         </Border>
 
-                        <!-- Order Total -->
+                        
                         <Border Grid.Row="2" Background="#FFF8F5" CornerRadius="8" Padding="12" Margin="0,0,0,12" BorderBrush="#FFE2B6" BorderThickness="1">
                             <Grid>
                                 <TextBlock Text="Tổng tiền" FontSize="14" FontWeight="Medium" Foreground="#666" VerticalAlignment="Center"/>
@@ -488,9 +488,9 @@
                             </Grid>
                         </Border>
 
-                        <!-- Notes & Status -->
+                        
                         <StackPanel Grid.Row="3" Margin="0,0,0,12">
-                            <!-- Note -->
+                            
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                 <materialDesign:PackIcon Kind="NoteTextOutline" Width="18" Height="18" Foreground="#FF6B6B" VerticalAlignment="Center"/>
                                 <TextBlock Text="Ghi Chú, Trạng Thái" FontSize="14" FontWeight="SemiBold" Foreground="#222" Margin="6,0,0,0" VerticalAlignment="Center"/>
@@ -507,7 +507,7 @@
                                      BorderThickness="1"
                                      Margin="0,0,0,12"/>
 
-                            <!-- Status Dropdowns -->
+                            
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
@@ -519,7 +519,7 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Approval Status -->
+                                
                                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Trạng thái duyệt:" FontSize="12" Foreground="#666" VerticalAlignment="Center" Margin="0,0,8,8"/>
                                 <ComboBox x:Name="ApprovalStatusCombo" Grid.Row="0" Grid.Column="1" FontSize="12" Margin="0,0,0,8">
                                     <ComboBoxItem Content="Chờ xét duyệt" Tag="Waiting"/>
@@ -527,14 +527,14 @@
                                     <ComboBoxItem Content="Từ chối" Tag="Rejected"/>
                                 </ComboBox>
 
-                                <!-- Payment Status -->
+                                
                                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Thanh toán:" FontSize="12" Foreground="#666" VerticalAlignment="Center" Margin="0,0,8,8"/>
                                 <ComboBox x:Name="PaymentStatusCombo" Grid.Row="1" Grid.Column="1" FontSize="12" Margin="0,0,0,8">
                                     <ComboBoxItem Content="Chưa thanh toán" Tag="Pending" IsSelected="True"/>
                                     <ComboBoxItem Content="Đã thanh toán" Tag="Paid"/>
                                 </ComboBox>
 
-                                <!-- Shipping Status -->
+                                
                                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Vận chuyển:" FontSize="12" Foreground="#666" VerticalAlignment="Center" Margin="0,0,8,0"/>
                                 <ComboBox x:Name="ShippingStatusCombo" Grid.Row="2" Grid.Column="1" FontSize="12">
                                     <ComboBoxItem Content="Chưa giao" Tag="Pending" IsSelected="True"/>
@@ -544,7 +544,7 @@
                             </Grid>
                         </StackPanel>
 
-                        <!-- Create Order Button -->
+                        
                         <Button Grid.Row="4"
                                 x:Name="CreateOrderButton"
                                 Style="{StaticResource GradientButtonStyle}"
