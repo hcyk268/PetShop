@@ -18,7 +18,7 @@ namespace Pet_Shop_Project.Views
             InitializeComponent();
             userService = new UserService();
             isEditMode = false;
-            DialogTitle.Text = "THÊM NGƯỜI DÙNG MỚI";
+            DialogTitle.Text = "Thêm người dùng mới";
             PasswordPanel.Visibility = Visibility.Visible;
         }
 
@@ -27,7 +27,7 @@ namespace Pet_Shop_Project.Views
         {
             currentUser = user;
             isEditMode = true;
-            DialogTitle.Text = "CHỈNH SỬA NGƯỜI DÙNG";
+            DialogTitle.Text = "Chỉnh sửa người dùng";
             PasswordPanel.Visibility = Visibility.Collapsed;
 
             // Load thông tin user lên form

@@ -5,171 +5,327 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Pet_Shop_Project.Views"
       mc:Ignorable="d" 
-      d:DesignHeight="550" 
-      d:DesignWidth="500"
-      Title="Thêm sản phẩm mới">
+      d:DesignHeight="600" 
+      d:DesignWidth="460"
+      Title="Quản lý sản phẩm">
 
-    <Grid Margin="20" Background="White">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <!-- REMOVED SHADOW FROM BORDER -->
+    <Border Background="White"
+            CornerRadius="16"
+            Padding="30"
+            Margin="10">
 
-        <!-- Header -->
-        <TextBlock Grid.Row="0"
-               x:Name="DialogTitle"
-               Text="Thêm sản phẩm mới"
-               FontSize="24"
-               FontWeight="Bold"
-               Foreground="#FFAD57"
-               Margin="0,0,0,20"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <!-- Form Fields -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
-            <StackPanel>
-                <!-- Product Name -->
-                <TextBlock Text="Tên sản phẩm *"
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,5"
-                       Foreground="#555"/>
-                <TextBox x:Name="TxtProductName"
-                     Height="40"
-                     Padding="10"
-                     BorderBrush="#E0E0E0"
-                     Margin="0,0,0,15"/>
+            <!-- Header -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                <TextBlock x:Name="DialogTitle"
+                           Text="Thêm sản phẩm mới"
+                           FontSize="26"
+                           FontWeight="Bold"
+                           Foreground="#FFAD57"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,8"/>
+            </StackPanel>
 
-                <!-- Category -->
-                <TextBlock Text="Danh mục *"
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,5"
-                       Foreground="#555"/>
-				<ComboBox x:Name="CmbCategory"
-                      Height="40"
-                      Padding="10"
-                      BorderBrush="#E0E0E0"
-                      Margin="0,0,0,15">
-				</ComboBox>
+            <!-- Form Fields -->
+            <ScrollViewer Grid.Row="1" 
+                          VerticalScrollBarVisibility="Hidden"
+                          HorizontalScrollBarVisibility="Disabled">
+                <StackPanel>
+                    <!-- Product Name -->
+                    <TextBlock Text="Tên sản phẩm"
+                               FontSize="15"
+                               FontWeight="SemiBold"
+                               Foreground="#FFAD57"
+                               Margin="0,0,0,8"/>
+                    <Border Background="White"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            Margin="0,0,0,20">
+                        <TextBox x:Name="TxtProductName"
+                                 Height="42"
+                                 Padding="12,0"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 VerticalContentAlignment="Center"
+                                 FontSize="14"/>
+                    </Border>
 
-                <!-- Description -->
-                <TextBlock Text="Mô tả"
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,5"
-                       Foreground="#555"/>
-                <TextBox x:Name="TxtDescription"
-                     Height="80"
-                     Padding="10"
-                     BorderBrush="#E0E0E0"
-                     TextWrapping="Wrap"
-                     AcceptsReturn="True"
-                     VerticalScrollBarVisibility="Auto"
-                     Margin="0,0,0,15"/>
+                    <!-- Category -->
+                    <TextBlock Text="Danh mục"
+                               FontSize="15"
+                               FontWeight="SemiBold"
+                               Foreground="#FFAD57"
+                               Margin="0,0,0,8"/>
+                    <Border Background="White"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            Margin="0,0,0,20">
+                        <ComboBox x:Name="CmbCategory"
+                                  Height="42"
+                                  Padding="12,0"
+                                  BorderThickness="0"
+                                  Background="Transparent"
+                                  VerticalContentAlignment="Center"
+                                  FontSize="14"/>
+                    </Border>
 
-                <!-- Discount -->
-                <TextBlock Text="Khuyến mãi (0-1) *"
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,5"
-                       Foreground="#555"/>
-                <TextBox x:Name="TxtDiscount"
-                     Height="40"
-                     Padding="10"
-                     BorderBrush="#E0E0E0"
-                     Text="0"
-                     Margin="0,0,0,15"/>
+                    <!-- Description -->
+                    <TextBlock Text="Mô tả"
+                               FontSize="15"
+                               FontWeight="SemiBold"
+                               Foreground="#FFAD57"
+                               Margin="0,0,0,8"/>
+                    <Border Background="White"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            Padding="12"
+                            Margin="0,0,0,20">
+                        <TextBox x:Name="TxtDescription"
+                                 Height="80"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 VerticalScrollBarVisibility="Auto"
+                                 FontSize="14"/>
+                    </Border>
 
-                <!-- Unit Price -->
-                <TextBlock Text="Giá bán *"
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,5"
-                       Foreground="#555"/>
-                <TextBox x:Name="TxtUnitPrice"
-                     Height="40"
-                     Padding="10"
-                     BorderBrush="#E0E0E0"
-                     Margin="0,0,0,15"/>
+                    <!-- Discount -->
+                    <TextBlock Text="Khuyến mãi (0-1)"
+                               FontSize="15"
+                               FontWeight="SemiBold"
+                               Foreground="#FFAD57"
+                               Margin="0,0,0,8"/>
+                    <Border Background="White"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            Margin="0,0,0,20">
+                        <TextBox x:Name="TxtDiscount"
+                                 Height="42"
+                                 Padding="12,0"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 VerticalContentAlignment="Center"
+                                 FontSize="14"
+                                 Text="0"/>
+                    </Border>
 
-                <!-- Unit In Stock -->
-                <TextBlock Text="Số lượng tồn kho *"
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,5"
-                       Foreground="#555"/>
-                <TextBox x:Name="TxtUnitInStock"
-                     Height="40"
-                     Padding="10"
-                     BorderBrush="#E0E0E0"
-                     Margin="0,0,0,15"/>
+                    <!-- Unit Price -->
+                    <TextBlock Text="Giá bán"
+                               FontSize="15"
+                               FontWeight="SemiBold"
+                               Foreground="#FFAD57"
+                               Margin="0,0,0,8"/>
+                    <Border Background="White"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            Margin="0,0,0,20">
+                        <TextBox x:Name="TxtUnitPrice"
+                                 Height="42"
+                                 Padding="12,0"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 VerticalContentAlignment="Center"
+                                 FontSize="14"/>
+                    </Border>
 
-                <!-- Picture URL -->
-                <TextBlock Text="Đường dẫn hình ảnh"
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,5"
-                       Foreground="#555"/>
-                <Grid Margin="0,0,0,15">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox x:Name="TxtPicture"
-                         Grid.Column="0"
-                         Height="40"
-                         Padding="10"
-                         BorderBrush="#E0E0E0"/>
-                    <Button Grid.Column="1"
-                        Content="Chọn file"
-                        Height="40"
-                        Width="100"
-                        Margin="10,0,0,0"
-                        Background="#FFB76C"
+                    <!-- Unit In Stock -->
+                    <TextBlock Text="Số lượng tồn kho"
+                               FontSize="15"
+                               FontWeight="SemiBold"
+                               Foreground="#FFAD57"
+                               Margin="0,0,0,8"/>
+                    <Border Background="White"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            Margin="0,0,0,20">
+                        <TextBox x:Name="TxtUnitInStock"
+                                 Height="42"
+                                 Padding="12,0"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 VerticalContentAlignment="Center"
+                                 FontSize="14"/>
+                    </Border>
+
+                    <!-- Picture URL -->
+                    <TextBlock Text="Hình ảnh sản phẩm"
+                               FontSize="15"
+                               FontWeight="SemiBold"
+                               Foreground="#FFAD57"
+                               Margin="0,0,0,8"/>
+                    <Border Background="White"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            Margin="0,0,0,12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="TxtPicture"
+                                     Grid.Column="0"
+                                     Height="42"
+                                     Padding="12,0"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     VerticalContentAlignment="Center"
+                                     FontSize="14"/>
+                            <Button Grid.Column="1"
+                                    Content="Chọn file"
+                                    Height="36"
+                                    Width="90"
+                                    Margin="0,0,3,0"
+                                    FontSize="13"
+                                    FontWeight="SemiBold"
+                                    Foreground="White"
+                                    BorderThickness="0"
+                                    Cursor="Hand"
+                                    Click="BtnSelectImage_Click">
+                                <Button.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Color="#FFAD56" Offset="0"/>
+                                        <GradientStop Color="#FFC281" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border"
+                                                Background="{TemplateBinding Background}"
+                                                CornerRadius="8">
+                                            <TextBlock Text="{TemplateBinding Content}"
+                                                       FontSize="{TemplateBinding FontSize}"
+                                                       FontWeight="{TemplateBinding FontWeight}"
+                                                       Foreground="{TemplateBinding Foreground}"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Opacity" Value="0.9"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <!-- Image Preview -->
+                    <Border x:Name="ImagePreviewBorder"
+                            Height="150"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            Margin="0,0,0,15"
+                            Visibility="Collapsed">
+                        <Image x:Name="ImgPreview"
+                               Stretch="Uniform"/>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Action Buttons -->
+            <Grid Grid.Row="2" Margin="0,24,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Cancel Button -->
+                <Button Grid.Column="0"
+                        Content="Hủy"
+                        Height="44"
+                        FontSize="15"
+                        FontWeight="SemiBold"
+                        Foreground="#666666"
+                        Background="White"
+                        BorderBrush="#E0E0E0"
+                        BorderThickness="2"
+                        Cursor="Hand"
+                        Margin="0,0,8,0"
+                        Click="BtnCancel_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="12">
+                                <TextBlock Text="{TemplateBinding Content}"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           FontWeight="{TemplateBinding FontWeight}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#F5F5F5"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#E0E0E0"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <!-- Save Button -->
+                <Button Grid.Column="1"
+                        Content="Lưu"
+                        Height="44"
+                        FontSize="15"
+                        FontWeight="Bold"
                         Foreground="White"
                         BorderThickness="0"
                         Cursor="Hand"
-                        Click="BtnSelectImage_Click"/>
-                </Grid>
-
-                <!-- Image Preview -->
-                <Border x:Name="ImagePreviewBorder"
-                    Height="150"
-                    BorderBrush="#E0E0E0"
-                    BorderThickness="1"
-                    Margin="0,0,0,15"
-                    Visibility="Collapsed">
-                    <Image x:Name="ImgPreview"
-                       Stretch="Uniform"/>
-                </Border>
-
-            </StackPanel>
-        </ScrollViewer>
-
-        <!-- Action Buttons -->
-        <Grid Grid.Row="2" Margin="0,20,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <Button Grid.Column="0"
-                Style="{StaticResource GradientButtonStyle}"
-                Background="#B7B7B7"
-                Content="Hủy"
-                Height="45"
-                Margin="0,0,10,0"
-                BorderThickness="0"
-                FontSize="16"
-                FontWeight="SemiBold"
-                Cursor="Hand"
-                Click="BtnCancel_Click"/>
-
-            <Button Grid.Column="1"
-                Style="{StaticResource GradientButtonStyle}"
-                Content="Lưu"
-                Height="45"
-                Margin="10,0,0,0"
-                Foreground="White"
-                BorderThickness="0"
-                FontSize="16"
-                FontWeight="SemiBold"
-                Cursor="Hand"
-                Click="BtnSave_Click"/>
+                        Margin="8,0,0,0"
+                        Click="BtnSave_Click">
+                    <Button.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#FFAD56" Offset="0"/>
+                            <GradientStop Color="#FFC281" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="12">
+                                <TextBlock Text="{TemplateBinding Content}"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           FontWeight="{TemplateBinding FontWeight}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.9"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.8"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
         </Grid>
-    </Grid>
+    </Border>
 </Page>

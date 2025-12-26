@@ -152,20 +152,20 @@
                             <!-- Product Name -->
                             <TextBlock x:Name="ProductName"
                                       Text="Tên sản phẩm"
-                                      FontSize="20"
+                                      FontSize="18"
                                       FontWeight="Bold"
                                       Foreground="#333333"
                                       TextWrapping="Wrap"
                                       Margin="0,0,0,10"/>
 
                             <!-- Description: 600x100 with ellipsis -->
-                            <Border Width="600"
+                            <Border Width="540"
                                    Height="70"
                                    HorizontalAlignment="Left"
                                    Margin="0,0,0,10">
                                 <TextBlock x:Name="ProductDescription"
                                           Text="Mô tả sản phẩm..."
-                                          FontSize="15"
+                                          FontSize="14"
                                           Foreground="#343131"
                                           TextWrapping="Wrap"
                                           TextTrimming="CharacterEllipsis"/>
@@ -175,7 +175,7 @@
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                 <!-- Discounted Price (or Regular Price) -->
                                 <TextBlock x:Name="ProductPrice"
-                                          FontSize="20"
+                                          FontSize="18"
                                           FontWeight="Bold"
                                           Margin="0,0,8,0"
                                           VerticalAlignment="Center"
@@ -220,11 +220,11 @@
                             <!-- Stock -->
                             <TextBlock Margin="0,0,0,15">
                                 <Run Text="Còn: " 
-                                     FontSize="15" 
+                                     FontSize="12" 
                                      Foreground="#666666"/>
                                 <Run x:Name="StockText"
                                      Text="40" 
-                                     FontSize="15" 
+                                     FontSize="12" 
                                      FontWeight="Bold"
                                      Foreground="#333333"/>
                             </TextBlock>
