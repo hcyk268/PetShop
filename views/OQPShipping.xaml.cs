@@ -97,17 +97,12 @@ namespace Pet_Shop_Project.Views
                         UPDATE ORDERS
                         SET ShippingStatus = @ShippingStatus,
                             PaymentStatus = @PaymentStatus
-                        WHERE OrderId = @OrderId;
-
-                        UPDATE SHIPMENTS
-                        SET Status = @ShipmentStatus
                         WHERE OrderId = @OrderId;";
 
                     using (var cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@ShippingStatus", "Delivered");
                         cmd.Parameters.AddWithValue("@PaymentStatus", "Paid");
-                        cmd.Parameters.AddWithValue("@ShipmentStatus", "Delivered");
                         cmd.Parameters.AddWithValue("@OrderId", order.OrderId);
 
                         await cmd.ExecuteNonQueryAsync();
