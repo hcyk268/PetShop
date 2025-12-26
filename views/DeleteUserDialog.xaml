@@ -3,117 +3,231 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Xác nhận xóa" 
-        Height="300" Width="450"
+        Height="400" Width="450"
         WindowStartupLocation="CenterOwner"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
         ResizeMode="NoResize">
 
-    <Grid>
+    <Border Background="White"
+            CornerRadius="16"
+            Padding="30"
+            Margin="10">
+        <Border.Effect>
+            <DropShadowEffect Color="#40000000" 
+                              BlurRadius="20" 
+                              ShadowDepth="0" 
+                              Opacity="0.3"/>
+        </Border.Effect>
 
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <Border Background="White"
-                CornerRadius="15"
-                MaxWidth="450"
-                MaxHeight="300"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center"
-                Padding="25"
-                Effect="{DynamicResource MaterialDesignShadowDepth3}">
-
-            <StackPanel VerticalAlignment="Center" Height="237">
-
+            <!-- Header -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,10">
                 <!-- Icon -->
                 <Border Background="#FFF3E0"
                         CornerRadius="50"
-                        Width="30" Height="30"
+                        Width="80" Height="80"
                         HorizontalAlignment="Center"
-                        Margin="0,0,0,5">
+                        Margin="0,0,0,10">
                     <materialDesign:PackIcon Kind="AlertCircle"
-                                             Width="20" Height="20"
+                                             Width="50" Height="50"
                                              Foreground="#FFAD57"
                                              HorizontalAlignment="Center"
                                              VerticalAlignment="Center"/>
                 </Border>
 
-                <!-- Title -->
-                <TextBlock Text="XÁC NHẬN XÓA NGƯỜI DÙNG"
-                           FontSize="13"
+                <TextBlock Text="Xác nhận xóa người dùng"
+                           FontSize="26"
                            FontWeight="Bold"
-                           Foreground="#333"
-                           HorizontalAlignment="Center"
-                           Margin="0,0,0,10"/>
-
-                <!-- Question -->
-                <TextBlock Text="Bạn có chắc chắn muốn xóa người dùng này không?"
-                           FontSize="14"
-                           Foreground="#666"
-                           TextAlignment="Center"
-                           TextWrapping="Wrap"
-                           Margin="0,0,0,15"/>
-
-                <!-- User info -->
-                <Border Background="#fff6ee"
-                        CornerRadius="8"
-                        Padding="12"
-                        Margin="0,0,0,15">
-                    <StackPanel>
-                        <TextBlock>
-                            <Run Text="Tên: " FontWeight="SemiBold" Foreground="#333"/>
-                            <Run x:Name="UserNameRun" Foreground="#666"/>
-                        </TextBlock>
-                        <TextBlock Margin="0,4,0,0">
-                            <Run Text="Email: " FontWeight="SemiBold" Foreground="#333"/>
-                            <Run x:Name="UserEmailRun" Foreground="#666"/>
-                        </TextBlock>
-                    </StackPanel>
-                </Border>
-
-                <!-- Warning -->
-                <TextBlock Text="LƯU Ý: Hành động này không thể hoàn tác!"
-                           FontSize="13"
                            Foreground="#FFAD57"
-                           FontWeight="SemiBold"
                            HorizontalAlignment="Center"
-                           Margin="0,0,0,11"/>
-
-                <!-- Buttons -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="154*"/>
-                        <ColumnDefinition Width="15"/>
-                        <ColumnDefinition Width="17*"/>
-                        <ColumnDefinition Width="138*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Button Style="{StaticResource GradientButtonStyle}"
-                            Grid.Column="0"
-                            Content="Hủy"
-                            Height="35"
-                            Background="#E0E0E0"
-                            Foreground="#666"
-                            FontSize="14"
-                            FontWeight="SemiBold"
-                            BorderThickness="0"
-                            Cursor="Hand"
-                            Click="CancelButton_Click">
-                    </Button>
-
-                    <Button Grid.Column="1"
-                            Style="{StaticResource GradientButtonStyle}"
-                            Content="Xóa"
-                            Height="35"
-                            Foreground="White"
-                            FontSize="14"
-                            FontWeight="SemiBold"
-                            BorderThickness="0"
-                            Cursor="Hand"
-                            Click="DeleteButton_Click" Grid.ColumnSpan="3" Margin="15,0,0,0">
-                    </Button>
-                </Grid>
-
+                           Margin="0,0,0,5"/>
             </StackPanel>
-        </Border>
-    </Grid>
+
+            <!-- Content -->
+            <ScrollViewer Grid.Row="1" 
+                          VerticalScrollBarVisibility="Hidden"
+                          HorizontalScrollBarVisibility="Disabled">
+                <StackPanel>
+                    <TextBlock Text="Hành động này không thể hoàn tác"
+                               FontSize="15"
+                               Foreground="#666"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,20"/>
+
+                    <!-- User Info Card -->
+                    <Border Background="#FFF6EE"
+                            BorderBrush="#FFAD57"
+                            BorderThickness="2"
+                            CornerRadius="12"
+                            Padding="20"
+                            Margin="0,0,0,20">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <materialDesign:PackIcon Kind="Account"
+                                                         Width="20"
+                                                         Height="20"
+                                                         Foreground="#FFAD57"
+                                                         VerticalAlignment="Center"
+                                                         Margin="0,0,10,0"/>
+                                <TextBlock Text="Họ và tên: " 
+                                           FontWeight="SemiBold" 
+                                           FontSize="14"
+                                           Foreground="#333"
+                                           VerticalAlignment="Center"/>
+                                <TextBlock x:Name="UserNameRun" 
+                                           FontSize="14"
+                                           Foreground="#666"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Email"
+                                                         Width="20"
+                                                         Height="20"
+                                                         Foreground="#FFAD57"
+                                                         VerticalAlignment="Center"
+                                                         Margin="0,0,10,0"/>
+                                <TextBlock Text="Email: " 
+                                           FontWeight="SemiBold" 
+                                           FontSize="14"
+                                           Foreground="#333"
+                                           VerticalAlignment="Center"/>
+                                <TextBlock x:Name="UserEmailRun" 
+                                           FontSize="14"
+                                           Foreground="#666"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Warning -->
+                    <Border Background="#FFF3E0"
+                            BorderBrush="#FFB74D"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="12">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="AlertCircleOutline"
+                                                     Width="20"
+                                                     Height="20"
+                                                     Foreground="#FF9800"
+                                                     VerticalAlignment="Center"
+                                                     Margin="0,0,10,0"/>
+                            <TextBlock Text="Dữ liệu sẽ bị xóa vĩnh viễn và không thể khôi phục"
+                                       FontSize="13"
+                                       Foreground="#F57C00"
+                                       TextWrapping="Wrap"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Buttons -->
+            <Grid Grid.Row="2" Margin="0,24,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Cancel Button -->
+                <Button Grid.Column="0"
+                        Content="Hủy"
+                        Height="44"
+                        FontSize="15"
+                        FontWeight="SemiBold"
+                        Foreground="#666666"
+                        Background="White"
+                        BorderBrush="#E0E0E0"
+                        BorderThickness="2"
+                        Cursor="Hand"
+                        Margin="0,0,8,0"
+                        Click="CancelButton_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="12">
+                                <TextBlock Text="{TemplateBinding Content}"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           FontWeight="{TemplateBinding FontWeight}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#F5F5F5"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#E0E0E0"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <!-- Delete Button -->
+                <Button Grid.Column="1"
+                        Height="44"
+                        FontSize="15"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Margin="8,0,0,0"
+                        Click="DeleteButton_Click">
+                    <Button.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#DC3545" Offset="0"/>
+                            <GradientStop Color="#E05565" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="12">
+                                <TextBlock Text="Xóa"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           FontWeight="{TemplateBinding FontWeight}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Effect">
+                                        <Setter.Value>
+                                            <DropShadowEffect ShadowDepth="0" BlurRadius="15" Opacity="0.3" Color="#DC3545"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <GradientStop Color="#C82333" Offset="0"/>
+                                                <GradientStop Color="#D04555" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+        </Grid>
+    </Border>
 </Window>

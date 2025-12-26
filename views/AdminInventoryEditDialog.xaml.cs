@@ -21,10 +21,7 @@ using System.Collections.ObjectModel;
 
 namespace Pet_Shop_Project.Views
 {
-    /// <summary>
-    /// Interaction logic for AdminInventoryEditDialog.xaml
-    /// </summary>
-    public partial class AdminInventoryEditDialog : Window
+    public partial class AdminInventoryEditDialog : Page
     {
         private readonly string _conn = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
         private InventoryItem _originalItem;
@@ -34,11 +31,15 @@ namespace Pet_Shop_Project.Views
         public InventoryItem InventoryItem { get; private set; }
         private readonly UploadImageService _uploadImageService = new UploadImageService();
 
+        // Event to notify parent when dialog closes
+        public event Action<bool> DialogClosed;
+
         public AdminInventoryEditDialog()
         {
             InitializeComponent();
             Loaded += AdminInventoryEditDialog_Loaded;
         }
+
         public AdminInventoryEditDialog(InventoryItem item) : this()
         {
             _originalItem = item;
@@ -116,7 +117,7 @@ namespace Pet_Shop_Project.Views
                     {
                         var cat = reader["Category"].ToString();
                         if (!items.Any(c => c.Equals(cat, StringComparison.OrdinalIgnoreCase)))
-                        items.Add(cat);
+                            items.Add(cat);
                     }
                 }
             }
@@ -127,7 +128,6 @@ namespace Pet_Shop_Project.Views
                     .FirstOrDefault(c => string.Equals(c, selectedCategory, StringComparison.OrdinalIgnoreCase));
             }
         }
-
 
         private async Task LoadItemDataAsync()
         {
@@ -157,7 +157,6 @@ namespace Pet_Shop_Project.Views
                 CmbCategory.SelectedItem = cats.FirstOrDefault(c => string.Equals(c, category, StringComparison.OrdinalIgnoreCase));
             }
         }
-
 
         private async void ProductComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
@@ -195,7 +194,7 @@ namespace Pet_Shop_Project.Views
                 TxtPicture.Text = secureUrl;
 
                 if (_loadedProduct == null)
-                _loadedProduct = new Product { ProductId = TxtProductCode.Text };
+                    _loadedProduct = new Product { ProductId = TxtProductCode.Text };
                 _loadedProduct.Picture = secureUrl;
 
                 LoadImagePreview(secureUrl);
@@ -227,37 +226,39 @@ namespace Pet_Shop_Project.Views
             }
         }
 
-        private async void BtnCreateNewProduct_Click(object sender, RoutedEventArgs e)
+        private void BtnCreateNewProduct_Click(object sender, RoutedEventArgs e)
         {
-            var page = new AdminProductEditDialog(null);
-            var win = new Window
+            ShowProductEditDialog(null);
+        }
+
+        private void ShowProductEditDialog(Product product)
+        {
+            var dialogPage = new AdminProductEditDialog(product);
+
+            // Subscribe to the product dialog's close event
+            dialogPage.DialogClosed += async (success) =>
             {
-                Owner = this,
-                Content = page,
-                Width = 500,
-                Height = 550,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                ResizeMode = ResizeMode.NoResize,
-                Title = "Tạo sản phẩm mới"
-            };
+                OverlayContainer.Visibility = Visibility.Collapsed;
+                OverlayFrame.Content = null;
 
-            if (win.ShowDialog() == true)
-            {
-                MessageBox.Show("Sản phẩm mới đã được tạo thành công!\nVui lòng chọn sản phẩm từ danh sách để thêm vào kho.",
-                    "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                await LoadProductsAsync();
-
-                if (page.Product != null)
+                if (success && dialogPage.Product != null)
                 {
+                    MessageBox.Show("Sản phẩm mới đã được tạo thành công!\nVui lòng chọn sản phẩm từ danh sách để thêm vào kho.",
+                        "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    await LoadProductsAsync();
+
                     var newProduct = ProductComboBox.Items.Cast<Product>()
-                        .FirstOrDefault(p => p.ProductId == page.Product.ProductId);
+                        .FirstOrDefault(p => p.ProductId == dialogPage.Product.ProductId);
                     if (newProduct != null)
                     {
                         ProductComboBox.SelectedItem = newProduct;
                     }
                 }
-            }
+            };
+
+            OverlayFrame.Content = dialogPage;
+            OverlayContainer.Visibility = Visibility.Visible;
         }
 
         private async void BtnSave_Click(object sender, RoutedEventArgs e)
@@ -303,8 +304,7 @@ namespace Pet_Shop_Project.Views
 
                 if (saved)
                 {
-                    DialogResult = true;
-                    Close();
+                    CloseDialog(true);
                 }
             }
             catch (Exception ex)
@@ -360,7 +360,6 @@ namespace Pet_Shop_Project.Views
             return null;
         }
 
-        
         private async Task<bool> AddInventoryItemAsync(InventoryItem item)
         {
             const string sql = @"UPDATE PRODUCTS 
@@ -479,12 +478,14 @@ namespace Pet_Shop_Project.Views
             return true;
         }
 
-
-
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = false;
-            Close();
+            CloseDialog(false);
+        }
+
+        private void CloseDialog(bool success)
+        {
+            DialogClosed?.Invoke(success);
         }
     }
 }
