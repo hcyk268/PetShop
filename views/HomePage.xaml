@@ -15,7 +15,6 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Main Content -->
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -23,7 +22,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Header with Logo and Search - Background F5F5F5 -->
+            <!-- Header và Logo và Search -->
             <Grid Grid.Row="0" 
                   Background="#F5F5F5"
                   Margin="25,10,15,90" Grid.RowSpan="2">
@@ -32,7 +31,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Logo and MIMI Text -->
+                <!-- Logo và Text -->
                 <StackPanel Grid.Column="0" 
                            Orientation="Horizontal"
                            VerticalAlignment="Center">
@@ -92,7 +91,7 @@
                 </Border>
             </Grid>
 
-            <!-- Category Buttons - Background F5F5F5 -->
+            <!-- Danh mục -->
             <StackPanel Grid.Row="1" 
                        Background="#F5F5F5"
                        Orientation="Horizontal"
@@ -148,7 +147,7 @@
                 </Button>
             </StackPanel>
 
-            <!-- Main Content Area - Background F8FFFE -->
+            <!-- Main Content -->
             <Grid Grid.Row="2" Background="#F8FFFE">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -156,7 +155,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Filter Section -->
+                <!-- Lọc -->
                 <StackPanel Grid.Row="1" 
                            Orientation="Horizontal"
                            Margin="25,20,25,20">
@@ -195,7 +194,7 @@
                     </Border>
                 </StackPanel>
 
-                <!-- Products Grid -->
+                <!-- Ô sản phẩm -->
                 <ScrollViewer Grid.Row="2" 
                              VerticalScrollBarVisibility="Hidden"
                              HorizontalScrollBarVisibility="Disabled"
@@ -203,7 +202,7 @@
                     <WrapPanel x:Name="ProductsPanel"
                               Orientation="Horizontal"
                               HorizontalAlignment="Left">
-                        <!-- ProductCards will be added here dynamically -->
+                        <!-- Các thẻ sản phẩm sẽ xuất hiện ở đây -->
                     </WrapPanel>
                 </ScrollViewer>
             </Grid>

@@ -18,7 +18,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Title -->
+        <!-- Tiêu đề -->
         <TextBlock Grid.Row="0"
                    Text="Đánh giá sản phẩm"
                    FontSize="26"
@@ -70,7 +70,7 @@
                                    Margin="0,0,8,0"
                                    VerticalAlignment="Center"/>
 
-                        <!-- Discount Badge -->
+                        <!-- Discount -->
                         <Border x:Name="DiscountBadge"
                                 Background="#FFE5E5"
                                 BorderBrush="#FF8284"
@@ -94,7 +94,7 @@
             </Grid>
         </Border>
 
-        <!-- Rating Section -->
+        <!-- Đánh giá -->
         <StackPanel Grid.Row="2" Margin="0,0,0,0">
             <TextBlock Text="Xếp hạng"
                        FontSize="17"
@@ -105,11 +105,10 @@
             <StackPanel x:Name="StarPanel"
                         Orientation="Horizontal"
                         HorizontalAlignment="Center">
-                <!-- Stars will be added dynamically in code-behind -->
             </StackPanel>
         </StackPanel>
 
-        <!-- Comment Section -->
+        <!-- Bình luận -->
         <StackPanel Grid.Row="3" Margin="0,0,0,0">
             <TextBlock Text="Bình luận"
                        FontSize="17"
@@ -145,7 +144,7 @@
             </Border>
         </StackPanel>
 
-        <!-- Action Buttons -->
+        <!-- Nút hủy/hoàn tất -->
         <StackPanel Grid.Row="4"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"

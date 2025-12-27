@@ -523,7 +523,7 @@ namespace Pet_Shop_Project.Views
         public string Variant => _originalCartItem.Variant;
         public decimal SubTotal => _originalCartItem.SubTotal;
 
-        // Discount properties
+        // Giá giảm
         public bool HasDiscount => Product != null && Product.Discount > 0;
 
         public Visibility DiscountVisibility => HasDiscount ? Visibility.Visible : Visibility.Collapsed;
@@ -532,7 +532,7 @@ namespace Pet_Shop_Project.Views
 
         public Visibility VariantVisibility => string.IsNullOrEmpty(Variant) ? Visibility.Collapsed : Visibility.Visible;
 
-        // Price display
+        // Giá hiển thị
         public string DisplayPrice
         {
             get

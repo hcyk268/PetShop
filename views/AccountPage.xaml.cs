@@ -140,10 +140,9 @@ namespace Pet_Shop_Project.Views
             }
         }
 
-        // Contact Information Edit Functions
+        // ========== CONTACT INFORMATION EDIT FUNCTIONS ==========
         private void EditContact_Click(object sender, RoutedEventArgs e)
         {
-            // Hide text displays, show text boxes
             EmailText.Visibility = Visibility.Collapsed;
             EmailEdit.Visibility = Visibility.Visible;
             EmailEdit.Text = EmailText.Text == "Chưa cập nhật" ? "" : EmailText.Text;
@@ -156,7 +155,6 @@ namespace Pet_Shop_Project.Views
             AddressEdit.Visibility = Visibility.Visible;
             AddressEdit.Text = AddressText.Text == "Chưa cập nhật" ? "" : AddressText.Text;
 
-            // Toggle buttons
             EditContactButton.Visibility = Visibility.Collapsed;
             SaveContactButton.Visibility = Visibility.Visible;
             CancelContactButton.Visibility = Visibility.Visible;
@@ -166,26 +164,45 @@ namespace Pet_Shop_Project.Views
         {
             try
             {
-                // Validate inputs
                 string email = EmailEdit.Text.Trim();
                 string phone = PhoneEdit.Text.Trim();
                 string address = AddressEdit.Text.Trim();
 
-                // Validate email
-                if (!string.IsNullOrEmpty(email) && !IsValidEmail(email))
+                // ✅ VALIDATE EMAIL
+                if (!string.IsNullOrEmpty(email))
                 {
-                    MessageBox.Show("Email không hợp lệ!", "Lỗi",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
+                    var emailValidation = ValidateEmail(email);
+                    if (!emailValidation.IsValid)
+                    {
+                        MessageBox.Show(emailValidation.ErrorMessage, "Lỗi Email",
+                            MessageBoxButton.OK, MessageBoxImage.Warning);
+                        EmailEdit.Focus();
+                        return;
+                    }
                 }
 
-                // Validate phone
+                // ✅ VALIDATE PHONE
                 if (!string.IsNullOrEmpty(phone))
                 {
-                    if (!phone.StartsWith("0") || phone.Length != 10 || !IsNumeric(phone))
+                    var phoneValidation = ValidatePhone(phone);
+                    if (!phoneValidation.IsValid)
                     {
-                        MessageBox.Show("Số điện thoại phải có 10 số và bắt đầu bằng 0!",
-                            "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        MessageBox.Show(phoneValidation.ErrorMessage, "Lỗi Số điện thoại",
+                            MessageBoxButton.OK, MessageBoxImage.Warning);
+                        PhoneEdit.Focus();
+                        return;
+                    }
+                }
+
+                // ✅ VALIDATE ADDRESS
+                if (!string.IsNullOrEmpty(address))
+                {
+                    var addressValidation = ValidateAddress(address);
+                    if (!addressValidation.IsValid)
+                    {
+                        MessageBox.Show(addressValidation.ErrorMessage, "Lỗi Địa chỉ",
+                            MessageBoxButton.OK, MessageBoxImage.Warning);
+                        AddressEdit.Focus();
                         return;
                     }
                 }
@@ -200,7 +217,6 @@ namespace Pet_Shop_Project.Views
 
                 if (success)
                 {
-                    // Update display
                     EmailText.Text = currentUser.Email ?? "Chưa cập nhật";
                     PhoneText.Text = currentUser.Phone ?? "Chưa cập nhật";
                     AddressText.Text = currentUser.Address ?? "Chưa cập nhật";
@@ -230,7 +246,6 @@ namespace Pet_Shop_Project.Views
 
         private void ExitContactEditMode()
         {
-            // Show text displays, hide text boxes
             EmailText.Visibility = Visibility.Visible;
             EmailEdit.Visibility = Visibility.Collapsed;
 
@@ -240,21 +255,18 @@ namespace Pet_Shop_Project.Views
             AddressText.Visibility = Visibility.Visible;
             AddressEdit.Visibility = Visibility.Collapsed;
 
-            // Toggle buttons
             EditContactButton.Visibility = Visibility.Visible;
             SaveContactButton.Visibility = Visibility.Collapsed;
             CancelContactButton.Visibility = Visibility.Collapsed;
         }
 
-        // Account Information Edit Functions
+        // ========== ACCOUNT INFORMATION EDIT FUNCTIONS ==========
         private void EditAccount_Click(object sender, RoutedEventArgs e)
         {
-            // Hide text display, show text box
             FullNameText.Visibility = Visibility.Collapsed;
             FullNameEdit.Visibility = Visibility.Visible;
             FullNameEdit.Text = FullNameText.Text == "Chưa cập nhật" ? "" : FullNameText.Text;
 
-            // Toggle buttons
             EditAccountButton.Visibility = Visibility.Collapsed;
             SaveAccountButton.Visibility = Visibility.Visible;
             CancelAccountButton.Visibility = Visibility.Visible;
@@ -266,22 +278,20 @@ namespace Pet_Shop_Project.Views
             {
                 string fullName = FullNameEdit.Text.Trim();
 
-                if (string.IsNullOrEmpty(fullName))
+                var nameValidation = ValidateFullName(fullName);
+                if (!nameValidation.IsValid)
                 {
-                    MessageBox.Show("Họ tên không được để trống!", "Lỗi",
+                    MessageBox.Show(nameValidation.ErrorMessage, "Lỗi Họ tên",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
+                    FullNameEdit.Focus();
                     return;
                 }
 
-                // Update user object
                 currentUser.FullName = fullName;
-
-                // Save to database
                 bool success = userService.UpdateUser(currentUser);
 
                 if (success)
                 {
-                    // Update displays
                     FullNameText.Text = currentUser.FullName;
                     UserNameText.Text = currentUser.FullName;
 
@@ -310,42 +320,142 @@ namespace Pet_Shop_Project.Views
 
         private void ExitAccountEditMode()
         {
-            // Show text display, hide text box
             FullNameText.Visibility = Visibility.Visible;
             FullNameEdit.Visibility = Visibility.Collapsed;
 
-            // Toggle buttons
             EditAccountButton.Visibility = Visibility.Visible;
             SaveAccountButton.Visibility = Visibility.Collapsed;
             CancelAccountButton.Visibility = Visibility.Collapsed;
         }
 
-        // Validation Functions
-        private bool IsValidEmail(string email)
+        /// <summary>
+        /// Validate Email với các quy tắc đầy đủ
+        /// </summary>
+        private ValidationResult ValidateEmail(string email)
         {
-            try
+            // Kiểm tra rỗng
+            if (string.IsNullOrWhiteSpace(email))
             {
-                var regex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
-                return regex.IsMatch(email);
+                return new ValidationResult(false, "Email không được để trống!");
             }
-            catch
+
+            // Regex đầy đủ cho email
+            string emailPattern = @"^[a-zA-Z0-9]([a-zA-Z0-9._-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z]{2,})+$";
+
+            if (!Regex.IsMatch(email, emailPattern))
             {
-                return false;
+                return new ValidationResult(false, "Email không hợp lệ! Vui lòng nhập đúng định dạng email.");
             }
+
+            // Kiểm tra các trường hợp đặc biệt
+            if (email.Contains("..") || email.StartsWith(".") || email.EndsWith("."))
+            {
+                return new ValidationResult(false, "Email không được có dấu chấm liên tiếp hoặc ở đầu/cuối!");
+            }
+
+            return new ValidationResult(true, string.Empty);
+        }
+
+        /// <summary>
+        /// Validate số điện thoại Việt Nam
+        /// </summary>
+        private ValidationResult ValidatePhone(string phone)
+        {
+            // Kiểm tra rỗng
+            if (string.IsNullOrWhiteSpace(phone))
+            {
+                return new ValidationResult(false, "Số điện thoại không được để trống!");
+            }
+
+            // Loại bỏ khoảng trắng
+            phone = phone.Replace(" ", "").Replace("-", "");
+
+            // Kiểm tra chỉ chứa số
+            if (!Regex.IsMatch(phone, @"^\d+$"))
+            {
+                return new ValidationResult(false, "Số điện thoại chỉ được chứa số!");
+            }
+
+            // Kiểm tra độ dài
+            if (phone.Length != 10)
+            {
+                return new ValidationResult(false, "Số điện thoại phải có đúng 10 chữ số!");
+            }
+
+            return new ValidationResult(true, string.Empty);
+        }
+
+        /// <summary>
+        /// Validate địa chỉ
+        /// </summary>
+        private ValidationResult ValidateAddress(string address)
+        {
+            // Kiểm tra rỗng
+            if (string.IsNullOrWhiteSpace(address))
+            {
+                return new ValidationResult(false, "Địa chỉ không được để trống!");
+            }
+
+            // Kiểm tra ký tự đặc biệt nguy hiểm
+            string dangerousChars = @"[<>""'%;()&+]";
+            if (Regex.IsMatch(address, dangerousChars))
+            {
+                return new ValidationResult(false, "Địa chỉ chứa ký tự không hợp lệ!");
+            }
+
+            return new ValidationResult(true, string.Empty);
+        }
+
+        /// <summary>
+        /// Validate họ tên
+        /// </summary>
+        private ValidationResult ValidateFullName(string fullName)
+        {
+            // Kiểm tra rỗng
+            if (string.IsNullOrWhiteSpace(fullName))
+            {
+                return new ValidationResult(false, "Họ tên không được để trống!");
+            }
+
+            // Kiểm tra độ dài
+            if (fullName.Length < 2)
+            {
+                return new ValidationResult(false, "Họ tên quá ngắn! Vui lòng nhập ít nhất 2 ký tự.");
+            }
+
+            if (fullName.Length > 50)
+            {
+                return new ValidationResult(false, "Họ tên quá dài! Vui lòng nhập tối đa 50 ký tự.");
+            }
+
+            // Kiểm tra chỉ chứa chữ cái, khoảng trắng và dấu tiếng Việt
+            string namePattern = @"^[a-zA-ZÀ-ỹ\s]+$";
+            if (!Regex.IsMatch(fullName, namePattern))
+            {
+                return new ValidationResult(false, "Họ tên chỉ được chứa chữ cái và khoảng trắng!");
+            }
+
+            // Kiểm tra khoảng trắng liên tiếp
+            if (Regex.IsMatch(fullName, @"\s{2,}"))
+            {
+                return new ValidationResult(false, "Họ tên không được chứa nhiều khoảng trắng liên tiếp!");
+            }
+
+            return new ValidationResult(true, string.Empty);
         }
 
         private bool IsNumeric(string text)
         {
-            Regex regex = new Regex("^[0-9]+$");
-            return regex.IsMatch(text);
+            return Regex.IsMatch(text, @"^\d+$");
         }
 
         private void PhoneEdit_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
+            // Chỉ cho phép nhập số
             e.Handled = !IsNumeric(e.Text);
         }
 
-        // Other Functions
+        // Hàm khác
         private void ChangePassword_Click(object sender, RoutedEventArgs e)
         {
             ChangePasswordDialog dialog = new ChangePasswordDialog(currentUserId);
@@ -378,6 +488,19 @@ namespace Pet_Shop_Project.Views
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.GoBack();
+        }
+    }
+
+    // Kết quả validate
+    public class ValidationResult
+    {
+        public bool IsValid { get; set; }
+        public string ErrorMessage { get; set; }
+
+        public ValidationResult(bool isValid, string errorMessage)
+        {
+            IsValid = isValid;
+            ErrorMessage = errorMessage;
         }
     }
 }
