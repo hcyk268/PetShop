@@ -47,8 +47,14 @@ Hệ thống bao gồm hai nhóm người dùng chính:
 ---
 
 ## ⚙️ 4. Hướng dẫn cài đặt và chạy dự án
+[▶️ XEM VIDEO HƯỚNG DẪN](https://drive.google.com/file/d/10iBpNYwbJyoonjimntKvpF_2Q4NpPH6T/view?usp=sharing)
 
-Nội dung chi tiết sẽ được cập nhật sau.
+* B1: Lấy dự án về máy: git clone https://github.com/hcyk268/PetShop.git
+* B2: Mở thư mục PetShop sau khi kéo về. Trong thư mục Data có file database PETSHOP.bak
+* B3: Sử dụng SQL Sever Express vào SSMS thực hiện restore database với file PETSHOP.bak
+* B4: Mở dự án bằng Visual Studio
+* B5 (Nếu chưa chạy được liền): Chuột phải vào Solution 'Pet-Shop-Project' ở Solution Explorer, chọn Restore Nuget Packages
+* B6: Chạy dự án
 
 ---
 

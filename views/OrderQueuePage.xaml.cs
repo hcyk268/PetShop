@@ -1,4 +1,4 @@
-﻿using Pet_Shop_Project.Models;
+using Pet_Shop_Project.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -141,7 +141,7 @@ namespace Pet_Shop_Project.Views
 
         protected void setOpacityButton()
         {
-            odppendingbutton.Opacity = odpshippingbutton.Opacity = odpsuccessbutton.Opacity = odpcanceledbutton.Opacity = 0.5;
+            odppendingbutton.Opacity = odpshippingbutton.Opacity = odpsuccessbutton.Opacity = odpcanceledbutton.Opacity = 1.0;
         }
 
         private async void OrderQueuePage_Loaded(object sender, RoutedEventArgs e)
@@ -172,8 +172,8 @@ namespace Pet_Shop_Project.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi tải đơn hàng: {ex.Message}",
-                    "Lỗi",
+                MessageBox.Show($"L?i khi t?i don h�ng: {ex.Message}",
+                    "L?i",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }

@@ -18,9 +18,6 @@ using System.Windows.Shapes;
 
 namespace Pet_Shop_Project.Views
 {
-    /// <summary>
-    /// Interaction logic for AdminInventory.xaml
-    /// </summary>
     public partial class AdminInventory : Page
     {
         private ObservableCollection<InventoryItem> allItems;
@@ -114,11 +111,11 @@ namespace Pet_Shop_Project.Views
 
             // Category filter
             string selectedCategory = null;
-            if (AllCategory?.IsChecked == true)       selectedCategory = null;
-            else if (FoodCategory?.IsChecked == true)      selectedCategory = "Thức ăn";
-            else if (ToyCategory?.IsChecked == true)   selectedCategory = "Đồ chơi";
+            if (AllCategory?.IsChecked == true) selectedCategory = null;
+            else if (FoodCategory?.IsChecked == true) selectedCategory = "Thức ăn";
+            else if (ToyCategory?.IsChecked == true) selectedCategory = "Đồ chơi";
             else if (DeviceCategory?.IsChecked == true) selectedCategory = "Thiết bị";
-            else if (ToolCategory?.IsChecked == true)   selectedCategory = "Dụng cụ";
+            else if (ToolCategory?.IsChecked == true) selectedCategory = "Dụng cụ";
 
             if (!string.IsNullOrEmpty(selectedCategory))
             {
@@ -209,57 +206,19 @@ namespace Pet_Shop_Project.Views
 
         #region CRUD Operations
 
-        private async void BtnAdd_Click(object sender, RoutedEventArgs e)
+        private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new AdminInventoryEditDialog(null);
-            if (dialog.ShowDialog() == true)
-            {
-                try
-                {
-                    var newItem = dialog.InventoryItem;
-                    newItem.InventoryId = newItem.ProductId; 
-                    newItem.LastUpdated = DateTime.Now;
-
-                    if (await InventoryService.AddInventoryItemAsync(newItem))
-                    {
-                        MessageBox.Show("Thêm sản phẩm thành công!",
-                            "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
-                        await LoadInventoryDataAsync();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Lỗi khi thêm sản phẩm: {ex.Message}",
-                        "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
+            ShowInventoryEditDialog(null);
         }
 
-        private async void BtnEdit_Click(object sender, RoutedEventArgs e)
+        private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
             var item = button?.Tag as InventoryItem;
 
             if (item == null) return;
 
-            var dialog = new AdminInventoryEditDialog(item);
-            if (dialog.ShowDialog() == true)
-            {
-                try
-                {
-                    if (await InventoryService.UpdateInventoryItemAsync(dialog.InventoryItem))
-                    {
-                        MessageBox.Show("Cập nhật thành công!",
-                            "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
-                        await LoadInventoryDataAsync();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Lỗi khi cập nhật: {ex.Message}",
-                        "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
+            ShowInventoryEditDialog(item);
         }
 
         private async void BtnDelete_Click(object sender, RoutedEventArgs e)
@@ -319,33 +278,43 @@ namespace Pet_Shop_Project.Views
                 await InventoryService.DeleteInventoryItemAsync(item.ProductId);
             }
 
-            await LoadInventoryDataAsync(); // reload sẽ clear IsSelected
+            await LoadInventoryDataAsync();
         }
 
-
-        private async void InventoryDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void InventoryDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (InventoryDataGrid.SelectedItem is InventoryItem item)
             {
-                var dialog = new AdminInventoryEditDialog(item);
-                if (dialog.ShowDialog() == true)
-                {
-                    try
-                    {
-                        if (await InventoryService.UpdateInventoryItemAsync(dialog.InventoryItem))
-                        {
-                            MessageBox.Show("Cập nhật thành công!",
-                                "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
-                            await LoadInventoryDataAsync();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Lỗi khi cập nhật: {ex.Message}",
-                            "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
+                ShowInventoryEditDialog(item);
             }
+        }
+
+        #endregion
+
+        #region Overlay Dialog Management
+
+        private void ShowInventoryEditDialog(InventoryItem item)
+        {
+            var dialogPage = new AdminInventoryEditDialog(item);
+
+            // Subscribe to the dialog's close event
+            dialogPage.DialogClosed += async (success) =>
+            {
+                HideOverlay();
+                if (success)
+                {
+                    await LoadInventoryDataAsync();
+                }
+            };
+
+            OverlayFrame.Content = dialogPage;
+            OverlayContainer.Visibility = Visibility.Visible;
+        }
+
+        private void HideOverlay()
+        {
+            OverlayFrame.Content = null;
+            OverlayContainer.Visibility = Visibility.Collapsed;
         }
 
         #endregion

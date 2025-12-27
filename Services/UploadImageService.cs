@@ -91,7 +91,10 @@ namespace Pet_Shop_Project.Services
                     Folder = folder,
                     UseFilename = true,    
                     UniqueFilename = true, 
-                    Overwrite = false
+                    Overwrite = false,
+                    Transformation = new Transformation()
+                    .Width(400).Height(400)
+                    .Crop("fill").Gravity("auto")
                 };
 
             var result = await _cloudinary.UploadAsync(uploadParams);

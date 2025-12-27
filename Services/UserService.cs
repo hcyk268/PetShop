@@ -123,6 +123,9 @@ namespace Pet_Shop_Project.Services
         }
 
         // Xóa user
+        // Thay thế method DeleteUser trong UserService.cs
+        // CHÍNH XÁC cho database: CART, ORDERS, REVIEWS có UserId
+
         public bool DeleteUser(string userId)
         {
             try
@@ -131,14 +134,57 @@ namespace Pet_Shop_Project.Services
                 {
                     conn.Open();
 
-                    string query = "DELETE FROM USERS WHERE UserId = @UserId";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    // Bắt đầu transaction để đảm bảo tính toàn vẹn dữ liệu
+                    using (SqlTransaction transaction = conn.BeginTransaction())
                     {
-                        cmd.Parameters.AddWithValue("@UserId", userId);
+                        try
+                        {
+                            // Xóa theo thứ tự: con → cha
 
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                        return rowsAffected > 0;
+                            // 1. Xóa ORDER_DETAILS trước (chi tiết đơn hàng)
+                            string deleteOrderDetails = @"
+                        DELETE FROM ORDER_DETAILS 
+                        WHERE OrderId IN (
+                            SELECT OrderId FROM ORDERS WHERE UserId = @UserId
+                        )";
+                            ExecuteNonQuery(conn, transaction, deleteOrderDetails, userId);
+
+                            // 2. Xóa CART_ITEMS (sản phẩm trong giỏ)
+                            string deleteCartItems = @"
+                        DELETE FROM CART_ITEMS 
+                        WHERE CartId IN (
+                            SELECT CartId FROM CART WHERE UserId = @UserId
+                        )";
+                            ExecuteNonQuery(conn, transaction, deleteCartItems, userId);
+
+                            // 3. Xóa ORDERS (đơn hàng)
+                            string deleteOrders = "DELETE FROM ORDERS WHERE UserId = @UserId";
+                            ExecuteNonQuery(conn, transaction, deleteOrders, userId);
+
+                            // 4. Xóa CART (giỏ hàng)
+                            string deleteCart = "DELETE FROM CART WHERE UserId = @UserId";
+                            ExecuteNonQuery(conn, transaction, deleteCart, userId);
+
+                            // 5. Xóa REVIEWS (đánh giá)
+                            string deleteReviews = "DELETE FROM REVIEWS WHERE UserId = @UserId";
+                            ExecuteNonQuery(conn, transaction, deleteReviews, userId);
+
+                            // 6. Cuối cùng mới xóa USERS
+                            string deleteUser = "DELETE FROM USERS WHERE UserId = @UserId";
+                            int rowsAffected = ExecuteNonQuery(conn, transaction, deleteUser, userId);
+
+                            // Commit transaction nếu tất cả đều thành công
+                            transaction.Commit();
+
+                            return rowsAffected > 0;
+                        }
+                        catch (Exception ex)
+                        {
+                            // Rollback nếu có lỗi bất kỳ
+                            transaction.Rollback();
+                            System.Diagnostics.Debug.WriteLine($"DeleteUser transaction error: {ex.Message}");
+                            throw new Exception($"Lỗi khi xóa người dùng: {ex.Message}");
+                        }
                     }
                 }
             }
@@ -146,6 +192,16 @@ namespace Pet_Shop_Project.Services
             {
                 System.Diagnostics.Debug.WriteLine($"DeleteUser error: {ex.Message}");
                 throw new Exception($"Không thể xóa người dùng: {ex.Message}");
+            }
+        }
+
+        // Helper method để thực thi câu lệnh SQL trong transaction
+        private int ExecuteNonQuery(SqlConnection conn, SqlTransaction transaction, string query, string userId)
+        {
+            using (SqlCommand cmd = new SqlCommand(query, conn, transaction))
+            {
+                cmd.Parameters.AddWithValue("@UserId", userId);
+                return cmd.ExecuteNonQuery();
             }
         }
         // Hash password bằng SHA256

@@ -1,168 +1,302 @@
 ﻿<Window x:Class="Pet_Shop_Project.Views.AddEditUserDialog"
-               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Thêm/Sửa Người Dùng" 
-        Height="600" Width="500"
+        Height="680" Width="450"
         WindowStartupLocation="CenterOwner"
+        WindowStyle="None"
         ResizeMode="NoResize"
-        Background="White">
+        Background="Transparent"
+        AllowsTransparency="True">
 
     <Border Background="White"
-           CornerRadius="15"
-           Margin="15">
-        <ScrollViewer VerticalScrollBarVisibility="Hidden"
-                     Padding="30">
-            <StackPanel>
-                <!-- Title -->
+            CornerRadius="16"
+            Padding="30"
+            Margin="10">
+        <Border.Effect>
+            <DropShadowEffect Color="#40000000" 
+                              BlurRadius="20" 
+                              ShadowDepth="0" 
+                              Opacity="0.3"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,20">
                 <TextBlock x:Name="DialogTitle"
-                          Text="THÊM NGƯỜI DÙNG MỚI"
-                          FontSize="22"
-                          FontWeight="Bold"
-                          Foreground="#ffad57"
-                          HorizontalAlignment="Center"
-                          Margin="0,0,0,30"/>
-
-                <!-- Full Name -->
-                <StackPanel Margin="0,0,0,15">
-                    <TextBlock Text="Họ và tên *"
-                              FontSize="13"
-                              FontWeight="SemiBold"
-                              Foreground="#333"
-                              Margin="0,0,0,6"/>
-                    <TextBox x:Name="FullNameTextBox"
-                            FontSize="14"
-                            Padding="12"
-                            BorderBrush="#DDD"
-                            BorderThickness="1"/>
-                </StackPanel>
-
-                <!-- Username -->
-                <StackPanel Margin="0,0,0,15">
-                    <TextBlock Text="Tên đăng nhập *"
-                              FontSize="13"
-                              FontWeight="SemiBold"
-                              Foreground="#333"
-                              Margin="0,0,0,6"/>
-                    <TextBox x:Name="UsernameTextBox"
-                            FontSize="14"
-                            Padding="12"
-                            BorderBrush="#DDD"
-                            BorderThickness="1"/>
-                </StackPanel>
-
-                <!-- Email -->
-                <StackPanel Margin="0,0,0,15">
-                    <TextBlock Text="Email *"
-                              FontSize="13"
-                              FontWeight="SemiBold"
-                              Foreground="#333"
-                              Margin="0,0,0,6"/>
-                    <TextBox x:Name="EmailTextBox"
-                            FontSize="14"
-                            Padding="12"
-                            BorderBrush="#DDD"
-                            BorderThickness="1"/>
-                </StackPanel>
-
-                <!-- Phone -->
-                <StackPanel Margin="0,0,0,15">
-                    <TextBlock Text="Số điện thoại"
-                              FontSize="13"
-                              FontWeight="SemiBold"
-                              Foreground="#333"
-                              Margin="0,0,0,6"/>
-                    <TextBox x:Name="PhoneTextBox"
-                            FontSize="14"
-                            Padding="12"
-                            BorderBrush="#DDD"
-                            BorderThickness="1"/>
-                </StackPanel>
-
-                <!-- Address -->
-                <StackPanel Margin="0,0,0,15">
-                    <TextBlock Text="Địa chỉ"
-                              FontSize="13"
-                              FontWeight="SemiBold"
-                              Foreground="#333"
-                              Margin="0,0,0,6"/>
-                    <TextBox x:Name="AddressTextBox"
-                            FontSize="14"
-                            Padding="12"
-                            BorderBrush="#DDD"
-                            BorderThickness="1"
-                            Height="60"
-                            TextWrapping="Wrap"
-                            AcceptsReturn="True"/>
-                </StackPanel>
-
-                <!-- Password (only for Add) -->
-                <StackPanel x:Name="PasswordPanel" Margin="0,0,0,15">
-                    <TextBlock Text="Mật khẩu *"
-                              FontSize="13"
-                              FontWeight="SemiBold"
-                              Foreground="#333"
-                              Margin="0,0,0,6"/>
-                    <PasswordBox x:Name="PasswordBox"
-                                FontSize="14"
-                                Padding="12"
-                                BorderBrush="#DDD"
-                                BorderThickness="1"/>
-                </StackPanel>
-
-                <!-- Role -->
-                <StackPanel Margin="0,0,0,25">
-                    <TextBlock Text="Vai trò *"
-                              FontSize="13"
-                              FontWeight="SemiBold"
-                              Foreground="#333"
-                              Margin="0,0,0,6"/>
-                    <ComboBox x:Name="RoleComboBox"
-                             FontSize="14"
-                             Padding="12"
-                             BorderBrush="#DDD"
-                             BorderThickness="1">
-                        <ComboBoxItem Content="User" IsSelected="True"/>
-                        <ComboBoxItem Content="Admin"/>
-                    </ComboBox>
-                </StackPanel>
-
-                <!-- Buttons -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <!-- Cancel Button -->
-                    <Button Grid.Column="0"
-                           Style="{StaticResource GradientButtonStyle}"
-                           Content="Hủy"
-                           Height="45"
-                           FontSize="14"
-                           FontWeight="SemiBold"
-                           Background="#E0E0E0"
-                           Foreground="#666"
-                           BorderThickness="0"
-                           Cursor="Hand"
-                           Click="CancelButton_Click">
-                    </Button>
-
-                    <!-- Save Button -->
-                    <Button Grid.Column="2"
-                           Style="{StaticResource GradientButtonStyle}"
-                           Content="Lưu"
-                           Height="45"
-                           FontSize="14"
-                           FontWeight="SemiBold"
-                           Foreground="White"
-                           BorderThickness="0"
-                           Cursor="Hand"
-                           Click="SaveButton_Click">
-                    </Button>
-                </Grid>
+                           Text="Thêm người dùng mới"
+                           FontSize="26"
+                           FontWeight="Bold"
+                           Foreground="#FFAD57"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,8"/>
             </StackPanel>
-        </ScrollViewer>
+
+            <!-- Form -->
+            <ScrollViewer Grid.Row="1" 
+                          VerticalScrollBarVisibility="Hidden"
+                          HorizontalScrollBarVisibility="Disabled">
+                <StackPanel>
+                    <!-- Full Name -->
+                    <TextBlock Text="Họ và tên" 
+                               FontSize="15"
+                               FontWeight="SemiBold" 
+                               Foreground="#FFAD57"
+                               Margin="0,0,0,8"/>
+                    <Border Background="White"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            Margin="0,0,0,20">
+                        <TextBox x:Name="FullNameTextBox"
+                                 Height="42"
+                                 Padding="12,0"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 VerticalContentAlignment="Center"
+                                 FontSize="14"
+                                 materialDesign:HintAssist.Hint="Nhập họ và tên"/>
+                    </Border>
+
+                    <!-- Username -->
+                    <TextBlock Text="Tên đăng nhập" 
+                               FontSize="15"
+                               FontWeight="SemiBold" 
+                               Foreground="#FFAD57"
+                               Margin="0,0,0,8"/>
+                    <Border Background="White"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            Margin="0,0,0,20">
+                        <TextBox x:Name="UsernameTextBox"
+                                 Height="42"
+                                 Padding="12,0"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 VerticalContentAlignment="Center"
+                                 FontSize="14"
+                                 materialDesign:HintAssist.Hint="Nhập tên đăng nhập"/>
+                    </Border>
+
+                    <!-- Email -->
+                    <TextBlock Text="Email" 
+                               FontSize="15"
+                               FontWeight="SemiBold" 
+                               Foreground="#FFAD57"
+                               Margin="0,0,0,8"/>
+                    <Border Background="White"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            Margin="0,0,0,20">
+                        <TextBox x:Name="EmailTextBox"
+                                 Height="42"
+                                 Padding="12,0"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 VerticalContentAlignment="Center"
+                                 FontSize="14"
+                                 materialDesign:HintAssist.Hint="Nhập email"/>
+                    </Border>
+
+                    <!-- Phone -->
+                    <TextBlock Text="Số điện thoại" 
+                               FontSize="15"
+                               FontWeight="SemiBold" 
+                               Foreground="#FFAD57"
+                               Margin="0,0,0,8"/>
+                    <Border Background="White"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            Margin="0,0,0,20">
+                        <TextBox x:Name="PhoneTextBox"
+                                 Height="42"
+                                 Padding="12,0"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 VerticalContentAlignment="Center"
+                                 FontSize="14"
+                                 materialDesign:HintAssist.Hint="Nhập số điện thoại"/>
+                    </Border>
+
+                    <!-- Address -->
+                    <TextBlock Text="Địa chỉ" 
+                               FontSize="15"
+                               FontWeight="SemiBold" 
+                               Foreground="#FFAD57"
+                               Margin="0,0,0,8"/>
+                    <Border Background="White"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            Padding="12"
+                            Margin="0,0,0,20">
+                        <TextBox x:Name="AddressTextBox"
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 Height="80"
+                                 BorderThickness="0"
+                                 FontSize="14"
+                                 Foreground="#333333"
+                                 Background="Transparent"
+                                 VerticalScrollBarVisibility="Auto"
+                                 materialDesign:HintAssist.Hint="Nhập địa chỉ"/>
+                    </Border>
+
+                    <!-- Password (only for Add) -->
+                    <StackPanel x:Name="PasswordPanel">
+                        <TextBlock Text="Mật khẩu" 
+                                   FontSize="15"
+                                   FontWeight="SemiBold" 
+                                   Foreground="#FFAD57"
+                                   Margin="0,0,0,8"/>
+                        <Border Background="White"
+                                BorderBrush="#E0E0E0"
+                                BorderThickness="2"
+                                CornerRadius="10"
+                                Margin="0,0,0,20">
+                            <PasswordBox x:Name="PasswordBox"
+                                         Height="42"
+                                         Padding="12,0"
+                                         BorderThickness="0"
+                                         Background="Transparent"
+                                         VerticalContentAlignment="Center"
+                                         FontSize="14"
+                                         materialDesign:HintAssist.Hint="Nhập mật khẩu"/>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Role -->
+                    <TextBlock Text="Vai trò" 
+                               FontSize="15"
+                               FontWeight="SemiBold" 
+                               Foreground="#FFAD57"
+                               Margin="0,0,0,8"/>
+                    <Border Background="White"
+                            BorderBrush="#E0E0E0"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            Margin="0,0,0,0">
+                        <ComboBox x:Name="RoleComboBox"
+                                  Height="42"
+                                  Padding="12,0"
+                                  BorderThickness="0"
+                                  Background="Transparent"
+                                  VerticalContentAlignment="Center"
+                                  FontSize="14">
+                            <ComboBoxItem Content="User" IsSelected="True"/>
+                            <ComboBoxItem Content="Admin"/>
+                        </ComboBox>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Buttons -->
+            <Grid Grid.Row="2" Margin="0,24,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Cancel Button -->
+                <Button Grid.Column="0"
+                        Content="Hủy"
+                        Height="44"
+                        FontSize="15"
+                        FontWeight="SemiBold"
+                        Foreground="#666666"
+                        Background="White"
+                        BorderBrush="#E0E0E0"
+                        BorderThickness="2"
+                        Cursor="Hand"
+                        Margin="0,0,8,0"
+                        Click="CancelButton_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="12">
+                                <TextBlock Text="{TemplateBinding Content}"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           FontWeight="{TemplateBinding FontWeight}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#F5F5F5"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#E0E0E0"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <!-- Save Button -->
+                <Button Grid.Column="1"
+                        Height="44"
+                        FontSize="15"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Margin="8,0,0,0"
+                        Click="SaveButton_Click">
+                    <Button.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#FFAD56" Offset="0"/>
+                            <GradientStop Color="#FFC281" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="12">
+                                <TextBlock Text="Lưu"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           FontWeight="{TemplateBinding FontWeight}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Effect">
+                                        <Setter.Value>
+                                            <DropShadowEffect ShadowDepth="0" BlurRadius="15" Opacity="0.3"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <GradientStop Color="#FF9D46" Offset="0"/>
+                                                <GradientStop Color="#FFB271" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+        </Grid>
     </Border>
 </Window>

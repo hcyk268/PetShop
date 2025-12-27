@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Configuration;
+
 namespace Pet_Shop_Project.Services
 {
     public class DashboardService
@@ -40,39 +41,42 @@ namespace Pet_Shop_Project.Services
         public List<string> GetBestSellers()
         {
             string query = @"
-        SELECT 
-            TOP 3 p.Name   
-        FROM 
-            ORDER_DETAILS od        
-        JOIN 
-            PRODUCTS p ON od.ProductID = p.ProductID  
-        GROUP BY 
-            p.Name
-        ORDER BY 
-            SUM(od.Quantity) DESC  ";
+                SELECT 
+                    TOP 3 p.Name   
+                FROM 
+                    ORDER_DETAILS od        
+                JOIN 
+                    PRODUCTS p ON od.ProductID = p.ProductID  
+                GROUP BY 
+                    p.Name
+                ORDER BY 
+                    SUM(od.Quantity) DESC";
             return ExecuteList(query);
         }
 
         public List<string> GetWorstSellers()
         {
             string query = @"
-        SELECT 
-            TOP 3 p.Name   
-        FROM 
-            ORDER_DETAILS od        
-        JOIN 
-            PRODUCTS p ON od.ProductID = p.ProductID  
-        GROUP BY 
-            p.Name
-        ORDER BY 
-            SUM(od.Quantity) ASC  ";
+                SELECT 
+                    TOP 3 p.Name   
+                FROM 
+                    ORDER_DETAILS od        
+                JOIN 
+                    PRODUCTS p ON od.ProductID = p.ProductID  
+                GROUP BY 
+                    p.Name
+                ORDER BY 
+                    SUM(od.Quantity) ASC";
             return ExecuteList(query);
         }
 
-        // ===== THÊM MỚI: Lấy doanh thu 7 ngày gần nhất =====
+        // ===== Lấy doanh thu 7 ngày gần nhất (đã sửa) =====
         public Dictionary<string, decimal> GetWeeklyRevenue()
         {
             var result = new Dictionary<string, decimal>();
+
+            // Tạo Dictionary tạm để lưu doanh thu theo DateTime
+            var tempData = new Dictionary<DateTime, decimal>();
 
             string query = @"
                 SELECT 
@@ -81,8 +85,7 @@ namespace Pet_Shop_Project.Services
                 FROM ORDERS
                 WHERE PaymentStatus = 'Paid' 
                     AND OrderDate >= DATEADD(day, -6, CAST(GETDATE() AS DATE))
-                GROUP BY CONVERT(DATE, OrderDate)
-                ORDER BY OrderDay";
+                GROUP BY CONVERT(DATE, OrderDate)";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -94,22 +97,26 @@ namespace Pet_Shop_Project.Services
                 {
                     DateTime day = rd.GetDateTime(0);
                     decimal revenue = rd.GetDecimal(1);
-
-                    // Format: "T2\n01/12"
-                    string dayLabel = GetDayLabel(day);
-                    result[dayLabel] = revenue;
+                    tempData[day] = revenue;
                 }
             }
 
-            // Đảm bảo có đủ 7 ngày (nếu ngày nào không có đơn thì revenue = 0)
-            EnsureSevenDays(result);
+            // ✅ Tạo 7 ngày từ xa đến gần (20/12 → 21/12 → ... → 26/12)
+            for (int i = 6; i >= 0; i--)
+            {
+                DateTime day = DateTime.Today.AddDays(-i);
+                string label = GetDayLabel(day);
+
+                // Nếu có dữ liệu thì lấy, không thì để 0
+                decimal revenue = tempData.ContainsKey(day) ? tempData[day] : 0;
+                result[label] = revenue;
+            }
 
             return result;
         }
 
         private string GetDayLabel(DateTime date)
         {
-            // Trả về label theo định dạng Việt Nam: T2, T3, T4...
             var dayNames = new Dictionary<DayOfWeek, string>
             {
                 { DayOfWeek.Monday, "T2" },
@@ -122,21 +129,6 @@ namespace Pet_Shop_Project.Services
             };
 
             return $"{dayNames[date.DayOfWeek]}\n{date:dd/MM}";
-        }
-
-        private void EnsureSevenDays(Dictionary<string, decimal> data)
-        {
-            // Nếu thiếu ngày nào thì thêm vào với revenue = 0
-            for (int i = 6; i >= 0; i--)
-            {
-                DateTime day = DateTime.Today.AddDays(-i);
-                string label = GetDayLabel(day);
-
-                if (!data.ContainsKey(label))
-                {
-                    data[label] = 0;
-                }
-            }
         }
 
         // ===================== HÀM DÙNG CHUNG ======================

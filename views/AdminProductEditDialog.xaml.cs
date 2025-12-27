@@ -23,9 +23,6 @@ using System.Collections.ObjectModel;
 
 namespace Pet_Shop_Project.Views
 {
-    /// <summary>
-    /// Interaction logic for AdminProductEditDialog.xaml
-    /// </summary>
     public partial class AdminProductEditDialog : Page
     {
         private readonly string _conn = ConfigurationManager.ConnectionStrings["PetShopDB"].ConnectionString;
@@ -34,13 +31,16 @@ namespace Pet_Shop_Project.Views
         private bool _isEditMode;
         public Product Product { get; private set; }
 
+        // Event to notify parent when dialog closes
+        public event Action<bool> DialogClosed;
+
         public AdminProductEditDialog(Product product)
         {
             InitializeComponent();
             _originalProduct = product;
             _isEditMode = product != null;
             Loaded += async (_, __) => { await LoadCategoriesAsync(); };
-            
+
             if (_isEditMode)
             {
                 DialogTitle.Text = "Chỉnh sửa sản phẩm";
@@ -61,18 +61,7 @@ namespace Pet_Shop_Project.Views
             TxtDiscount.Text = _originalProduct.Discount.ToString();
             TxtUnitInStock.Text = _originalProduct.UnitInStock.ToString();
             TxtPicture.Text = _originalProduct.Picture.ToString();
-           
-            // Set category
-            foreach (System.Windows.Controls.ComboBoxItem item in CmbCategory.Items)
-            {
-                if (item.Content.ToString() == _originalProduct.Category)
-                {
-                    CmbCategory.SelectedItem = item;
-                    break;
-                }
-            }
 
-            // Load image preview
             if (!string.IsNullOrEmpty(_originalProduct.Picture))
             {
                 LoadImagePreview(_originalProduct.Picture);
@@ -92,9 +81,9 @@ namespace Pet_Shop_Project.Views
                 {
                     while (await reader.ReadAsync())
                     {
-                         var cat = reader["Category"].ToString();
-                    if (!items.Any(c => c.Equals(cat, StringComparison.OrdinalIgnoreCase)))
-                        items.Add(cat);
+                        var cat = reader["Category"].ToString();
+                        if (!items.Any(c => c.Equals(cat, StringComparison.OrdinalIgnoreCase)))
+                            items.Add(cat);
                     }
                 }
             }
@@ -102,7 +91,7 @@ namespace Pet_Shop_Project.Views
             if (_originalProduct != null && !string.IsNullOrEmpty(_originalProduct.Category))
                 CmbCategory.SelectedItem = items.FirstOrDefault(c =>
                 c.Equals(_originalProduct.Category, StringComparison.OrdinalIgnoreCase));
-        }
+        }
 
         private async void BtnSelectImage_Click(object sender, RoutedEventArgs e)
         {
@@ -138,8 +127,7 @@ namespace Pet_Shop_Project.Views
                 }
                 else
                 {
-                    // Try as URL
-                    var bitmap = new BitmapImage();
+                    var bitmap = new BitmapImage();
                     bitmap.BeginInit();
                     bitmap.UriSource = new Uri(imagePath, UriKind.Absolute);
                     bitmap.EndInit();
@@ -165,8 +153,7 @@ namespace Pet_Shop_Project.Views
                 var selectedCategory = CmbCategory.SelectedItem as string ?? CmbCategory.Text;
                 if (_isEditMode)
                 {
-                   // Update existing product
-                    Product = new Product
+                    Product = new Product
                     {
                         Name = TxtProductName.Text.Trim(),
                         Description = TxtDescription.Text.Trim(),
@@ -183,8 +170,7 @@ namespace Pet_Shop_Project.Views
                 }
                 else
                 {
-                    // Create new product
-                    Product = new Product
+                    Product = new Product
                     {
                         Name = TxtProductName.Text.Trim(),
                         Description = TxtDescription.Text.Trim(),
@@ -211,8 +197,8 @@ namespace Pet_Shop_Project.Views
         private async Task<bool> AddProductAsync(Product product)
         {
             const string sql = @"INSERT INTO PRODUCTS (Name, Description, UnitPrice, UnitInStock, Discount, Picture, Category)
-                                 OUTPUT INSERTED.ProductId
-                                 VALUES (@Name, @Description, @UnitPrice, @UnitInStock, @Discount, @Picture, @Category)";
+                                 OUTPUT INSERTED.ProductId
+                                 VALUES (@Name, @Description, @UnitPrice, @UnitInStock, @Discount, @Picture, @Category)";
 
             using (var conn = new SqlConnection(_conn))
             {
@@ -229,11 +215,11 @@ namespace Pet_Shop_Project.Views
 
                     var result = await cmd.ExecuteScalarAsync();
                     if (result != null && result != DBNull.Value)
-                    {                
-                    product.ProductId = result.ToString();
-                    MessageBox.Show("Thêm sản phẩm thành công!", "Thành công",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
-                    return true;
+                    {
+                        product.ProductId = result.ToString();
+                        MessageBox.Show("Thêm sản phẩm thành công!", "Thành công",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                        return true;
                     }
                 }
             }
@@ -243,14 +229,14 @@ namespace Pet_Shop_Project.Views
         private async Task<bool> UpdateProductAsync(Product product)
         {
             const string sql = @"UPDATE PRODUCTS
-                                SET Name = @Name,
-                                    Description = @Description,
-                                    UnitPrice = @UnitPrice,
-                                    UnitInStock = @UnitInStock,
-                                    Discount = @Discount,
-                                    Picture = @Picture,
-                                    Category = @Category
-                                WHERE ProductId = @ProductId";
+                                SET Name = @Name,
+                                    Description = @Description,
+                                    UnitPrice = @UnitPrice,
+                                    UnitInStock = @UnitInStock,
+                                    Discount = @Discount,
+                                    Picture = @Picture,
+                                    Category = @Category
+                                WHERE ProductId = @ProductId";
 
             try
             {
@@ -285,6 +271,7 @@ namespace Pet_Shop_Project.Views
             }
             return false;
         }
+
         private bool ValidateInput()
         {
             if (string.IsNullOrWhiteSpace(TxtProductName.Text))
@@ -315,10 +302,10 @@ namespace Pet_Shop_Project.Views
             if (string.IsNullOrWhiteSpace(TxtUnitPrice.Text) ||
               !decimal.TryParse(TxtUnitPrice.Text, out decimal price) || price < 0)
             {
-                 MessageBox.Show("Giá bán không hợp lệ", "Thông báo",
-                 MessageBoxButton.OK, MessageBoxImage.Warning);
-                 TxtUnitPrice.Focus();
-                 return false;
+                MessageBox.Show("Giá bán không hợp lệ", "Thông báo",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+                TxtUnitPrice.Focus();
+                return false;
             }
 
             if (string.IsNullOrWhiteSpace(TxtUnitInStock.Text) ||
@@ -337,16 +324,9 @@ namespace Pet_Shop_Project.Views
             CloseDialog(false);
         }
 
-        //public event EventHandler<Product> Saved;
-        //public event EventHandler Canceled;
         private void CloseDialog(bool success)
         {
-            var host = Window.GetWindow(this);
-            if (host != null)
-            {
-                host.DialogResult = success;
-                host.Close();
-            }
+            DialogClosed?.Invoke(success);
         }
     }
 }
