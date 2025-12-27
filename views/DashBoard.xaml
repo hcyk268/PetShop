@@ -223,8 +223,8 @@
                         <Border.Clip>
                             <EllipseGeometry Center="27.5,27.5" RadiusX="27.5" RadiusY="27.5"/>
                         </Border.Clip>
-                        <Image Source="/Images/bear.jpg" 
-                               Stretch="Uniform" Margin="-2,-2,-2,-2"/>
+                        <Image Source="/Images/logo.jpg" 
+                               Stretch="Uniform" Margin="-10,-10,-10,-10"/>
                     </Border>
 
                     <StackPanel Margin="10 0">

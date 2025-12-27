@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:Pet_Shop_Project.Views"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d"
+      xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
       d:DesignHeight="650" d:DesignWidth="940"
       Background="#FFF7F5"
       Title="AdminCreateOrder">
@@ -80,7 +81,10 @@
                     <ColumnDefinition Width="290"/>
                 </Grid.ColumnDefinitions>
 
-                
+                <ScrollViewer Grid.Column="0"
+                              Margin="0,0,8,0"
+                              VerticalScrollBarVisibility="Hidden"
+                              MaxHeight="620">
                 <Border Grid.Column="0"
                         Background="White"
                         CornerRadius="12"
@@ -233,19 +237,20 @@
                                       Margin="0,0,0,8"/>
 
                             <TextBox x:Name="ShippingAddressBox"
-                                     Style="{StaticResource PlaceholderTextBoxStyle}"
-                                     Tag="Nhập địa chỉ giao hàng..."
+                                     md:HintAssist.Hint="Nhập địa chỉ giao hàng..."
+                                     md:HintAssist.Foreground="#999999"
                                      AcceptsReturn="True"
                                      TextWrapping="Wrap"
-                                     Height="60"
+                                     MaxLength="500"
+                                     Height="80"
+                                     VerticalContentAlignment="Top"
                                      Padding="10"
                                      BorderBrush="#DDDDDD"
-                                     BorderThickness="1"
-                                     IsEnabled="False"/>
-                        </StackPanel>
+                                     BorderThickness="1"/>
+                    </StackPanel>
                     </Grid>
                 </Border>
-
+            </ScrollViewer>
                 
                 <Border Grid.Column="1"
                         Background="White"
@@ -496,19 +501,20 @@
                                 <TextBlock Text="Ghi Chú, Trạng Thái" FontSize="14" FontWeight="SemiBold" Foreground="#222" Margin="6,0,0,0" VerticalAlignment="Center"/>
                             </StackPanel>
 
-                            <TextBox x:Name="OrderNoteBox"
-                                     Style="{StaticResource PlaceholderTextBoxStyle}"
-                                     Tag="Ghi chú cho đơn hàng..."
+                        <TextBox x:Name="OrderNoteBox"
+                                     md:HintAssist.Hint="Ghi chú cho đơn hàng..."
+                                     md:HintAssist.Foreground="#999999"
                                      AcceptsReturn="True"
                                      TextWrapping="Wrap"
+                                     MaxLength="500"
                                      Height="50"
+                                     VerticalContentAlignment="Top"
                                      Padding="10"
                                      BorderBrush="#DDDDDD"
-                                     BorderThickness="1"
-                                     Margin="0,0,0,12"/>
+                                     BorderThickness="1"/>
 
-                            
-                            <Grid>
+
+                        <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
