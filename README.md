@@ -87,13 +87,13 @@ Hệ thống bao gồm hai nhóm người dùng chính:
 ### 8.1. Giao diện người dùng
 
 <p align="center">
-  <img src="Screenshots/Login.png" alt="Đăng nhập" width="700"/>
+  <img src="Screenshots/SignIn.png" alt="Đăng nhập" width="700"/>
   <br/>
   <i>Màn hình đăng nhập</i>
 </p>
 
 <p align="center">
-  <img src="Screenshots/Homepage.png" alt="Trang chủ" width="700"/>
+  <img src="Screenshots/HomePage.png" alt="Trang chủ" width="700"/>
   <br/>
   <i>Trang chủ - Danh sách sản phẩm</i>
 </p>
@@ -119,31 +119,31 @@ Hệ thống bao gồm hai nhóm người dùng chính:
 ### 8.2. Giao diện quản trị viên
 
 <p align="center">
-  <img src="screenshots/Ad_Dashboard.png" alt="Dashboard" width="700"/>
+  <img src="Screenshots/Ad_Dashboard.png" alt="Dashboard" width="700"/>
   <br/>
   <i>Dashboard - Thống kê tổng quan</i>
 </p>
 
 <p align="center">
-  <img src="screenshots/Ad_Storage.png" alt="Quản lý sản phẩm" width="700"/>
+  <img src="Screenshots/Ad_Storage.png" alt="Quản lý sản phẩm" width="700"/>
   <br/>
   <i>Quản lý sản phẩm</i>
 </p>
 
 <p align="center">
-  <img src="screenshots/Ad_UserManagement.png" alt="Quản lý người dùng" width="700"/>
+  <img src="Screenshots/Ad_UserManagement.png" alt="Quản lý người dùng" width="700"/>
   <br/>
   <i>Quản lý người dùng</i>
 </p>
 
 <p align="center">
-  <img src="screenshots/Ad_OrderManagement.png" alt="Quản lý đơn hàng" width="700"/>
+  <img src="Screenshots/Ad_OrderManagement.png" alt="Quản lý đơn hàng" width="700"/>
   <br/>
   <i>Quản lý đơn hàng</i>
 </p>
 
 <p align="center">
-  <img src="screenshots/Ad_RatingManagement.png" alt="Quản lý đánh giá" width="700"/>
+  <img src="Screenshots/Ad_RatingManagement.png" alt="Quản lý đánh giá" width="700"/>
   <br/>
   <i>Quản lý đánh giá</i>
 </p>
