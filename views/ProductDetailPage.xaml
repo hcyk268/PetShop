@@ -15,7 +15,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header - Background F5F5F5 (giữ nguyên) -->
+        <!-- Header  -->
         <Grid Grid.Row="0" Background="#F5F5F5" Height="60">
             <StackPanel Orientation="Horizontal"
                 VerticalAlignment="Center"
@@ -44,12 +44,10 @@
                             </Border>
 
                             <ControlTemplate.Triggers>
-                                <!-- Hover: nền xám nhạt -->
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter TargetName="border" Property="Background" Value="#FFECECEC"/>
                                 </Trigger>
-
-                                <!-- Pressed: nền gradient + icon trắng -->
+                                
                                 <Trigger Property="IsPressed" Value="True">
                                     <Setter TargetName="border" Property="Background">
                                         <Setter.Value>
@@ -77,14 +75,14 @@
         </Grid>
 
 
-        <!-- Main Content - Background F8FFFE từ đây trở xuống -->
+        <!-- Main Content -->
         <ScrollViewer Grid.Row="1" 
                      Background="#F8FFFE"
                      VerticalScrollBarVisibility="Hidden"
                      Margin="0,0,0,0">
             <StackPanel HorizontalAlignment="Center"
                         Margin="0,10,0,10">
-                <!-- Product Info Section: 880x320 - Shadow rõ hơn -->
+                <!-- Product Info -->
                 <Border Width="880"
                        Height="320"
                        Background="White"
@@ -110,7 +108,7 @@
                               Height="230"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center">
-                            <!-- Product Image: 230x230 - Border radius 20 -->
+                            <!-- Product Image -->
                             <Border CornerRadius="20"
                                    Background="#F5F5F5"
                                    ClipToBounds="True"
@@ -119,7 +117,7 @@
                                       Stretch="UniformToFill"/>
                             </Border>
 
-                            <!-- DISCOUNT BADGE - Nằm TRONG hình ảnh -->
+                            <!-- Giảm giá -->
                             <Grid x:Name="DiscountBadge"
                                   Width="40"
                                   Height="16"
@@ -128,12 +126,10 @@
                                   Margin="0,8,8,0"
                                   Visibility="Collapsed">
 
-                                <!-- Arrow shape path -->
                                 <Path Fill="#FF8284"
                                       Data="M 8,0 L 40,0 L 40,16 L 8,16 L 0,8 Z"
                                       Stretch="Fill"/>
 
-                                <!-- Text overlay -->
                                 <TextBlock x:Name="DiscountText"
                                            Text="-15%"
                                            FontSize="12"
@@ -336,7 +332,7 @@
                     </Grid>
                 </Border>
 
-                <!-- Reviews Section - Shadow rõ hơn -->
+                <!-- Reviews Section -->
                 <Border Background="White"
                        CornerRadius="20"
                        Padding="30"

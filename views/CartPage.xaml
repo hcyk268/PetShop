@@ -74,14 +74,14 @@
             </StackPanel>
         </Grid>
 
-        <!-- Main Content - Background F8FFFE -->
+        <!-- Main Content -->
         <Grid Grid.Row="1" Background="#F8FFFE">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Filter Section -->
+            <!-- Lọc -->
             <Grid Grid.Row="0" Margin="30,15,30,15">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -126,11 +126,11 @@
                     </Border>
                 </StackPanel>
 
-                <!-- Select All and Delete Buttons (Right) -->
+                <!-- Select All và Delete Buttons (Right) -->
                 <StackPanel Grid.Column="1" 
                             Orientation="Horizontal" 
                             VerticalAlignment="Center">
-                    <!-- Select All Button -->
+                    <!-- Select All -->
                     <Button x:Name="SelectAllButton"
                             Width="120"
                             Height="30"
@@ -239,14 +239,13 @@
                 </StackPanel>
             </Grid>
 
-            <!-- Cart Items ScrollViewer -->
+            <!-- Sản phẩm -->
             <ScrollViewer Grid.Row="1" 
                           VerticalScrollBarVisibility="Hidden"
                           Padding="30,0,30,120">
                 <ItemsControl x:Name="CartItemsControl">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <!-- Outer Border with Shadow và Click event -->
                             <Border x:Name="OuterBorder"
                                     Background="White" 
                                     BorderBrush="#E0E0E0" 
@@ -365,12 +364,11 @@
                                         </CheckBox.Style>
                                     </CheckBox>
 
-                                    <!-- Product Image with Discount Badge -->
+                                    <!-- Ảnh sản phẩm và giảm giá-->
                                     <Grid Grid.Column="1" 
                                           Width="80" Height="80"
                                           Margin="0,0,15,0">
-
-                                        <!-- Image Border -->
+                                        
                                         <Border x:Name="ImageBorder"
                                                 CornerRadius="8"
                                                 Background="#F0F0F0"
@@ -379,7 +377,7 @@
                                             <Image Source="{Binding Image}" Stretch="UniformToFill"/>
                                         </Border>
 
-                                        <!-- DISCOUNT BADGE -->
+                                        <!-- Discount -->
                                         <Grid x:Name="DiscountBadge"
                                               Width="32"
                                               Height="13"
@@ -388,7 +386,6 @@
                                               Margin="0,4,4,0"
                                               Visibility="{Binding DiscountVisibility}">
 
-                                            <!-- Arrow shape path -->
                                             <Path Fill="#FF8284"
                                                   Data="M 6,0 L 32,0 L 32,13 L 6,13 L 0,6.5 Z"
                                                   Stretch="Fill"/>
@@ -404,7 +401,7 @@
                                         </Grid>
                                     </Grid>
 
-                                    <!-- Product Details -->
+                                    <!-- Chi tiết sản phẩm -->
                                     <StackPanel Grid.Column="2" VerticalAlignment="Center">
                                         <TextBlock Text="{Binding Name}" 
                                                    FontSize="16" 
@@ -426,7 +423,7 @@
                                                        Foreground="#666666"/>
                                         </Border>
 
-                                        <!-- Price Section with Discount Badge -->
+                                        <!-- Giá -->
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                             <TextBlock Text="{Binding DisplayPrice}" 
                                                        FontSize="16" 
@@ -435,7 +432,7 @@
                                                        Margin="0,0,8,0"
                                                        VerticalAlignment="Center"/>
 
-                                            <!-- Discount Badge (instead of strikethrough) -->
+                                            <!-- Giá giảm -->
                                             <Border Background="#FFE5E5"
                                                     BorderBrush="#FF8284"
                                                     BorderThickness="1"
@@ -450,7 +447,7 @@
                                             </Border>
                                         </StackPanel>
 
-                                        <!-- Quantity Control -->
+                                        <!-- Thêm bớt hàng -->
                                         <StackPanel Orientation="Horizontal">
                                             <Button Style="{StaticResource QtyButtonStyle}" 
                                                     Content="−"
@@ -477,7 +474,7 @@
                 </ItemsControl>
             </ScrollViewer>
 
-            <!-- Floating Summary Box (Bottom Right) -->
+            <!-- Mua hàng -->
             <Border Grid.Row="1"
                     Background="White"
                     CornerRadius="12"
@@ -491,7 +488,7 @@
                 </Border.Effect>
 
                 <StackPanel>
-                    <!-- Total Items -->
+                    <!-- Tổng hàng -->
                     <Grid Margin="0,0,0,8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -508,7 +505,7 @@
                                    Foreground="#333333"/>
                     </Grid>
 
-                    <!-- Total Price -->
+                    <!-- Tổng giá -->
                     <Border BorderBrush="#E0E0E0" 
                             BorderThickness="0,1,0,0" 
                             Padding="0,10,0,0"
@@ -530,7 +527,7 @@
                         </Grid>
                     </Border>
 
-                    <!-- Order Button -->
+                    <!-- Nút mua hàng -->
                     <Button x:Name="Order" 
                             Style="{StaticResource GradientButtonStyle}"
                             Content="Mua hàng"
