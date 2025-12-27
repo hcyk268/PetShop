@@ -1,6 +1,6 @@
-# 🐾FETCH – HỆ THỐNG QUẢN LÝ VÀ BÁN HÀNG TIỆN ÍCH CHO THÚ CƯNG🐾
+# FETCH – HỆ THỐNG QUẢN LÝ VÀ BÁN HÀNG TIỆN ÍCH CHO THÚ CƯNG
 
-## 🐶 1. Giới thiệu
+## 1. Giới thiệu
 
 **Fetch** là ứng dụng được phát triển trong khuôn khổ đồ án môn học **Lập trình trực quan (IT008.Q12)** của nhóm 9.
 Dự án mô phỏng một hệ thống quản lý và bán các sản phẩm dành cho thú cưng, hướng tới việc hỗ trợ người dùng mua sắm và quản trị viên quản lý hệ thống một cách hiệu quả.
@@ -12,7 +12,7 @@ Hệ thống bao gồm hai nhóm người dùng chính:
 
 ---
 
-## ✨ 2. Chức năng chính
+## 2. Chức năng chính
 
 ### 2.1. Dành cho người dùng (Khách hàng)
 
@@ -35,7 +35,7 @@ Hệ thống bao gồm hai nhóm người dùng chính:
 
 ---
 
-## 🧰 3. Công nghệ sử dụng
+## 3. Công nghệ sử dụng
 
 | Thành phần            | Mô tả                                        |
 | --------------------- | -------------------------------------------- |
@@ -46,7 +46,7 @@ Hệ thống bao gồm hai nhóm người dùng chính:
 
 ---
 
-## ⚙️ 4. Hướng dẫn cài đặt và chạy dự án
+## 4. Hướng dẫn cài đặt và chạy dự án
 [▶️ XEM VIDEO HƯỚNG DẪN](https://drive.google.com/file/d/10iBpNYwbJyoonjimntKvpF_2Q4NpPH6T/view?usp=sharing)
 
 * B1: Lấy dự án về máy: git clone https://github.com/hcyk268/PetShop.git
@@ -58,7 +58,7 @@ Hệ thống bao gồm hai nhóm người dùng chính:
 
 ---
 
-## 🔑 5. Tài khoản mẫu
+## 5. Tài khoản mẫu
 
 | Vai trò       | Tên đăng nhập  | Mật khẩu    |
 | ------------- | -------------- | ----------- |
@@ -67,7 +67,7 @@ Hệ thống bao gồm hai nhóm người dùng chính:
 
 ---
 
-## 👥 6. Thành viên thực hiện
+## 6. Thành viên thực hiện
 
 | MSSV     | Họ và tên          | Vai trò                            |
 | -------- | ------------------ | ---------------------------------- |
@@ -78,6 +78,72 @@ Hệ thống bao gồm hai nhóm người dùng chính:
 
 ---
 
-## 🎓 7. Giảng viên hướng dẫn
+## 7. Giảng viên hướng dẫn
 
 * Ths. **Võ Tuấn Kiệt**
+
+## 8. Giao diện ứng dụng
+
+### 8.1. Giao diện người dùng
+
+<p align="center">
+  <img src="screenshots/login.png" alt="Đăng nhập" width="700"/>
+  <br/>
+  <i>Màn hình đăng nhập</i>
+</p>
+
+<p align="center">
+  <img src="screenshots/homepage.png" alt="Trang chủ" width="700"/>
+  <br/>
+  <i>Trang chủ - Danh sách sản phẩm</i>
+</p>
+
+<p align="center">
+  <img src="screenshots/cart.png" alt="Giỏ hàng" width="700"/>
+  <br/>
+  <i>Giỏ hàng</i>
+</p>
+
+<p align="center">
+  <img src="screenshots/orders.png" alt="Đơn hàng" width="700"/>
+  <br/>
+  <i>Quản lý đơn hàng</i>
+</p>
+
+<p align="center">
+  <img src="screenshots/profile.png" alt="Thông tin tài khoản" width="700"/>
+  <br/>
+  <i>Thông tin tài khoản</i>
+</p>
+
+### 8.2. Giao diện quản trị viên
+
+<p align="center">
+  <img src="screenshots/admin-dashboard.png" alt="Dashboard" width="700"/>
+  <br/>
+  <i>Dashboard - Thống kê tổng quan</i>
+</p>
+
+<p align="center">
+  <img src="screenshots/admin-products.png" alt="Quản lý sản phẩm" width="700"/>
+  <br/>
+  <i>Quản lý sản phẩm</i>
+</p>
+
+<p align="center">
+  <img src="screenshots/admin-users.png" alt="Quản lý người dùng" width="700"/>
+  <br/>
+  <i>Quản lý người dùng</i>
+</p>
+
+<p align="center">
+  <img src="screenshots/admin-orders.png" alt="Quản lý đơn hàng" width="700"/>
+  <br/>
+  <i>Quản lý đơn hàng</i>
+</p>
+
+<p align="center">
+  <img src="screenshots/admin-reviews.png" alt="Quản lý đánh giá" width="700"/>
+  <br/>
+  <i>Quản lý đánh giá</i>
+</p>
