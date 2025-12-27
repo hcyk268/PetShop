@@ -42,13 +42,10 @@ namespace Pet_Shop_Project.Views
                 currentCategory = "Tất cả";
                 DisplayProducts(allProducts);
 
-                // Clear search box
                 SearchBox.Text = string.Empty;
 
-                // Reset filter combobox
                 FilterComboBox.SelectedIndex = 0;
 
-                // Reset active state của tất cả category buttons
                 ResetCategoryButtons();
             }
             catch (Exception ex)
@@ -177,7 +174,7 @@ namespace Pet_Shop_Project.Views
             await ApplyCurrentFilterAsync(allProducts);
         }
 
-        // Apply filter sorting
+        // Filter sorting
         private async Task ApplyCurrentFilterAsync(List<Product> products)
         {
             if (FilterComboBox.SelectedItem == null || products == null)

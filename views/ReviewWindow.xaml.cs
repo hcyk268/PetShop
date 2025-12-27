@@ -36,7 +36,7 @@ namespace Pet_Shop_Project.Views
 
             for (int i = 0; i < 5; i++)
             {
-                int starIndex = i + 1; // 1-based index for rating
+                int starIndex = i + 1; 
 
                 var button = new Button
                 {
@@ -130,13 +130,10 @@ namespace Pet_Shop_Project.Views
                 }
             }
 
-            // Set product name
             ProductName.Text = product.Name;
 
-            // Set quantity
             ProductQuantity.Text = _orderDetail.Quantity.ToString();
 
-            // Handle discount
             bool hasDiscount = product.Discount > 0;
 
             if (hasDiscount)
