@@ -42,7 +42,7 @@ Hệ thống bao gồm hai nhóm người dùng chính:
 | Ngôn ngữ và nền tảng  | WPF (.NET Framework)                         |
 | Cơ sở dữ liệu         | SQL Server                                   |
 | Môi trường phát triển | Windows                                      |
-| Công cụ hỗ trợ        | Visual Studio, Git & GitHub, ChatGPT, Claude |
+| Công cụ hỗ trợ        | Visual Studio, GitHub, Figma, AI             |
 
 ---
 
